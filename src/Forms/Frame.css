@@ -1,19 +1,24 @@
 .frame-form {
   padding-top: 20px;
-  padding-left: 80px;
-  padding-right: 10px;
 }
 
 .frame-form-row {
+  display: inline-block;
   height: 44px;
+  width: 100%;
+  margin-left: 20%;
+}
+
+.frame-form-row.with-title {
+  margin-left: 0;
 }
 
 .num-input-container {
-  width: calc(50% - 6px);
+  width: calc(30% - 12px);
 }
 
 input {
-  height: 18px;
+  height: 16px;
   width: 100%;
   text-align: right;
   background-color: rgb(60, 60, 60);
@@ -29,15 +34,25 @@ input:focus {
   outline: none;
 }
 
+.frame-form-title {
+  display: inline-block;
+  vertical-align:top;
+  text-align: right;
+  width: calc(40% - 8px);
+  margin-right: 8px;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .num-input-container.left {
-  /* position: absolute; */
-  float: left;
+  display: inline-block;
   margin-right: 12px;
 }
 
 .num-input-container.right {
-  /* position: absolute; */
-  float: left;
+  display: inline-block;
+  margin-right: 12px;
 }
 
 .input-name {
