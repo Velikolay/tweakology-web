@@ -1,0 +1,147 @@
+.App {
+  text-align: center;
+  height: 100%;
+}
+
+.scene-view-container {
+  float: left;
+  height: 100%;
+  /* background-color: #1e1e1e; */
+  background-color: #1d1e21;
+}
+
+.config-pane {
+  float: left;
+  height: 100%;
+  background-color: #252526;
+  overflow-y: auto;
+}
+
+.tree-view {
+  float: left;
+  height: 100%;
+  /* background-color: #252526; */
+  background-color: #1d1e21;
+}
+
+.m-node .placeholder {
+  border: 1px dashed #1385e5;
+}
+
+.m-node .children {
+  padding-left: 0!important;
+}
+
+.m-node .inner {
+  width: 100%;
+  padding-left: 0!important;
+  color: rgb(180, 180, 180);
+  font-size: 12px;
+  font-family: Menlo;
+}
+
+.m-node .container {
+  width: 100%;
+}
+
+.m-node .container.is-active {
+  background-color: rgba(0, 113, 184, 0.6);
+}
+
+.m-node .container.is-active:hover {
+  background-color: rgba(0, 113, 184, 0.6);
+}
+
+.m-node .container:hover {
+  background-color: rgba(52, 52, 52, 0.6);
+}
+
+.m-node .text {
+  padding: 4px 10px;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.m-node .add-button {
+  float: right;
+  background: none!important;
+  color: green;
+  border: none;
+  padding: 4px 6px;
+  overflow: auto;
+  font: inherit;
+  cursor: pointer;
+}
+
+.m-node div > .m-node .text {
+  padding-left: 30px;
+}
+
+.m-node div > .m-node div > .m-node .text {
+  padding-left: 50px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 70px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 90px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 110px;
+}
+
+.m-node div > .m-node .collapse {
+  padding-left: 20px;
+}
+
+.m-node div > .m-node div > .m-node .collapse {
+  padding-left: 40px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 60px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 80px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 100px;
+}
+
+.m-node .collapse {
+  top: 50%;
+  transform: translate(0%, -50%);
+}
+
+.gutter {
+  background-color: rgb(58, 58, 58);
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  cursor: ew-resize;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  cursor: ns-resize;
+}
+
+.split {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.split, .gutter.gutter-horizontal {
+  float: left;
+  height: 100%;
+}
