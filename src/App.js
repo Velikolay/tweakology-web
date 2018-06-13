@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import ViewForm from './Forms/ViewForm.js';
 import FrameForm from './Forms/Frame.js';
+import ColorForm from './Forms/Color.js';
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
 import UIHierarchyTree from './UIHierarchyTree.js';
@@ -123,12 +124,19 @@ class App extends Component {
         </UIHierarchyScene>
         <div ref="config" className="config-pane">
           {this.state.activeNode !== null? (
-            <FrameForm 
+            <div>
+            <FrameForm
+              name="Frame"
               x={this.state.activeNode.properties.frame.minX}
               y={this.state.activeNode.properties.frame.minY}
               width={this.state.activeNode.properties.frame.maxX - this.state.activeNode.properties.frame.minX}
               height={this.state.activeNode.properties.frame.maxY - this.state.activeNode.properties.frame.minY}
             />
+            <ColorForm
+              alpha={this.state.activeNode.properties.backgroundColor.alpha}
+              colorHex={this.state.activeNode.properties.backgroundColor.hexValue}
+            />
+            </div>
             ): 
             null
           }

@@ -23,10 +23,9 @@ const InnerFrameForm = props => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="frame-form">
-        
         <div className="frame-form-row with-title">
           <label className="frame-form-title">
-              Frame
+              {values.name}
           </label>
           <div className="num-input-container left">
             <input
@@ -103,7 +102,7 @@ const InnerFrameForm = props => {
 
 const EnhancedFrameForm = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ({ x_coord: props.x, y_coord: props.y, width: props.width, height: props.height }),
+  mapPropsToValues: props => ({ name: props.name, x_coord: props.x, y_coord: props.y, width: props.width, height: props.height }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
   //     .email('Invalid email address')
