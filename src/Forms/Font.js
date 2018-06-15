@@ -1,0 +1,93 @@
+import React from 'react';
+import { withFormik } from 'formik';
+import Yup from 'yup';
+
+import './Font.css';
+
+// Our inner form component. Will be wrapped with Formik({..})
+
+const InnerFontForm = props => {
+  const {
+    values,
+    touched,
+    errors,
+    dirty,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    handleReset,
+  } = props;
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="font-form">
+        <div className="font-form-row">
+          <label className="font-title">
+            Font Family
+          </label>
+          <select
+            id="fontFamily"
+            className="full-width-input"
+            onChange={handleChange}
+          >
+            {
+              props.fonts.families.map(fontFamily => fontFamily === values.fontFamily ? <option selected> {fontFamily} </option> : <option> {fontFamily} </option>)
+            }
+          </select>
+        </div>
+        <div className="font-form-row">
+          <label className="font-title">
+            Font Style
+          </label>
+          <select
+            id="fontStyle"
+            className="full-width-input"
+            onChange={handleChange}
+          >
+            {
+              props.fonts.styles[values.fontFamily].map(fontStyle => fontStyle === values.fontStyle ? <option selected> {fontStyle} </option> : <option> {fontStyle} </option>)
+            }
+          </select>
+        </div>
+        <div className="font-form-row">
+          <label className="font-title">
+            Size
+          </label>
+          <input
+            id="pointSize"
+            placeholder=""
+            type="number"
+            min={0}
+            value={values.pointSize}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className={errors.pointSize && touched.pointSize ? 'full-width-input error' : 'full-width-input'}
+          />
+        </div>
+      </div>
+    </form>
+  );
+}
+
+const EnhancedFontForm = withFormik({
+  enableReinitialize: true,
+  mapPropsToValues: props => ({ fontStyle: props.fontStyle, fontFamily: props.fontFamily, pointSize: props.pointSize }),
+  // validationSchema: Yup.object().shape({
+  //   email: Yup.string()
+  //     .email('Invalid email address')
+  //     .required('Email is required!'),
+  // }),
+  handleSubmit: (values, { setSubmitting }) => {
+    setTimeout(() => {
+      alert(JSON.stringify(values, null, 2));
+      setSubmitting(false);
+    }, 1000);
+  },
+  displayName: 'FontForm', // helps with React DevTools
+})(InnerFontForm);
+
+const FontForm = props => {
+  return <EnhancedFontForm {...props} />
+}
+
+export default FontForm;

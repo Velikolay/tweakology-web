@@ -1,0 +1,23 @@
+.font-form-row {
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+}
+
+.font-title {
+  display: inline-block;
+  width: calc(40% - 8px);
+  vertical-align: top;
+  text-align: right;
+  margin-right: 8px;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.full-width-input {
+  box-sizing: border-box;
+  display: inline-block;
+  width: calc(60% - 12px);
+  margin-right: 12px;
+}

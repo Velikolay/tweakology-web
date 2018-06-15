@@ -7,7 +7,7 @@
 .color-title {
   display: inline-block;
   width: calc(40% - 8px);
-  vertical-align:top;
+  vertical-align: top;
   text-align: right;
   margin-right: 8px;
   line-height: 20px;

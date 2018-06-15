@@ -95,7 +95,7 @@ const InnerFrameForm = props => {
           </div>
         </div>
       </div>
-      <DisplayFormikState {...props} />
+      {/* <DisplayFormikState {...props} /> */}
     </form>
   );
 };
