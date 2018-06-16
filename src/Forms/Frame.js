@@ -23,7 +23,7 @@ const InnerFrameForm = props => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="frame-form">
-        <div className="frame-form-row with-title">
+        <div className="frame-form-row">
           <label className="frame-form-title">
               {values.name}
           </label>
@@ -61,6 +61,7 @@ const InnerFrameForm = props => {
           </div>
         </div>
         <div className="frame-form-row">
+          <label className="frame-form-title" />
           <div className="num-input-container left">
             <input
               id="width"

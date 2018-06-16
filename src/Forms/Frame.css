@@ -6,11 +6,6 @@
   display: inline-block;
   height: 44px;
   width: 100%;
-  margin-left: 20%;
-}
-
-.frame-form-row.with-title {
-  margin-left: 0;
 }
 
 .num-input-container {
