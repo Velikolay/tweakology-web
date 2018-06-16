@@ -1,11 +1,8 @@
 import React from 'react';
-import { withFormik } from 'formik';
-import Yup from 'yup';
 
 import './Groups.css';
 import './Color.css';
 
-// Our inner form component. Will be wrapped with Formik({..})
 const ColorGroup = props => {
   const {
     values,
@@ -60,26 +57,5 @@ const ColorGroup = props => {
     </div>
   );
 }
-
-// const EnhancedColorForm = withFormik({
-//   enableReinitialize: true,
-//   mapPropsToValues: props => ({ alpha: props.alpha, colorHex: props.colorHex }),
-//   // validationSchema: Yup.object().shape({
-//   //   email: Yup.string()
-//   //     .email('Invalid email address')
-//   //     .required('Email is required!'),
-//   // }),
-//   handleSubmit: (values, { setSubmitting }) => {
-//     setTimeout(() => {
-//       alert(JSON.stringify(values, null, 2));
-//       setSubmitting(false);
-//     }, 1000);
-//   },
-//   displayName: 'ColorForm', // helps with React DevTools
-// })(InnerColorForm);
-
-// const ColorForm = props => {
-//   return <EnhancedColorForm {...props} />
-// }
 
 export default ColorGroup;

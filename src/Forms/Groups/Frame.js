@@ -95,25 +95,4 @@ const FrameGroup = props => {
   );
 };
 
-// const EnhancedFrameForm = withFormik({
-//   enableReinitialize: true,
-//   mapPropsToValues: props => ({ name: props.name, x_coord: props.x, y_coord: props.y, width: props.width, height: props.height }),
-//   // validationSchema: Yup.object().shape({
-//   //   email: Yup.string()
-//   //     .email('Invalid email address')
-//   //     .required('Email is required!'),
-//   // }),
-//   handleSubmit: (values, { setSubmitting }) => {
-//     setTimeout(() => {
-//       alert(JSON.stringify(values, null, 2));
-//       setSubmitting(false);
-//     }, 1000);
-//   },
-//   displayName: 'FrameForm', // helps with React DevTools
-// })(InnerFrameForm);
-
-// const FrameForm = props => (
-//     <EnhancedFrameForm {...props}/>
-// );
-
 export default FrameGroup;

@@ -1,10 +1,6 @@
 import React from 'react';
-import { withFormik } from 'formik';
-import Yup from 'yup';
 
 import './Groups.css';
-
-// Our inner form component. Will be wrapped with Formik({..})
 
 const FontGroup = props => {
   const {
@@ -66,26 +62,5 @@ const FontGroup = props => {
     </div>
   );
 }
-
-// const EnhancedFontForm = withFormik({
-//   enableReinitialize: true,
-//   mapPropsToValues: props => ({ fontStyle: props.fontStyle, fontFamily: props.fontFamily, pointSize: props.pointSize }),
-//   // validationSchema: Yup.object().shape({
-//   //   email: Yup.string()
-//   //     .email('Invalid email address')
-//   //     .required('Email is required!'),
-//   // }),
-//   handleSubmit: (values, { setSubmitting }) => {
-//     setTimeout(() => {
-//       alert(JSON.stringify(values, null, 2));
-//       setSubmitting(false);
-//     }, 1000);
-//   },
-//   displayName: 'FontForm', // helps with React DevTools
-// })(InnerFontForm);
-
-// const FontForm = props => {
-//   return <EnhancedFontForm {...props} />
-// }
 
 export default FontGroup;

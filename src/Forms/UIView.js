@@ -4,20 +4,25 @@ import Yup from 'yup';
 
 import { transformFontName, transformFontFamily } from '../Utils/Font.js';
 import FrameGroup from './Groups/Frame.js';
-import ColorGroup from './Groups/Color.js';
+import TextGroup from './Groups/Text.js';
 import FontGroup from './Groups/Font.js';
+import ColorGroup from './Groups/Color.js';
 
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUIViewForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
         <FrameGroup  {...props} />
-        { props.viewProps.backgroundColor ? (
-          <ColorGroup  {...props} />
+        { props.viewProps.text ? (
+          <TextGroup {...props} />
           ): null
         }
         { props.viewProps.font ? (
           <FontGroup {...props} />
+          ): null
+        }
+        { props.viewProps.backgroundColor ? (
+          <ColorGroup  {...props} />
           ): null
         }
     </form>
@@ -39,6 +44,8 @@ const EnhancedUIViewForm = withFormik({
     fontFamily: props.viewProps.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.font.familyName) : null,
     fontStyle: props.viewProps.font ? transformFontName(props.viewProps.font.fontName) : null,
     pointSize: props.viewProps.font ? props.viewProps.font.pointSize : null,
+    // Text
+    text: props.viewProps.text,
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
