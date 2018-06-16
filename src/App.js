@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import FrameForm from './Forms/Frame.js';
-import ColorForm from './Forms/Color.js';
-import FontForm from './Forms/Font.js';
+import UIViewForm from './Forms/UIView.js';
+import { transformFontName } from './Utils/Font.js';
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
 import UIHierarchyTree from './UIHierarchyTree.js';
@@ -42,9 +41,11 @@ class App extends Component {
       .then(response => response.json())
       .then(data => {
         Object.keys(data.styles).map((key, index) => {
-          data.styles[key] = data.styles[key].map(this.transformFontName);;
+          data.styles[key] = data.styles[key].map(transformFontName);;
         });
-        this.fonts = data;
+        this.systemMetadata = {
+          fonts: data
+        };
       });
   }
 
@@ -113,36 +114,6 @@ class App extends Component {
     return meshProps;
   }
 
-  mergeEnchancers = styles => {
-    const enchancers = new Set(["Extra", "Ultra", "Semi", "Demi"]);
-    let enchancedStyles = [];
-    let i = 0;
-    while (i < styles.length) {
-      if (enchancers.has(styles[i]) && i + 1 < styles.length) {
-        enchancedStyles.push(styles[i] + styles[i+1]);
-        i+=2;
-      } else {
-        enchancedStyles.push(styles[i]);
-        i++;
-      }
-    }
-    return enchancedStyles;
-  }
-
-  transformFontName = fontName => {
-    const familyStylePair = fontName.split('-');
-    if (familyStylePair.length === 2) {
-      const styles = this.mergeEnchancers(familyStylePair[1].split(/(?=[A-Z])/).filter(style => style.length > 1));
-      return styles.join(' ');
-    } else {
-      return 'Regular';
-    }
-  }
-
-  transformFontFamily = fontFamily => {
-    return this.fonts.systemFont === fontFamily ? 'System' : fontFamily;
-  }
-
   render() {
     var meshComponents = this.transformPayloadToMeshProps(this.state.hierarchyData, 0, 0, 0).map(function(meshProps) {
       return <UIElementMesh {...meshProps} />;
@@ -162,31 +133,7 @@ class App extends Component {
         </UIHierarchyScene>
         <div ref="config" className="config-pane">
           { this.state.activeNode !== null ? (
-            <div>
-              <FrameForm
-                name="Frame"
-                x={this.state.activeNode.properties.frame.minX}
-                y={this.state.activeNode.properties.frame.minY}
-                width={this.state.activeNode.properties.frame.maxX - this.state.activeNode.properties.frame.minX}
-                height={this.state.activeNode.properties.frame.maxY - this.state.activeNode.properties.frame.minY}
-              />
-              { this.state.activeNode.properties.backgroundColor ? (
-                <ColorForm
-                  alpha={this.state.activeNode.properties.backgroundColor.alpha}
-                  colorHex={this.state.activeNode.properties.backgroundColor.hexValue}
-                />
-                ): null
-              }
-              { this.state.activeNode.properties.font ? (
-                  <FontForm 
-                    fonts={this.fonts} 
-                    fontFamily={this.transformFontFamily(this.state.activeNode.properties.font.familyName)}
-                    fontStyle={this.transformFontName(this.state.activeNode.properties.font.fontName)}
-                    pointSize={this.state.activeNode.properties.font.pointSize}
-                  />
-                ): null
-              }
-            </div>
+            <UIViewForm viewProps={this.state.activeNode.properties} systemMetadata={this.systemMetadata} />
             ): null
           }
         </div>
