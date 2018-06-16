@@ -2,6 +2,7 @@ import React from 'react';
 import { withFormik } from 'formik';
 import Yup from 'yup';
 
+import './Common.css';
 import './Color.css';
 
 // Our inner form component. Will be wrapped with Formik({..})
@@ -19,9 +20,9 @@ const InnerColorForm = props => {
   } = props;
   return (
     <form onSubmit={handleSubmit}>
-      <div className="color-form">
-        <div className="color-form-row">
-          <label className="color-title">
+      <div className="form-section">
+        <div className="form-row">
+          <label className="input-title">
             Alpha
           </label>
           <input
@@ -37,8 +38,8 @@ const InnerColorForm = props => {
             className={errors.alpha && touched.alpha ? 'full-width-input error' : 'full-width-input'}
           />
         </div>
-        <div className="color-form-row">
-          <label className="color-title">
+        <div className="form-row">
+          <label className="input-title">
             Background
           </label>
           <input

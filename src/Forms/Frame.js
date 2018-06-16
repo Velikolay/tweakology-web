@@ -1,11 +1,10 @@
 import { MoreResources, DisplayFormikState } from './helper';
 
 import React from 'react';
-import { render } from 'react-dom';
 import { withFormik } from 'formik';
 import Yup from 'yup';
 
-import './Frame.css';
+import './Common.css';
 
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerFrameForm = props => {
@@ -22,12 +21,12 @@ const InnerFrameForm = props => {
   } = props;
   return (
     <form onSubmit={handleSubmit}>
-      <div className="frame-form">
-        <div className="frame-form-row">
-          <label className="frame-form-title">
+      <div className="form-section">
+        <div className="form-row">
+          <label className="input-title">
               {values.name}
           </label>
-          <div className="num-input-container left">
+          <div className="half-width-input">
             <input
               id="x_coord"
               placeholder=""
@@ -43,7 +42,7 @@ const InnerFrameForm = props => {
               X
             </label>
           </div>
-          <div className="num-input-container right">
+          <div className="half-width-input">
             <input
               id="y_coord"
               placeholder=""
@@ -60,9 +59,9 @@ const InnerFrameForm = props => {
             </label>
           </div>
         </div>
-        <div className="frame-form-row">
-          <label className="frame-form-title" />
-          <div className="num-input-container left">
+        <div className="form-row">
+          <label className="input-title" />
+          <div className="half-width-input">
             <input
               id="width"
               placeholder=""
@@ -78,7 +77,7 @@ const InnerFrameForm = props => {
               Width
             </label>
           </div>
-          <div className="num-input-container right">
+          <div className="half-width-input">
             <input
               id="height"
               placeholder=""

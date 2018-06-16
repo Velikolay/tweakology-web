@@ -2,7 +2,7 @@ import React from 'react';
 import { withFormik } from 'formik';
 import Yup from 'yup';
 
-import './Font.css';
+import './Common.css';
 
 // Our inner form component. Will be wrapped with Formik({..})
 
@@ -20,9 +20,9 @@ const InnerFontForm = props => {
   } = props;
   return (
     <form onSubmit={handleSubmit}>
-      <div className="font-form">
-        <div className="font-form-row">
-          <label className="font-title">
+      <div className="form-section">
+        <div className="form-row">
+          <label className="input-title">
             Font Family
           </label>
           <select
@@ -35,8 +35,8 @@ const InnerFontForm = props => {
             }
           </select>
         </div>
-        <div className="font-form-row">
-          <label className="font-title">
+        <div className="form-row">
+          <label className="input-title">
             Font Style
           </label>
           <select
@@ -49,8 +49,8 @@ const InnerFontForm = props => {
             }
           </select>
         </div>
-        <div className="font-form-row">
-          <label className="font-title">
+        <div className="form-row">
+          <label className="input-title">
             Size
           </label>
           <input
