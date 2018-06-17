@@ -1,34 +1,17 @@
 import React from 'react';
+import { Field } from 'formik';
 
 import './Groups.css';
+import { nameWithPrefix, titleForField } from './Utils';
 
 const TextGroup = props => {
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
   return (
     <div className="form-group">
       <div className="form-row">
         <label className="input-title">
-          Text
+          {titleForField(props, "text", "Text")}
         </label>
-        <input
-          id="text"
-          placeholder=""
-          type="text"
-          value={values.text}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className="full-width-input"
-        />
+        <Field name={nameWithPrefix(props, "text")} type="text" className="full-width-input" />
       </div>
     </div>
   );

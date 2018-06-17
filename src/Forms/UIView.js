@@ -22,7 +22,15 @@ const InnerUIViewForm = props => {
           ): null
         }
         { props.viewProps.backgroundColor ? (
-          <ColorGroup  {...props} />
+          <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+          ): null
+        }
+        { props.viewProps.title ? (
+          <div>
+            <TextGroup prefix="title" titles={{text: "Title"}} {...props} />
+            <FontGroup prefix="title" {...props} />
+            <ColorGroup prefix="title" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
+          </div>
           ): null
         }
     </form>
@@ -33,8 +41,8 @@ const EnhancedUIViewForm = withFormik({
   enableReinitialize: true,
   mapPropsToValues: props => ({
     // Frame
-    x_coord: props.viewProps.frame ? props.viewProps.frame.minX : null,
-    y_coord: props.viewProps.frame ? props.viewProps.frame.minY : null,
+    x: props.viewProps.frame ? props.viewProps.frame.minX : null,
+    y: props.viewProps.frame ? props.viewProps.frame.minY : null,
     width: props.viewProps.frame ? props.viewProps.frame.maxX - props.viewProps.frame.minX : null,
     height: props.viewProps.frame ? props.viewProps.frame.maxY - props.viewProps.frame.minY : null,
     // Color
@@ -46,6 +54,18 @@ const EnhancedUIViewForm = withFormik({
     pointSize: props.viewProps.font ? props.viewProps.font.pointSize : null,
     // Text
     text: props.viewProps.text,
+    // Title
+    title: props.viewProps.title ? {
+      // Title Text
+      text: props.viewProps.title.properties.text,
+      // Title Color
+      alpha: props.viewProps.title.properties.textColor.alpha,
+      colorHex: props.viewProps.title.properties.textColor.hexValue,
+      // Title Font
+      fontFamily: transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.title.properties.font.familyName),
+      fontStyle: transformFontName(props.viewProps.title.properties.font.fontName),
+      pointSize: props.viewProps.title.properties.font.pointSize
+    } : null
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()

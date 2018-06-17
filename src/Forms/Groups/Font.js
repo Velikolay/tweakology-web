@@ -1,63 +1,51 @@
 import React from 'react';
+import { Field } from 'formik';
 
 import './Groups.css';
 
+import { nameWithPrefix, valueWithPrefix, titleForField } from './Utils';
+
 const FontGroup = props => {
   const {
-    values,
     touched,
     errors,
-    dirty,
-    isSubmitting,
     handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
   } = props;
   return (
     <div className="form-group">
       <div className="form-row">
         <label className="input-title">
-          Font Family
+          {titleForField(props, "family", "Font Family")}
         </label>
         <select
-          id="fontFamily"
+          id={nameWithPrefix(props, "fontFamily")}
           className="full-width-input"
           onChange={handleChange}
         >
           {
-            props.systemMetadata.fonts.families.map(fontFamily => fontFamily === values.fontFamily ? <option selected> {fontFamily} </option> : <option> {fontFamily} </option>)
+            props.systemMetadata.fonts.families.map(fontFamily => fontFamily === valueWithPrefix(props, "fontFamily") ? <option selected> {fontFamily} </option> : <option> {fontFamily} </option>)
           }
         </select>
       </div>
       <div className="form-row">
         <label className="input-title">
-          Font Style
+          {titleForField(props, "style", "Font Style")}
         </label>
         <select
-          id="fontStyle"
+          id={nameWithPrefix(props, "fontStyle")}
           className="full-width-input"
           onChange={handleChange}
         >
           {
-            props.systemMetadata.fonts.styles[values.fontFamily].map(fontStyle => fontStyle === values.fontStyle ? <option selected> {fontStyle} </option> : <option> {fontStyle} </option>)
+            props.systemMetadata.fonts.styles[valueWithPrefix(props, "fontFamily")].map(fontStyle => fontStyle === valueWithPrefix(props, "fontStyle") ? <option selected> {fontStyle} </option> : <option> {fontStyle} </option>)
           }
         </select>
       </div>
       <div className="form-row">
         <label className="input-title">
-          Size
+          {titleForField(props, "size", "Size")}
         </label>
-        <input
-          id="pointSize"
-          placeholder=""
-          type="number"
-          min={0}
-          value={values.pointSize}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={errors.pointSize && touched.pointSize ? 'full-width-input error' : 'full-width-input'}
-        />
+        <Field name={nameWithPrefix(props, "pointSize")} type="number" min={0} className={errors.pointSize && touched.pointSize ? 'full-width-input error' : 'full-width-input'} />
       </div>
     </div>
   );

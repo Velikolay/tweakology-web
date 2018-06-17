@@ -1,57 +1,30 @@
 import React from 'react';
+import { Field } from 'formik';
 
 import './Groups.css';
 import './Color.css';
 
+import { nameWithPrefix, valueWithPrefix, titleForField } from './Utils';
+
 const ColorGroup = props => {
-  const {
-    values,
-    touched,
-    errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    handleReset,
-  } = props;
   return (
     <div className="form-group">
       <div className="form-row">
         <label className="input-title">
-          Alpha
+          {titleForField(props, "alpha", "Alpha")}
         </label>
-        <input
-          id="alpha"
-          placeholder=""
-          type="number"
-          min={0}
-          max={1}
-          step={0.05}
-          value={values.alpha}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={errors.alpha && touched.alpha ? 'full-width-input error' : 'full-width-input'}
-        />
+        <Field name={nameWithPrefix(props, "alpha")} type="number" min={0} max={1} step={0.05} className="full-width-input" />
       </div>
       <div className="form-row">
         <label className="input-title">
-          Background
+          {titleForField(props, "color", "Color")}
         </label>
-        <input
-          id="colorHex"
-          placeholder=""
-          type="text"
-          value={values.colorHex}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className="color-input"
-        />
+        <Field name={nameWithPrefix(props, "colorHex")} type="text" className="color-input" />
         <input
           type="color"
-          value={values.colorHex}
+          value={valueWithPrefix(props, "colorHex")}
           className="color-picker-input"
-          onChange={event => props.setFieldValue("colorHex", event.target.value)}
+          onChange={event => props.setFieldValue(nameWithPrefix(props, "colorHex"), event.target.value)}
         />
       </div>
     </div>
