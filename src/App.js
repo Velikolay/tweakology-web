@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import UIViewForm from './Forms/UIView.js';
+
+import ViewForm from './Forms/ViewForm.js';
 import { transformFontName } from './Utils/Font.js';
+
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
 import UIHierarchyTree from './UIHierarchyTree.js';
+
 import Split from 'split.js'
+
 import './App.css';
 
 require("react-ui-tree/dist/react-ui-tree.css");
@@ -71,6 +75,7 @@ class App extends Component {
     let treeNode = {
       module: uiElement['type'],
       id: uiElement['hierarchyMetadata'],
+      type: uiElement['type'],
       properties: uiElement['properties']
     }
     if ('subviews' in uiElement) {
@@ -118,6 +123,7 @@ class App extends Component {
     var meshComponents = this.transformPayloadToMeshProps(this.state.hierarchyData, 0, 0, 0).map(function(meshProps) {
       return <UIElementMesh {...meshProps} />;
     });
+    console.log(this.state.activeNode);
     return (
       <div className="App">
         <UIHierarchyTree
@@ -133,7 +139,10 @@ class App extends Component {
         </UIHierarchyScene>
         <div ref="config" className="config-pane">
           { this.state.activeNode !== null ? (
-            <UIViewForm viewProps={this.state.activeNode.properties} systemMetadata={this.systemMetadata} />
+            <ViewForm
+              type={this.state.activeNode.type}
+              viewProps={this.state.activeNode.properties}
+              systemMetadata={this.systemMetadata} />
             ): null
           }
         </div>
