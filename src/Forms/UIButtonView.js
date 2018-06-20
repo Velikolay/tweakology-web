@@ -13,7 +13,9 @@ const InnerUIButtonViewForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
         <FrameGroup prefix="frame" {...props} />
+        <hr/>
         <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+        <hr/>
         <TextGroup prefix="title" titles={{text: "Title"}} {...props} />
         <FontGroup prefix="title" {...props} />
         <ColorGroup prefix="title" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />

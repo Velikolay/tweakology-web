@@ -63,7 +63,7 @@ class UIHierarchyScene extends Component {
                        position : this.controls? this.controls.object.position: new THREE.Vector3(0,0,750),
                        lookat : this.controls? this.controls.target: new THREE.Vector3(0,0,0)};
     return <div ref="sceneContainer" className="scene-view-container">
-      <Renderer ref="renderer" width={this.state.renderer.width} height={this.state.renderer.height} background={0x1d1e21}>
+      <Renderer ref="renderer" width={this.state.renderer.width} height={this.state.renderer.height} background={0x282841}>
         <Scene camera="maincamera">
             <PerspectiveCamera ref="camera" name="maincamera" {...cameraprops} />
             {this.props.children}

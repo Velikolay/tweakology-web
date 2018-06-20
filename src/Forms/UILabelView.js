@@ -13,10 +13,14 @@ const InnerUILabelViewForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
         <FrameGroup prefix="frame" {...props} />
+        <hr/>
         <TextGroup {...props} />
         <FontGroup {...props} />
-        { props.viewProps.backgroundColor ? (
-          <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+        { props.values.colorHex ? (
+          <div>
+            <hr/>
+            <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+          </div>
           ): null
         }
     </form>

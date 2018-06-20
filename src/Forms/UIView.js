@@ -10,8 +10,11 @@ const InnerUIViewForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
         <FrameGroup prefix="frame" {...props} />
-        { props.viewProps.backgroundColor ? (
-          <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+        { props.values.colorHex? (
+          <div>
+            <hr/>
+            <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+          </div>
           ): null
         }
     </form>
