@@ -13,10 +13,11 @@ class UIHierarchyTree extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-      this.setState({
+      const newState = {
         activeNode: nextProps.activeNode,
         tree: nextProps.tree
-      });
+      };
+      this.setState(newState);
   }
 
   renderNode = node => {
@@ -34,8 +35,8 @@ class UIHierarchyTree extends Component {
         <div
           className='text'
           onClick={this.props.onNodeClick.bind(null, node)}
-          onMouseEnter={this.props.onNodeFocus.bind(null, node)}
-          onMouseLeave={this.props.onNodeFocusOut.bind(null, node)}
+          // onMouseEnter={this.props.onNodeFocus.bind(null, node)}
+          // onMouseLeave={this.props.onNodeFocusOut.bind(null, node)}
         >
           {node.module}
         </div>
@@ -61,7 +62,6 @@ class UIHierarchyTree extends Component {
     return (
       <div className="tree-view">
         <Tree
-          paddingLeft={20}
           tree={this.state.tree}
           onChange={this.handleChange}
           isNodeCollapsed={this.isNodeCollapsed}

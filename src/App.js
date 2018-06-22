@@ -22,8 +22,12 @@ class App extends Component {
     super(props);
     this.state = {
       hierarchyData: {},
+      tree: {
+        module: 'Loading...',
+        leaf: true
+      },
       activeNode: null,
-      onFocusNode: null
+      onFocusNode: null,
     }
 
     this.onNodeClick = this.onNodeClick.bind(this);
@@ -39,14 +43,17 @@ class App extends Component {
 
     fetch(APP_INSPECTOR_EP)
       .then(response => response.json())
-      .then(data => this.setState({ hierarchyData: data }));
+      .then(data => this.setState({
+        hierarchyData: data,
+        tree: this.transformPayloadToTree(data)
+      }));
 
     fetch(APP_INSPECTOR_EP + 'fonts')
       .then(response => response.json())
       .then(data => {
-        Object.keys(data.styles).map((key, index) => {
-          data.styles[key] = data.styles[key].map(transformFontName);;
-        });
+        Object.keys(data.styles).map((key, index) =>
+          data.styles[key] = data.styles[key].map(transformFontName)
+        );
         this.systemMetadata = {
           fonts: data
         };
@@ -123,12 +130,12 @@ class App extends Component {
     var meshComponents = this.transformPayloadToMeshProps(this.state.hierarchyData, 0, 0, 0).map(function(meshProps) {
       return <UIElementMesh {...meshProps} />;
     });
-    console.log(this.state.activeNode);
+
     return (
       <div className="App">
         <UIHierarchyTree
           ref="tree"
-          tree={this.transformPayloadToTree(this.state.hierarchyData)}
+          tree={this.state.tree}
           activeNode={this.state.activeNode}
           onNodeClick={this.onNodeClick}
           onNodeFocus={this.onNodeFocus}

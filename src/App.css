@@ -77,24 +77,58 @@
   cursor: pointer;
 }
 
+.m-node .caret-down::before {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: middle;
+  border-top: 6px solid rgb(180, 180, 180);
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-bottom: 0 solid rgb(180, 180, 180);
+  overflow: hidden;
+  transition: 200ms ease;
+}
+
+.m-node .caret-right::before {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: middle;
+  border-top: 4px solid transparent;
+  border-right: 0 solid rgb(180, 180, 180);
+  border-left: 6px solid rgb(180, 180, 180);
+  border-bottom: 4px solid transparent;
+  overflow: hidden;
+  transition: 200ms ease;
+}
+
+.m-node .text {
+  padding-left: 16px;
+}
+
 .m-node div > .m-node .text {
-  padding-left: 30px;
+  padding-left: 32px;
 }
 
 .m-node div > .m-node div > .m-node .text {
-  padding-left: 50px;
+  padding-left: 48px;
 }
 
 .m-node div > .m-node div > .m-node div > .m-node .text {
-  padding-left: 70px;
+  padding-left: 64px;
 }
 
 .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
-  padding-left: 90px;
+  padding-left: 80px;
 }
 
 .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
-  padding-left: 110px;
+  padding-left: 96px;
+}
+
+.m-node .collapse {
+  padding-left: 4px;
 }
 
 .m-node div > .m-node .collapse {
@@ -102,19 +136,19 @@
 }
 
 .m-node div > .m-node div > .m-node .collapse {
-  padding-left: 40px;
+  padding-left: 36px;
 }
 
 .m-node div > .m-node div > .m-node div > .m-node .collapse {
-  padding-left: 60px;
+  padding-left: 52px;
 }
 
 .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
-  padding-left: 80px;
+  padding-left: 68px;
 }
 
 .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
-  padding-left: 100px;
+  padding-left: 84px;
 }
 
 .m-node .collapse {
