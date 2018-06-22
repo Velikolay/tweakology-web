@@ -30,8 +30,13 @@ class App extends Component {
       onFocusNode: null,
     }
 
+    this.dragging = false;
+
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onNodeFocus = this.onNodeFocus.bind(this);
+    this.onNodeFocusOut = this.onNodeFocus.bind(this);
+    this.onNodeMouseDown = this.onNodeMouseDown.bind(this);
+    this.onNodeMouseUp = this.onNodeMouseUp.bind(this);
   }
 
   componentDidMount() {
@@ -64,18 +69,28 @@ class App extends Component {
     this.setState({ activeNode: node });
   }
 
-  onNodeFocus = node => {
-    if (!this.state.activeNode || node['id'] !== this.state.activeNode['id']) {
-      this.setState({ onFocusNode: node });
-    } else {
+  onNodeFocus = (node, event) => {
+    if (!this.dragging) {
+      if (!this.state.activeNode || node.id !== this.state.activeNode.id) {
+        this.setState({ onFocusNode: node });
+      } else {
+        this.setState({ onFocusNode: null });
+      }
+    }
+  }
+
+  onNodeFocusOut = (node, event) => {
+    if (!this.dragging && this.state.onFocusNode && node.id === this.state.onFocusNode.id) {
       this.setState({ onFocusNode: null });
     }
   }
 
-  onNodeFocusOut = node => {
-    if (this.state.onFocusNode && node['id'] === this.state.onFocusNode['id']) {
-      this.setState({ onFocusNode: null });
-    }
+  onNodeMouseDown = (node, event) => {
+    this.dragging = true;
+  }
+
+  onNodeMouseUp = (node, event) => {
+    this.dragging = false;
   }
 
   transformPayloadToTree = uiElement => {
@@ -140,6 +155,8 @@ class App extends Component {
           onNodeClick={this.onNodeClick}
           onNodeFocus={this.onNodeFocus}
           onNodeFocusOut={this.onNodeFocusOut}
+          onNodeMouseDown={this.onNodeMouseDown}
+          onNodeMouseUp={this.onNodeMouseUp}
         />
         <UIHierarchyScene ref="scene">
             {meshComponents}

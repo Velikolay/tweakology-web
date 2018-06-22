@@ -35,8 +35,10 @@ class UIHierarchyTree extends Component {
         <div
           className='text'
           onClick={this.props.onNodeClick.bind(null, node)}
-          // onMouseEnter={this.props.onNodeFocus.bind(null, node)}
-          // onMouseLeave={this.props.onNodeFocusOut.bind(null, node)}
+          onMouseEnter={this.props.onNodeFocus.bind(null, node)}
+          onMouseLeave={this.props.onNodeFocusOut.bind(null, node)}
+          onMouseDown={this.props.onNodeMouseDown.bind(null, node)}
+          onMouseUp={this.props.onNodeMouseUp.bind(null, node)}
         >
           {node.module}
         </div>
