@@ -1,5 +1,6 @@
 import React from 'react';
 import { withFormik } from 'formik';
+import { Persist } from 'formik-persist'
 import Yup from 'yup';
 
 import FrameGroup from './Groups/Frame.js';
@@ -17,6 +18,7 @@ const InnerUIViewForm = props => {
           </div>
           ): null
         }
+        <Persist name={props.id} />
     </form>
   );
 }

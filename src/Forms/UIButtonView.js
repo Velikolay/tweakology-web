@@ -1,5 +1,6 @@
 import React from 'react';
 import { withFormik } from 'formik';
+import { Persist } from 'formik-persist'
 import Yup from 'yup';
 
 import { transformFontName, transformFontFamily } from '../Utils/Font.js';
@@ -19,6 +20,7 @@ const InnerUIButtonViewForm = props => {
         <TextGroup prefix="title" titles={{text: "Title"}} {...props} />
         <FontGroup prefix="title" {...props} />
         <ColorGroup prefix="title" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
+        <Persist name={props.id} />
     </form>
   );
 }

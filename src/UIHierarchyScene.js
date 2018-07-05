@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {Renderer, Scene, PerspectiveCamera} from 'react-three';
 
+import UIHierarchySceneFooter from './UIHierarchySceneFooter.js';
 
 const THREE = require('three');
 const OrbitControls = require('three-orbit-controls')(THREE)
@@ -65,10 +66,11 @@ class UIHierarchyScene extends Component {
     return <div ref="sceneContainer" className="scene-view-container">
       <Renderer ref="renderer" width={this.state.renderer.width} height={this.state.renderer.height} background={0x282841}>
         <Scene camera="maincamera">
-            <PerspectiveCamera ref="camera" name="maincamera" {...cameraprops} />
-            {this.props.children}
+          <PerspectiveCamera ref="camera" name="maincamera" {...cameraprops} />
+          {this.props.children}
         </Scene>
       </Renderer>
+      <UIHierarchySceneFooter onSubmitChanges={this.props.onSubmitChanges} />
     </div>;
   }
 }

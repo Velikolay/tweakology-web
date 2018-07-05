@@ -48,7 +48,7 @@ class UIElementMesh extends Component {
     const selectOverlay = new THREE.MeshBasicMaterial({
       color: 0x00bfff,
       side: THREE.DoubleSide,
-      opacity: 0.6,
+      opacity: 0.35,
       transparent: true
     });
 

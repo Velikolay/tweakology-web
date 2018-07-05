@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import ViewForm from './Forms/ViewForm.js';
+import { submitChanges } from './Forms/Submit.js';
 import { transformFontName } from './Utils/Font.js';
 
 import UIElementMesh from './UIElementMesh.js';
@@ -32,6 +33,7 @@ class App extends Component {
 
     this.dragging = false;
 
+    this.onSubmitChanges = this.onSubmitChanges.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onNodeFocus = this.onNodeFocus.bind(this);
     this.onNodeFocusOut = this.onNodeFocus.bind(this);
@@ -48,10 +50,15 @@ class App extends Component {
 
     fetch(APP_INSPECTOR_EP)
       .then(response => response.json())
-      .then(data => this.setState({
-        hierarchyData: data,
-        tree: this.transformPayloadToTree(data)
-      }));
+      .then(data => {
+        const tree = this.transformPayloadToTree(data);
+        this.setState({
+          hierarchyData: data,
+          tree: tree,
+          activeNode: tree
+        })
+      }
+    );
 
     fetch(APP_INSPECTOR_EP + 'fonts')
       .then(response => response.json())
@@ -63,6 +70,11 @@ class App extends Component {
           fonts: data
         };
       });
+  }
+
+  onSubmitChanges = () => {
+    submitChanges(this.state.tree);
+    // window.localStorage.clear();
   }
 
   onNodeClick = node => {
@@ -99,7 +111,7 @@ class App extends Component {
       id: uiElement['hierarchyMetadata'],
       type: uiElement['type'],
       properties: uiElement['properties']
-    }
+    };
     if ('subviews' in uiElement) {
       treeNode['children'] = [];
       for (let subview of uiElement.subviews) {
@@ -158,12 +170,13 @@ class App extends Component {
           onNodeMouseDown={this.onNodeMouseDown}
           onNodeMouseUp={this.onNodeMouseUp}
         />
-        <UIHierarchyScene ref="scene">
+        <UIHierarchyScene ref="scene" onSubmitChanges={this.onSubmitChanges}>
             {meshComponents}
         </UIHierarchyScene>
         <div ref="config" className="config-pane">
           { this.state.activeNode !== null ? (
             <ViewForm
+              id={this.state.activeNode.id}
               type={this.state.activeNode.type}
               viewProps={this.state.activeNode.properties}
               systemMetadata={this.systemMetadata} />
