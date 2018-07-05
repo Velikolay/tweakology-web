@@ -108,7 +108,7 @@ class App extends Component {
   transformPayloadToTree = uiElement => {
     let treeNode = {
       module: uiElement['type'],
-      id: uiElement['hierarchyMetadata'],
+      id: uiElement['uid'],
       type: uiElement['type'],
       properties: uiElement['properties']
     };
@@ -139,8 +139,8 @@ class App extends Component {
       width: width,
       height: height,
       imgUrl: 'http://nikoivan01m.local:8080/images?path=' + uiElement['hierarchyMetadata'],
-      selected: this.state.activeNode && this.state.activeNode['id'] === uiElement['hierarchyMetadata'] ? true: false,
-      onFocus: this.state.onFocusNode && this.state.onFocusNode['id'] === uiElement['hierarchyMetadata'] ? true: false
+      selected: this.state.activeNode && this.state.activeNode.id === uiElement['uid'] ? true: false,
+      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === uiElement['uid'] ? true: false
     }];
     if ('subviews' in uiElement) {
       const nextBaseX = baseX + frame['minX'] - (depth === 0? width/2: 0);
