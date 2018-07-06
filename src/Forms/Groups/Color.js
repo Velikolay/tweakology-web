@@ -19,12 +19,12 @@ const ColorGroup = props => {
         <label className="input-title">
           {titleForField(props, "color", "Color")}
         </label>
-        <Field name={nameWithPrefix(props, "colorHex")} type="text" className="color-input" />
+        <Field name={nameWithPrefix(props, "hexValue")} type="text" className="color-input" />
         <input
           type="color"
-          value={valueWithPrefix(props, "colorHex")}
+          value={valueWithPrefix(props, "hexValue")}
           className="color-picker-input"
-          onChange={event => props.setFieldValue(nameWithPrefix(props, "colorHex"), event.target.value)}
+          onChange={event => props.setFieldValue(nameWithPrefix(props, "hexValue"), event.target.value)}
         />
       </div>
     </div>

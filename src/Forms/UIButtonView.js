@@ -15,11 +15,11 @@ const InnerUIButtonViewForm = props => {
     <form onSubmit={props.handleSubmit}>
         <FrameGroup prefix="frame" {...props} />
         <hr/>
-        <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+        <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
         <hr/>
         <TextGroup prefix="title" titles={{text: "Title"}} {...props} />
         <FontGroup prefix="title" {...props} />
-        <ColorGroup prefix="title" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
+        <ColorGroup prefix="title.textColor" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
         <Persist name={props.id} />
     </form>
   );
@@ -35,16 +35,14 @@ const EnhancedUIButtonViewForm = withFormik({
       width: props.viewProps.frame.maxX - props.viewProps.frame.minX,
       height: props.viewProps.frame.maxY - props.viewProps.frame.minY
     },
-    // Color
-    alpha: props.viewProps.backgroundColor.alpha,
-    colorHex: props.viewProps.backgroundColor.hexValue,
+    // Background color
+    backgroundColor: props.viewProps.backgroundColor,
     // Title
     title: {
       // Title Text
       text: props.viewProps.title.properties.text,
       // Title Color
-      alpha: props.viewProps.title.properties.textColor.alpha,
-      colorHex: props.viewProps.title.properties.textColor.hexValue,
+      textColor: props.viewProps.title.properties.textColor,
       // Title Font
       fontFamily: transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.title.properties.font.familyName),
       fontStyle: transformFontName(props.viewProps.title.properties.font.fontName),

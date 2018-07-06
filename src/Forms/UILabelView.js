@@ -17,10 +17,11 @@ const InnerUILabelViewForm = props => {
         <hr/>
         <TextGroup {...props} />
         <FontGroup {...props} />
-        { props.values.colorHex ? (
+        <ColorGroup prefix="textColor" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
+        { props.values.backgroundColor ? (
           <div>
             <hr/>
-            <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+            <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
           </div>
           ): null
         }
@@ -39,11 +40,12 @@ const EnhancedUILabelViewForm = withFormik({
       width: props.viewProps.frame.maxX - props.viewProps.frame.minX,
       height: props.viewProps.frame.maxY - props.viewProps.frame.minY
     },
-    // Color
-    alpha: props.viewProps.backgroundColor ? props.viewProps.backgroundColor.alpha : null,
-    colorHex: props.viewProps.backgroundColor ? props.viewProps.backgroundColor.hexValue : null,
+    // Background color
+    backgroundColor: props.viewProps.backgroundColor,
     // Text
     text: props.viewProps.text,
+    // Text color
+    textColor: props.viewProps.textColor,
     // Font
     fontFamily: props.viewProps.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.font.familyName) : null,
     fontStyle: props.viewProps.font ? transformFontName(props.viewProps.font.fontName) : null,

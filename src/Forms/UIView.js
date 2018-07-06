@@ -11,10 +11,10 @@ const InnerUIViewForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
         <FrameGroup prefix="frame" {...props} />
-        { props.values.colorHex? (
+        { props.values.backgroundColor? (
           <div>
             <hr/>
-            <ColorGroup titles={{alpha: "Alpha", color: "Background"}} {...props} />
+            <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
           </div>
           ): null
         }
@@ -33,9 +33,8 @@ const EnhancedUIViewForm = withFormik({
       width: props.viewProps.frame.maxX - props.viewProps.frame.minX,
       height: props.viewProps.frame.maxY - props.viewProps.frame.minY
     },
-    // Color
-    alpha: props.viewProps.backgroundColor ? props.viewProps.backgroundColor.alpha : null,
-    colorHex: props.viewProps.backgroundColor ? props.viewProps.backgroundColor.hexValue : null,
+    // Background color
+    backgroundColor: props.viewProps.backgroundColor
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
