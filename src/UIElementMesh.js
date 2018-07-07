@@ -13,10 +13,18 @@ class UIElementMesh extends Component {
   }
 
   componentWillMount() {
-    this.imgTexture = new THREE.TextureLoader().load(this.props.imgUrl); 
+    this.setState({
+      texture: new THREE.TextureLoader().load(this.props.imgUrl)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.updateTexture) {
+      new THREE.TextureLoader().load(
+        this.props.imgUrl,
+        (texture) => this.setState({texture: texture})
+      );
+    }
     this.setState({
       selected: nextProps.selected,
       onFocus: nextProps.onFocus
@@ -24,6 +32,9 @@ class UIElementMesh extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.updateTexture) {
+      return true;
+    }
     if (this.state.selected !== nextState.selected) {
       return true;
     }
@@ -35,14 +46,14 @@ class UIElementMesh extends Component {
 
   render() {
     const img = new THREE.MeshBasicMaterial({
-      map: this.imgTexture,
+      map: this.state.texture,
       side: THREE.DoubleSide,
       transparent: true,
       polygonOffset: true,
       polygonOffsetFactor: 1, // positive value pushes polygon further away
       polygonOffsetUnits: 1
     });
-    img.map.needsUpdate = true;
+    // img.map.needsUpdate = true;
     img.map.minFilter = THREE.LinearFilter;
 
     const selectOverlay = new THREE.MeshBasicMaterial({

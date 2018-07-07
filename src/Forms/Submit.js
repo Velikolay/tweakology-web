@@ -28,8 +28,8 @@ const submitChanges = tree => {
       }
     }
   }
-  console.log(changeSet);
-  fetch('http://nikoivan01m.local:8080/tweaks/test', {
+
+  return fetch('http://nikoivan01m.local:8080/tweaks/test', {
     method: 'put',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify(changeSet)

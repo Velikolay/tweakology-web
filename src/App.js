@@ -48,17 +48,7 @@ class App extends Component {
       gutterSize: 5,
     });
 
-    fetch(APP_INSPECTOR_EP)
-      .then(response => response.json())
-      .then(data => {
-        const tree = this.transformPayloadToTree(data);
-        this.setState({
-          hierarchyData: data,
-          tree: tree,
-          activeNode: tree
-        })
-      }
-    );
+    this.updateHierarchyData();
 
     fetch(APP_INSPECTOR_EP + 'fonts')
       .then(response => response.json())
@@ -72,8 +62,28 @@ class App extends Component {
       });
   }
 
+  updateHierarchyData = () => {
+    fetch(APP_INSPECTOR_EP)
+      .then(response => response.json())
+      .then(data => {
+        this.updateMesh = true;
+        const tree = this.transformPayloadToTree(data);
+        const updatedState = {
+          hierarchyData: data,
+          tree: tree
+        };
+        if (!this.state.activeNode) {
+          updatedState.activeNode = tree;
+        }
+        this.setState(updatedState);
+      }
+    );
+  }
+
   onSubmitChanges = () => {
-    submitChanges(this.state.tree);
+    submitChanges(this.state.tree).then(response =>
+      this.updateHierarchyData()
+    );
     // window.localStorage.clear();
   }
 
@@ -139,6 +149,7 @@ class App extends Component {
       width: width,
       height: height,
       imgUrl: 'http://nikoivan01m.local:8080/images?path=' + uiElement['hierarchyMetadata'],
+      updateTexture: this.updateMesh,
       selected: this.state.activeNode && this.state.activeNode.id === uiElement['uid'] ? true: false,
       onFocus: this.state.onFocusNode && this.state.onFocusNode.id === uiElement['uid'] ? true: false
     }];
@@ -157,7 +168,9 @@ class App extends Component {
     var meshComponents = this.transformPayloadToMeshProps(this.state.hierarchyData, 0, 0, 0).map(function(meshProps) {
       return <UIElementMesh {...meshProps} />;
     });
-
+    if (this.updateMesh) {
+      this.updateMesh = false;
+    }
     return (
       <div className="App">
         <UIHierarchyTree
