@@ -18,7 +18,7 @@ const InnerUIButtonViewForm = props => {
         <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
         <hr/>
         <TextGroup prefix="title" titles={{text: "Title"}} {...props} />
-        <FontGroup prefix="title" {...props} />
+        <FontGroup prefix="title.font" {...props} />
         <ColorGroup prefix="title.textColor" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
         <Persist name={props.id} />
     </form>
@@ -44,9 +44,11 @@ const EnhancedUIButtonViewForm = withFormik({
       // Title Color
       textColor: props.viewProps.title.properties.textColor,
       // Title Font
-      fontFamily: transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.title.properties.font.familyName),
-      fontStyle: transformFontName(props.viewProps.title.properties.font.fontName),
-      pointSize: props.viewProps.title.properties.font.pointSize
+      font: {
+        familyName: transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.title.properties.font.familyName),
+        fontStyle: transformFontName(props.viewProps.title.properties.font.fontName),
+        pointSize: props.viewProps.title.properties.font.pointSize
+      }
     }
   }),
   // validationSchema: Yup.object().shape({

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import ViewForm from './Forms/ViewForm.js';
 import { submitChanges } from './Forms/Submit.js';
-import { transformFontName } from './Utils/Font.js';
+import { enrichFontsData } from './Utils/Font.js';
 
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
@@ -52,12 +52,9 @@ class App extends Component {
 
     fetch(APP_INSPECTOR_EP + 'fonts')
       .then(response => response.json())
-      .then(data => {
-        Object.keys(data.styles).map((key, index) =>
-          data.styles[key] = data.styles[key].map(transformFontName)
-        );
+      .then(fontsData => {
         this.systemMetadata = {
-          fonts: data
+          fonts: enrichFontsData(fontsData)
         };
       });
   }
@@ -81,7 +78,7 @@ class App extends Component {
   }
 
   onSubmitChanges = () => {
-    submitChanges(this.state.tree).then(response =>
+    submitChanges(this.state.tree, this.systemMetadata).then(response =>
       this.updateHierarchyData()
     );
     // window.localStorage.clear();

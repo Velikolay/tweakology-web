@@ -28,4 +28,24 @@ const transformFontFamily = (systemFont, fontFamily) => {
   return systemFont === fontFamily ? 'System' : fontFamily;
 }
 
-export { transformFontName, transformFontFamily };
+const getFontName = (fontFamily, fontStyle, styles) => {
+  if (fontFamily in styles) {
+    const fontNames = styles[fontFamily].filter(fontName => fontName.includes("-" + fontStyle.replace(/\s/g, "")));
+    if (fontNames.length > 0) {
+      return fontNames.reduce((a, b) => a.length <= b.length ? a : b);
+    } else if (fontStyle == "Regular") {
+      return styles[fontFamily].reduce((a, b) => a.length <= b.length ? a : b);
+    }
+  }
+  return "";
+}
+
+const enrichFontsData = fontsData => {
+  fontsData.styles = {};
+  Object.keys(fontsData.names).map(key =>
+    fontsData.styles[key] = fontsData.names[key].map(transformFontName)
+  );
+  return fontsData;
+}
+
+export { transformFontName, transformFontFamily, enrichFontsData, getFontName };

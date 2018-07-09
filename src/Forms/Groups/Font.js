@@ -18,12 +18,12 @@ const FontGroup = props => {
           {titleForField(props, "family", "Font Family")}
         </label>
         <select
-          id={nameWithPrefix(props, "fontFamily")}
+          id={nameWithPrefix(props, "familyName")}
           className="full-width-input"
           onChange={handleChange}
         >
           {
-            props.systemMetadata.fonts.families.map(fontFamily => fontFamily === valueWithPrefix(props, "fontFamily") ? <option selected> {fontFamily} </option> : <option> {fontFamily} </option>)
+            props.systemMetadata.fonts.families.map(familyName => familyName === valueWithPrefix(props, "familyName") ? <option selected> {familyName} </option> : <option> {familyName} </option>)
           }
         </select>
       </div>
@@ -37,7 +37,7 @@ const FontGroup = props => {
           onChange={handleChange}
         >
           {
-            props.systemMetadata.fonts.styles[valueWithPrefix(props, "fontFamily")].map(fontStyle => fontStyle === valueWithPrefix(props, "fontStyle") ? <option selected> {fontStyle} </option> : <option> {fontStyle} </option>)
+            props.systemMetadata.fonts.styles[valueWithPrefix(props, "familyName")].map(fontStyle => fontStyle === valueWithPrefix(props, "fontStyle") ? <option selected> {fontStyle} </option> : <option> {fontStyle} </option>)
           }
         </select>
       </div>

@@ -16,7 +16,7 @@ const InnerUILabelViewForm = props => {
         <FrameGroup prefix="frame" {...props} />
         <hr/>
         <TextGroup {...props} />
-        <FontGroup {...props} />
+        <FontGroup prefix="font" {...props} />
         <ColorGroup prefix="textColor" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
         { props.values.backgroundColor ? (
           <div>
@@ -47,9 +47,11 @@ const EnhancedUILabelViewForm = withFormik({
     // Text color
     textColor: props.viewProps.textColor,
     // Font
-    fontFamily: props.viewProps.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.font.familyName) : null,
-    fontStyle: props.viewProps.font ? transformFontName(props.viewProps.font.fontName) : null,
-    pointSize: props.viewProps.font ? props.viewProps.font.pointSize : null,
+    font: {
+      familyName: props.viewProps.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.font.familyName) : null,
+      fontStyle: props.viewProps.font ? transformFontName(props.viewProps.font.fontName) : null,
+      pointSize: props.viewProps.font ? props.viewProps.font.pointSize : null
+    }
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
