@@ -33,7 +33,7 @@ const getFontName = (fontFamily, fontStyle, styles) => {
     const fontNames = styles[fontFamily].filter(fontName => fontName.includes("-" + fontStyle.replace(/\s/g, "")));
     if (fontNames.length > 0) {
       return fontNames.reduce((a, b) => a.length <= b.length ? a : b);
-    } else if (fontStyle == "Regular") {
+    } else if (fontStyle === "Regular") {
       return styles[fontFamily].reduce((a, b) => a.length <= b.length ? a : b);
     }
   }

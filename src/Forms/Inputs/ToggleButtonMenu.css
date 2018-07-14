@@ -1,0 +1,28 @@
+.toggle-button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+.toggle-button:first-child:not(:last-child) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.toggle-button:last-child:not(:first-child) {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.toggle-button:hover {
+  background-color: #2b882e;
+}
+
+.toggle-button.is-active {
+  background-color: #2b882e;
+}
+
+.toggle-button {
+  color: rgb(180, 180, 180);
+  background-color: rgb(60, 60, 60);
+  border: 1px solid rgba(200, 150, 55, 0.5);
+  border-radius: 2px;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field } from 'formik';
+import ConstraintItemSelector from '../Inputs/ConstraintItemSelector.js';
 
 import './Groups.css';
 
@@ -11,6 +12,38 @@ const FontGroup = props => {
     errors,
     handleChange,
   } = props;
+
+  const item = {
+    value: 'ZDNjNGRhNW',
+    options: [
+      { label: 'UIButton', value: 'MGQ3MDAyZD' },
+      { label: 'UILabel', value: 'N2MyOTZhNT' },
+      { label: 'superview', value: 'ZDNjNGRhNW' }
+    ]
+  };
+
+  const attribute = {
+    value: 'left',
+    groups: [
+      {
+        label: 'Space',
+        options: [
+          { label: 'Top', value: 'top', hasOptions: true },
+          { label: 'Bottom', value: 'bottom', hasOptions: true },
+          { label: 'Left', value: 'left', hasOptions: true },
+          { label: 'Right', value: 'right', hasOptions: true }
+        ]
+      },
+      {
+        label: 'Size',
+        options: [
+          { label: 'Width', value: 'width'},
+          { label: 'Height', value: 'height'}
+        ]
+      },
+    ]
+  };
+
   return (
     <div className="form-group">
       <div className="form-row">
@@ -47,6 +80,7 @@ const FontGroup = props => {
         </label>
         <Field name={nameWithPrefix(props, "pointSize")} type="number" min={0} className={errors.pointSize && touched.pointSize ? 'full-width-input error' : 'full-width-input'} />
       </div>
+      <ConstraintItemSelector item={item} attribute={attribute} />
     </div>
   );
 }

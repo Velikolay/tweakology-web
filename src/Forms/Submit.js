@@ -25,7 +25,8 @@ const submitChanges = (tree, systemMetadata) => {
           operation: 'modify',
           view: {
             id: id,
-            properties: state.values
+            properties: state.values,
+            frame: state.values.frame
           }
         });
       }
