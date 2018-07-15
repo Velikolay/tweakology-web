@@ -40,6 +40,7 @@ const EnhancedUIViewForm = withFormik({
     backgroundColor: props.viewProps.backgroundColor,
     // Test constraint
     constraint: {
+      relation: 'eq',
       first: {
         item: {
           value: 'ZDNjNGRhNW',
@@ -52,24 +53,20 @@ const EnhancedUIViewForm = withFormik({
         attribute: {
           // value: 'left',
           placeholder: 'Attribute',
-          groups: [
-            {
-              label: 'Space',
-              options: [
-                { label: 'Top', value: 'top', hasOptions: true },
-                { label: 'Bottom', value: 'bottom', hasOptions: true },
-                { label: 'Left', value: 'left', hasOptions: true },
-                { label: 'Right', value: 'right', hasOptions: true }
-              ]
-            },
-            {
-              label: 'Size',
-              options: [
-                { label: 'Width', value: 'width'},
-                { label: 'Height', value: 'height'}
-              ]
-            },
+        }
+      },
+      second: {
+        item: {
+          value: 'ZDNjNGRhNW',
+          options: [
+            { label: 'UIButton', value: 'MGQ3MDAyZD' },
+            { label: 'UILabel', value: 'N2MyOTZhNT' },
+            { label: 'superview', value: 'ZDNjNGRhNW' }
           ]
+        },
+        attribute: {
+          // value: 'left',
+          placeholder: 'Attribute',
         }
       }
     }

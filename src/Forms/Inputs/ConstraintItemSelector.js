@@ -11,17 +11,18 @@ const ConstraintItemSelector = (props) => {
     setFieldValue
   } = props.formik;
 
-  const hasOptions = (attribute) => {
-    for (const group of attribute.groups) {
+  const hasOptions = (attribute, attributeGroups) => {
+    for (const group of attributeGroups) {
       for (const option of group.options) {
         if (attribute.value === option.value) {
-          return option.hasOptions ? true : false;
+          return group.hasExtraOptions ? true : false;
         }
       }
     }
     return false;
   }
 
+  console.log(props);
   const item = formikValueWithPrefix(props, 'item')
   const attribute = formikValueWithPrefix(props, 'attribute')
 
@@ -34,10 +35,8 @@ const ConstraintItemSelector = (props) => {
       <option value="" disabled selected>{attribute.placeholder}</option>
     )
   }
-  for (const group of attribute.groups) {
-    const attributeDOM = group.options.map(option => {
-      return option.value === attribute.value ? <option selected value={option.value}>{option.label}</option> : <option value={option.value}>{option.label}</option>
-    });
+  for (const group of props.attributes) {
+    const attributeDOM = group.options.map(option => <option value={option.value}>{option.label}</option>);
 
     attributeGroupsDOM.push(
       <optgroup label={group.label}>
@@ -52,19 +51,20 @@ const ConstraintItemSelector = (props) => {
       <option value="" disabled selected>{item.placeholder}</option>
     )
   }
-  const _itemsDOM = item.options.map(option => {
-    return option.value === item.value ? <option selected value={option.value}>{option.label}</option> : <option value={option.value}>{option.label}</option>
-  });
+  const _itemsDOM = item.options.map(option => <option value={option.value}>{option.label}</option>);
   itemsDOM.push(..._itemsDOM);
 
-  const showOptions = hasOptions(attribute);
+  const showOptions = hasOptions(attribute, props.attributes);
 
   return (
     <div className="cis-container">
       <div className={cx('cis-item', {
         'with-options': showOptions
       })}>
-        <select id={nameWithPrefix(props, 'item.value')} onChange={handleChange}>
+        <select
+          id={nameWithPrefix(props, 'item.value')}
+          value={item.value}
+          onChange={handleChange}>
           {itemsDOM}
         </select>
       </div>
@@ -73,7 +73,10 @@ const ConstraintItemSelector = (props) => {
       <div className={cx('cis-attribute', {
         'with-options': showOptions
       })}>
-        <select id={nameWithPrefix(props, 'attribute.value')} onChange={handleChange}>
+        <select
+          id={nameWithPrefix(props, 'attribute.value')}
+          value={attribute.value}
+          onChange={handleChange}>
           {attributeGroupsDOM}
         </select>
       </div>

@@ -1,7 +1,7 @@
 .color-input {
   box-sizing: border-box;
   display: inline-block;
-  width: calc(60% - 52px);
+  width: calc(60% - 40px);
   margin-right: 4px;
 }
 
@@ -11,6 +11,5 @@
   width: 36px;
   height: 18px;
   vertical-align: middle;
-  margin-right: 12px;
   padding: 0px 1px;
 }

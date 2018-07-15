@@ -12,30 +12,28 @@
 .cis-item {
   box-sizing: border-box;
   display: inline-block;
-  width: calc(60% - 6px);
+  width: calc(60% - 8px);
   margin-right: 2px;
-  margin-left: 4px;
 }
 
 .cis-item.with-options {
-  width: calc(45% - 6px);
+  width: calc(45% - 8px);
 }
 
 .cis-attribute {
   box-sizing: border-box;
   display: inline-block;
-  width: calc(35% - 6px);
-  margin-right: 4px;
+  width: calc(40% - 2px);
   margin-left: 2px;
 }
 
 .cis-attribute.with-options {
-  width: calc(25% - 6px);
+  width: calc(30% - 2px);
 }
 
 .cis-options {
   box-sizing: border-box;
   display: inline-block;
   width: calc(25% - 4px);
-  margin-right: 4px;
+  margin-left: 4px;
 }

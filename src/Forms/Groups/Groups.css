@@ -1,5 +1,7 @@
 .form-group {
   padding-top: 12px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .form-row {
@@ -22,13 +24,15 @@
 .full-width-input {
   box-sizing: border-box;
   display: inline-block;
-  width: calc(60% - 12px);
-  margin-right: 12px;
+  width: 60%;
 }
 
 .half-width-input-container {
-  width: calc(30% - 12px);
+  width: calc(30% - 6px);
   display: inline-block;
+}
+
+.half-width-input-container:nth-child(2) {
   margin-right: 12px;
 }
 
