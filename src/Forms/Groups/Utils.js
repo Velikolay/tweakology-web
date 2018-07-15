@@ -6,7 +6,11 @@ const nameWithPrefix = (props, name) => {
 }
 
 const valueWithPrefix = (props, name) => {
-  return deep_value(props.values, nameWithPrefix(props, name))
+  return deep_value(props.values, nameWithPrefix(props, name));
+}
+
+const formikValueWithPrefix = (props, name) => {
+  return deep_value(props.formik.values, nameWithPrefix(props, name));
 }
 
 const deep_value = (obj, path) => {
@@ -23,4 +27,4 @@ const titleForField = (props, fieldName, defaultTitle) => {
   return defaultTitle;
 }
 
-export { nameWithPrefix, valueWithPrefix, titleForField };
+export { nameWithPrefix, valueWithPrefix, formikValueWithPrefix, titleForField };

@@ -1,13 +1,16 @@
 import React from 'react';
 import cx from 'classnames';
+import { nameWithPrefix } from '../Groups/Utils';
 
 import './ToggleButtonMenu.css';
 
 const ToggleButtonMenu = (props) => {
   if (props.options.length) {
-    const width = 100/props.options.length;
+    const width = 100 / props.options.length;
     const buttons = props.options.map(option => {
-      return <ToggleButton width={`${width}%`} {...option} />
+      return <ToggleButton width={`${width}%`} {...option} onClick={() => {
+        props.setFieldValue(nameWithPrefix(props, option.name), !option.isActive);
+      }} />
     });
     return (
       <div className="toggle-buttons-menu">
@@ -18,10 +21,6 @@ const ToggleButtonMenu = (props) => {
 };
 
 const ToggleButton = (props) => {
-  const toggle = (e) => {
-    console.log(e);
-  }
-
   let style = {
     width: props.width
   };
@@ -35,14 +34,11 @@ const ToggleButton = (props) => {
       className={cx('toggle-button', {
         'is-active': props.isActive
       })}
-      onClick={toggle}>
+      type="button"
+      onClick={props.onClick}>
       {props.text}
     </button>
   );
 };
-
-const onChange = (e) => {
-  console.log(e.target.value);
-}
 
 export default ToggleButtonMenu;

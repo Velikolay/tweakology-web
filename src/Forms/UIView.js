@@ -5,6 +5,7 @@ import Yup from 'yup';
 
 import FrameGroup from './Groups/Frame.js';
 import ColorGroup from './Groups/Color.js';
+import Constraint from './Groups/Constraint';
 
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUIViewForm = props => {
@@ -18,6 +19,8 @@ const InnerUIViewForm = props => {
           </div>
           ): null
         }
+        <hr/>
+        <Constraint prefix="constraint" formik={props} />
         <Persist name={props.id} />
     </form>
   );
@@ -34,7 +37,42 @@ const EnhancedUIViewForm = withFormik({
       height: props.viewProps.frame.maxY - props.viewProps.frame.minY
     },
     // Background color
-    backgroundColor: props.viewProps.backgroundColor
+    backgroundColor: props.viewProps.backgroundColor,
+    // Test constraint
+    constraint: {
+      first: {
+        item: {
+          value: 'ZDNjNGRhNW',
+          options: [
+            { label: 'UIButton', value: 'MGQ3MDAyZD' },
+            { label: 'UILabel', value: 'N2MyOTZhNT' },
+            { label: 'superview', value: 'ZDNjNGRhNW' }
+          ]
+        },
+        attribute: {
+          // value: 'left',
+          placeholder: 'Attribute',
+          groups: [
+            {
+              label: 'Space',
+              options: [
+                { label: 'Top', value: 'top', hasOptions: true },
+                { label: 'Bottom', value: 'bottom', hasOptions: true },
+                { label: 'Left', value: 'left', hasOptions: true },
+                { label: 'Right', value: 'right', hasOptions: true }
+              ]
+            },
+            {
+              label: 'Size',
+              options: [
+                { label: 'Width', value: 'width'},
+                { label: 'Height', value: 'height'}
+              ]
+            },
+          ]
+        }
+      }
+    }
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
