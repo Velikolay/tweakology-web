@@ -16,7 +16,7 @@
   margin-right: 2px;
 }
 
-.cis-item.with-options {
+.cis-item.with-modifiers {
   width: calc(45% - 8px);
 }
 
@@ -27,7 +27,7 @@
   margin-left: 2px;
 }
 
-.cis-attribute.with-options {
+.cis-attribute.with-modifiers {
   width: calc(30% - 2px);
 }
 

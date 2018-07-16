@@ -7,32 +7,30 @@ import './ConstraintItemSelector.css';
 
 const ConstraintItemSelector = (props) => {
   const {
-    handleChange,
-    setFieldValue
+    handleChange
   } = props.formik;
 
-  const hasOptions = (attribute, attributeGroups) => {
+  const getModifiers = (attribute, attributeGroups) => {
     for (const group of attributeGroups) {
       for (const option of group.options) {
         if (attribute.value === option.value) {
-          return group.hasExtraOptions ? true : false;
+          return group.modifiers;
         }
       }
     }
     return false;
   }
 
-  console.log(props);
   const item = formikValueWithPrefix(props, 'item')
   const attribute = formikValueWithPrefix(props, 'attribute')
 
-  console.log(item);
-  console.log(attribute);
+  // console.log(item);
+  // console.log(attribute);
 
   const attributeGroupsDOM = []
-  if (!attribute.value && attribute.placeholder) {
+  if (!attribute.value) {
     attributeGroupsDOM.push(
-      <option value="" disabled selected>{attribute.placeholder}</option>
+      <option value="" disabled selected>Attribute</option>
     )
   }
   for (const group of props.attributes) {
@@ -54,12 +52,12 @@ const ConstraintItemSelector = (props) => {
   const _itemsDOM = item.options.map(option => <option value={option.value}>{option.label}</option>);
   itemsDOM.push(..._itemsDOM);
 
-  const showOptions = hasOptions(attribute, props.attributes);
-
+  const modifiers = getModifiers(attribute, props.attributes);
+  const hasModifiers = modifiers ? true : false;
   return (
     <div className="cis-container">
       <div className={cx('cis-item', {
-        'with-options': showOptions
+        'with-modifiers': hasModifiers
       })}>
         <select
           id={nameWithPrefix(props, 'item.value')}
@@ -71,7 +69,7 @@ const ConstraintItemSelector = (props) => {
       {/* <label>{'\u2024'}</label> */}
       <label>.</label>
       <div className={cx('cis-attribute', {
-        'with-options': showOptions
+        'with-modifiers': hasModifiers
       })}>
         <select
           id={nameWithPrefix(props, 'attribute.value')}
@@ -81,15 +79,12 @@ const ConstraintItemSelector = (props) => {
         </select>
       </div>
       {
-        showOptions ?
+        hasModifiers ?
         <div className='cis-options'>
           <ToggleButtonMenu
             prefix={`${props.prefix}.attribute`}
-            options={[
-              { name: 'relativeToMargin', text: 'M', isActive: attribute.relativeToMargin },
-              { name: 'respectLanguageDirection', text: 'L', isActive: attribute.respectLanguageDirection }
-            ]}
-            setFieldValue={setFieldValue}
+            options={modifiers}
+            formik={props.formik}
           />
         </div>
         :

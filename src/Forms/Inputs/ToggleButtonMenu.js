@@ -1,15 +1,19 @@
 import React from 'react';
 import cx from 'classnames';
-import { nameWithPrefix } from '../Groups/Utils';
+import { nameWithPrefix, formikValueWithPrefix } from '../Groups/Utils';
 
 import './ToggleButtonMenu.css';
 
 const ToggleButtonMenu = (props) => {
+  const {
+    setFieldValue
+  } = props.formik;
   if (props.options.length) {
     const width = 100 / props.options.length;
     const buttons = props.options.map(option => {
-      return <ToggleButton width={`${width}%`} {...option} onClick={() => {
-        props.setFieldValue(nameWithPrefix(props, option.name), !option.isActive);
+      const optionValue = formikValueWithPrefix(props, option.name);
+      return <ToggleButton width={`${width}%`} isEnabled={optionValue} {...option} onClick={() => {
+        setFieldValue(nameWithPrefix(props, option.name), !optionValue);
       }} />
     });
     return (
@@ -32,7 +36,7 @@ const ToggleButton = (props) => {
     <button
       style={style}
       className={cx('toggle-button', {
-        'is-active': props.isActive
+        'is-active': props.isEnabled
       })}
       type="button"
       onClick={props.onClick}>

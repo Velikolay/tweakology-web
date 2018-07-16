@@ -51,8 +51,8 @@ const EnhancedUIViewForm = withFormik({
           ]
         },
         attribute: {
-          // value: 'left',
-          placeholder: 'Attribute',
+          // value: 'leading',
+          relativeToMargin: true
         }
       },
       second: {
@@ -65,10 +65,13 @@ const EnhancedUIViewForm = withFormik({
           ]
         },
         attribute: {
-          // value: 'left',
-          placeholder: 'Attribute',
+          // value: 'trailing',
+          relativeToMargin: true
         }
-      }
+      },
+      constant: 0,
+      priority: 1000,
+      multiplier: 1
     }
   }),
   // validationSchema: Yup.object().shape({
