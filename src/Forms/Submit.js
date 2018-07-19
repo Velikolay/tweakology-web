@@ -1,4 +1,4 @@
-import { getFontName } from '../Utils/Font.js';
+import { getFontName } from '../Utils/Font';
 
 const _treeToFormIds = uiElement => {
   let treeNode = [uiElement['id']];

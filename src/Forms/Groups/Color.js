@@ -1,10 +1,9 @@
 import React from 'react';
 import { Field } from 'formik';
+import { nameWithPrefix, valueWithPrefix, titleForField } from './Utils';
 
 import './Groups.css';
 import './Color.css';
-
-import { nameWithPrefix, valueWithPrefix, titleForField } from './Utils';
 
 const ColorGroup = props => {
   return (

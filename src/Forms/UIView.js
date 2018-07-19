@@ -3,9 +3,11 @@ import { withFormik } from 'formik';
 import { Persist } from 'formik-persist'
 import Yup from 'yup';
 
-import FrameGroup from './Groups/Frame.js';
-import ColorGroup from './Groups/Color.js';
+import FrameGroup from './Groups/Frame';
+import ColorGroup from './Groups/Color';
 import Constraint from './Groups/Constraint';
+
+import ConstraintTransformer from './Transformers/Constraints';
 
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUIViewForm = props => {
@@ -39,40 +41,20 @@ const EnhancedUIViewForm = withFormik({
     // Background color
     backgroundColor: props.viewProps.backgroundColor,
     // Test constraint
-    constraint: {
-      relation: 'eq',
+    constraint: ConstraintTransformer.payloadToFormikProps({
+      relation: '0',
       first: {
-        item: {
-          value: 'ZDNjNGRhNW',
-          options: [
-            { label: 'UIButton', value: 'MGQ3MDAyZD' },
-            { label: 'UILabel', value: 'N2MyOTZhNT' },
-            { label: 'superview', value: 'ZDNjNGRhNW' }
-          ]
-        },
-        attribute: {
-          // value: 'leading',
-          relativeToMargin: true
-        }
+        item: 'ZDNjNGRhNW',
+        attribute: '7'
       },
       second: {
-        item: {
-          value: 'ZDNjNGRhNW',
-          options: [
-            { label: 'UIButton', value: 'MGQ3MDAyZD' },
-            { label: 'UILabel', value: 'N2MyOTZhNT' },
-            { label: 'superview', value: 'ZDNjNGRhNW' }
-          ]
-        },
-        attribute: {
-          // value: 'trailing',
-          relativeToMargin: true
-        }
+        item: 'MGQ3MDAyZD',
+        attribute: '7'
       },
       constant: 0,
       priority: 1000,
       multiplier: 1
-    }
+    })
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()

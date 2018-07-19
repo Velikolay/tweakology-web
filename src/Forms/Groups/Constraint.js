@@ -1,58 +1,26 @@
 import React from 'react';
-import ConstraintItemSelector from '../Inputs/ConstraintItemSelector.js';
+import ConstraintItemSelector from './Inputs/ConstraintItemSelector';
 import { nameWithPrefix, formikValueWithPrefix } from './Utils';
+import { constraintAttributes } from '../Static/Constraints';
 import { Field } from 'formik';
 
 import './Groups.css';
 
-const attributeGroups = [
-  {
-    label: 'Vertical Space',
-    options: [
-      { label: 'Top', value: 'top' },
-      { label: 'Center Y', value: 'centery' },
-      { label: 'First Baseline', value: 'firstbaseline' },
-      { label: 'Last Baseline', value: 'lastbaseline' },
-      { label: 'Bottom', value: 'bottom' },
-    ],
-    modifiers: [
-      { name: 'relativeToMargin', text: 'M' }
-    ]
-  },
-  {
-    label: 'Horizontal Space',
-    options: [
-      { label: 'Leading', value: 'leading' },
-      { label: 'Center X', value: 'centerx' },
-      { label: 'Trailing', value: 'trailing' }
-    ],
-    modifiers: [
-      { name: 'relativeToMargin', text: 'M' },
-      { name: 'respectLanguageDirection', text: 'L' }
-    ]
-  },
-  {
-    label: 'Size',
-    options: [
-      { label: 'Width', value: 'width'},
-      { label: 'Height', value: 'height'}
-    ]
-  },
-];
-
-const getAttributeGroup = (itemAttribute) => {
-  for (const group of attributeGroups) {
-    for (const option of group.options) {
-      if (itemAttribute === option.value) {
-        return group;
+const getAttributeGroup = (attribute) => {
+  for (const group of constraintAttributes) {
+    for (const variant of group.variants) {
+      for (const option of variant.options) {
+        if (attribute.value === option.value) {
+          return group;
+        }
       }
     }
   }
   return null;
 }
 
-const getSecondGroupAttributes = (firstItemAttribute) => {
-  const group = getAttributeGroup(firstItemAttribute);
+const getAttributes2 = (attribute1) => {
+  const group = getAttributeGroup(attribute1);
   if (group && group.label !== 'Size') {
     return [group];
   } else {
@@ -67,38 +35,40 @@ const Constraint = props => {
     setFieldValue
   } = props.formik;
 
-  const firstItemAttribute = formikValueWithPrefix(props, "first.attribute.value");
-  const secondItemAttribute = formikValueWithPrefix(props, "second.attribute.value");
-  if (secondItemAttribute) {
-    const firstGroup = getAttributeGroup(firstItemAttribute);
-    const secondGroup = getAttributeGroup(secondItemAttribute);
-    if (firstGroup && secondGroup && firstGroup.label !== secondGroup.label) {
+  const attribute1 = formikValueWithPrefix(props, "first.attribute");
+  const attribute2 = formikValueWithPrefix(props, "second.attribute");
+
+  if (attribute2 && attribute2.value) {
+    const group1 = getAttributeGroup(attribute1);
+    const group2 = getAttributeGroup(attribute2);
+    if (group1 && group2 && group1.label !== group2.label) {
+      // reset second attribute if the group is invalid
       setFieldValue(nameWithPrefix(props, "second.attribute.value"), '');
     }
   }
-  const secondGroupAttributes = getSecondGroupAttributes(firstItemAttribute);
+  const attributes2 = getAttributes2(attribute1);
   return (
     <div className="form-group">
       <div className="form-row">
-        <ConstraintItemSelector prefix={nameWithPrefix(props, "first")} formik={props.formik} attributes={attributeGroups} />
+        <ConstraintItemSelector prefix={nameWithPrefix(props, "first")} formik={props.formik} attributes={constraintAttributes} />
       </div>
       <div className="form-row">
         <select
           id={nameWithPrefix(props, "relation")}
           value={formikValueWithPrefix(props, "relation")}
           onChange={props.formik.handleChange}>
-          <option value="eq">Equal</option>
-          <option value="gte">Greater Than or Equal</option>
-          <option value="lte">Less Than or Equal</option>
+          <option value="0">Equal</option>
+          <option value="1">Greater Than or Equal</option>
+          <option value="2">Less Than or Equal</option>
         </select>
       </div>
-      {
+      {/* {
         secondGroupAttributes.length > 0 ?
         <div className="form-row">
-          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={props.formik} attributes={secondGroupAttributes} />
+          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={props.formik} attributes={attributes2} />
         </div>
         : null
-      }
+      } */}
       <div className="form-row">
         <label className="input-title">
           Constant

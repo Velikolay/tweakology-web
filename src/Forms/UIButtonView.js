@@ -3,11 +3,11 @@ import { withFormik } from 'formik';
 import { Persist } from 'formik-persist'
 import Yup from 'yup';
 
-import { transformFontName, transformFontFamily } from '../Utils/Font.js';
-import FrameGroup from './Groups/Frame.js';
-import TextGroup from './Groups/Text.js';
-import FontGroup from './Groups/Font.js';
-import ColorGroup from './Groups/Color.js';
+import { transformFontName, transformFontFamily } from '../Utils/Font';
+import FrameGroup from './Groups/Frame';
+import TextGroup from './Groups/Text';
+import FontGroup from './Groups/Font';
+import ColorGroup from './Groups/Color';
 
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUIButtonViewForm = props => {
