@@ -13,7 +13,7 @@ const ToggleButtonMenu = (props) => {
                 width={`${width}%`}
                 isOn={optionValue}
                 {...option}
-                onSwitch={() => props.onSwitch(option.name, !option.value)} />
+                onSwitch={() => props.onSwitch(option.name, !optionValue)} />
     });
     return (
       <div className="toggle-buttons-menu">

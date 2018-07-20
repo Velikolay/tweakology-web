@@ -62,13 +62,13 @@ const Constraint = props => {
           <option value="2">Less Than or Equal</option>
         </select>
       </div>
-      {/* {
-        secondGroupAttributes.length > 0 ?
+      {
+        attributes2.length > 0 ?
         <div className="form-row">
           <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={props.formik} attributes={attributes2} />
         </div>
         : null
-      } */}
+      }
       <div className="form-row">
         <label className="input-title">
           Constant

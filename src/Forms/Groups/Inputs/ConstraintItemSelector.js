@@ -27,7 +27,6 @@ const ConstraintItemSelector = (props) => {
   const attribute = formikValueWithPrefix(props, 'attribute');
 
   const handleSwitchModifier = (modifier, isOn) => {
-    console.log(nameWithPrefix(props, `attribute.${modifier}`));
     setFieldValue(nameWithPrefix(props, `attribute.${modifier}`), isOn);
     const modifierSwitch = valueSwitch[modifier];
     if (attribute.value in modifierSwitch) {
