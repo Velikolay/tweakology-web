@@ -53,7 +53,8 @@ const EnhancedUIViewForm = withFormik({
       },
       constant: 0,
       priority: 1000,
-      multiplier: 1
+      multiplier: 1,
+      isActive: true
     })
   }),
   // validationSchema: Yup.object().shape({

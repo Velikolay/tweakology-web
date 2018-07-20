@@ -20,6 +20,12 @@
 // case centerXWithinMargins 19
 // case centerYWithinMargins 20
 
+const attributeNames = [
+  'noAttribute', 'left', 'right', 'top', 'bottom', 'leading', 'trailing', 'width', 'height', 'centerX', 'centerY',
+  'lastBaseline', 'firstBaseline', 'leftMargin', 'rightMargin', 'topMargin', 'bottomMargin', 'leadingMargin', 'trailingMargin',
+  'centerXWithinMargins', 'centerYWithinMargins'
+];
+
 const valueSwitch = {
   respectLanguageDirection: {
     '1': '5',
@@ -156,4 +162,4 @@ const constraintAttributes = [
   },
 ];
 
-export { valueSwitch, attributeToModifiers, constraintAttributes };
+export { attributeNames, valueSwitch, attributeToModifiers, constraintAttributes };

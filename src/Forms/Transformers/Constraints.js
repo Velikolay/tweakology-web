@@ -1,4 +1,4 @@
-import { attributeToModifiers } from '../Static/Constraints';
+import { attributeToModifiers } from '../../Static/Constraints';
 
 const ConstraintTransformer = {
 

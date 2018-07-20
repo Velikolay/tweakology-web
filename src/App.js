@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import ViewForm from './Forms/ViewForm.js';
 import { submitChanges } from './Forms/Submit.js';
 import { enrichFontsData } from './Utils/Font.js';
+import { attributeNames } from './Static/Constraints.js';
 
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
@@ -119,15 +120,66 @@ class App extends Component {
       type: uiElement['type'],
       properties: uiElement['properties']
     };
+
+    const children = [];
     if ('subviews' in uiElement) {
-      treeNode['children'] = [];
       for (let subview of uiElement.subviews) {
-        treeNode.children.push(this.transformPayloadToTree(subview));
+        children.push(this.transformPayloadToTree(subview));
       }
+    }
+
+    if (uiElement.constraints && uiElement.constraints.length > 0) {
+      children.push(this.transformConstraintPayloadToTree(uiElement));
+    }
+
+    if (children.length > 0) {
+      treeNode['children'] = children;
     } else {
       treeNode['leaf'] = true;
     }
+
     return treeNode;
+  }
+
+  transformConstraintPayloadToTree = uiElement => {
+    const constraintToNodeName = constraint => {
+      let name = `${attributeNames[constraint.first.attribute]} = `;
+      if (constraint.first.item === uiElement.uid) {
+        name = `${constraint.first.item}.${name}`;
+      }
+
+      if (constraint.second) {
+        if (constraint.multiplier !== 1) {
+          name += `${constraint.multiplier} * `;
+        }
+        let secondItem = `${attributeNames[constraint.second.attribute]}`;
+        if (constraint.second.item === uiElement.uid) {
+          secondItem = `${constraint.second.item}.${secondItem}`;
+        }
+        name += secondItem;
+      }
+
+      if (constraint.constant !== 0) {
+        if (constraint.constant > 0) {
+          name += ` + ${constraint.constant}`;  
+        } else {
+          name += ` - ${-1*constraint.constant}`;  
+        }
+      }
+      return name;
+    };
+
+    return {
+      module: 'Constraints',
+      collapsed: true,
+      children: uiElement['constraints'].map(constraint => {
+        return {
+          module: constraintToNodeName(constraint),
+          properties: constraint,
+          leaf: true
+        }
+      })
+    };
   }
 
   transformPayloadToMeshProps = (uiElement, baseX, baseY, depth) => {

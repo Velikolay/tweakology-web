@@ -1,7 +1,7 @@
 import React from 'react';
 import ConstraintItemSelector from './Inputs/ConstraintItemSelector';
 import { nameWithPrefix, formikValueWithPrefix } from './Utils';
-import { constraintAttributes } from '../Static/Constraints';
+import { constraintAttributes } from '../../Static/Constraints';
 import { Field } from 'formik';
 
 import './Groups.css';
@@ -34,6 +34,8 @@ const Constraint = props => {
     touched,
     setFieldValue
   } = props.formik;
+
+  console.log(props.formik);
 
   const attribute1 = formikValueWithPrefix(props, "first.attribute");
   const attribute2 = formikValueWithPrefix(props, "second.attribute");
@@ -86,6 +88,12 @@ const Constraint = props => {
           Multiplier
         </label>
         <Field name={nameWithPrefix(props, "multiplier")} type="number" min={0} step={0.1} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} />
+      </div>
+      <div className="form-row">
+        <label className="input-title">
+          Installed
+        </label>
+        <Field name={nameWithPrefix(props, "isActive")} type="checkbox" checked={formikValueWithPrefix(props, "isActive")} className={errors.isActive && touched.isActive ? 'full-width-input error' : 'full-width-input'} />
       </div>
     </div>
   );

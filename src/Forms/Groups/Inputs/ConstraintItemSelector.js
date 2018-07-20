@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import ToggleButtonMenu from './ToggleButtonMenu.js';
 import { nameWithPrefix, formikValueWithPrefix } from '../Utils';
-import { attributeToModifiers, valueSwitch } from '../../Static/Constraints'
+import { attributeToModifiers, valueSwitch } from '../../../Static/Constraints'
 
 import './ConstraintItemSelector.css';
 
