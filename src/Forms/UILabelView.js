@@ -28,7 +28,7 @@ const InnerUILabelViewForm = props => {
         <Persist name={props.id} />
     </form>
   );
-}
+};
 
 const EnhancedUILabelViewForm = withFormik({
   enableReinitialize: true,
@@ -69,6 +69,6 @@ const EnhancedUILabelViewForm = withFormik({
 
 const UILabelViewForm = props => {
   return <EnhancedUILabelViewForm {...props} />
-}
+};
 
 export default UILabelViewForm;

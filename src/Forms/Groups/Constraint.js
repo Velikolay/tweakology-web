@@ -35,8 +35,6 @@ const Constraint = props => {
     setFieldValue
   } = props.formik;
 
-  console.log(props.formik);
-
   const attribute1 = formikValueWithPrefix(props, "first.attribute");
   const attribute2 = formikValueWithPrefix(props, "second.attribute");
 

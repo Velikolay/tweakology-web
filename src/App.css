@@ -22,6 +22,7 @@
 .tree-view {
   float: left;
   height: 100%;
+  overflow-y: auto;
   /* background-color: #252526; */
   /* background-color: #1d1e21; */
   background-color: #282841;
@@ -62,6 +63,7 @@
 .m-node .text {
   padding: 4px 10px;
   text-align: left;
+  white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }

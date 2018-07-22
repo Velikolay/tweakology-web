@@ -10,7 +10,7 @@ const _treeToFormIds = uiElement => {
     }
   }
   return treeNode;
-}
+};
 
 const submitChanges = (tree, systemMetadata) => {
   const ids = _treeToFormIds(tree);
@@ -38,7 +38,7 @@ const submitChanges = (tree, systemMetadata) => {
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(changeSet)
    });
-}
+};
 
 const enrichValues = (values, systemMetadata) => {
   Object.keys(values).forEach(key => {
@@ -51,10 +51,10 @@ const enrichValues = (values, systemMetadata) => {
       }
     }
   });
-}
+};
 
 const isDict = v => {
   return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
-}
+};
 
 export { submitChanges };

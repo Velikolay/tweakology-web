@@ -26,7 +26,7 @@ const InnerUIViewForm = props => {
         <Persist name={props.id} />
     </form>
   );
-}
+};
 
 const EnhancedUIViewForm = withFormik({
   enableReinitialize: true,
@@ -73,6 +73,6 @@ const EnhancedUIViewForm = withFormik({
 
 const UIViewForm = props => {
   return <EnhancedUIViewForm {...props} />
-}
+};
 
 export default UIViewForm;

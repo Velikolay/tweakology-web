@@ -86,12 +86,14 @@ class App extends Component {
   }
 
   onNodeClick = node => {
-    this.setState({ activeNode: node });
+    if (!node.id.endsWith(':c')) {
+      this.setState({ activeNode: node });
+    }
   }
 
   onNodeFocus = (node, event) => {
     if (!this.dragging) {
-      if (!this.state.activeNode || node.id !== this.state.activeNode.id) {
+      if ((!this.state.activeNode || node.id !== this.state.activeNode.id) && !node.id.endsWith(':c')) {
         this.setState({ onFocusNode: node });
       } else {
         this.setState({ onFocusNode: null });
@@ -161,7 +163,11 @@ class App extends Component {
 
       if (constraint.constant !== 0) {
         if (constraint.constant > 0) {
-          name += ` + ${constraint.constant}`;  
+          if (constraint.second) {
+            name += ` + ${constraint.constant}`;
+          } else {
+            name += ` ${constraint.constant}`;
+          }
         } else {
           name += ` - ${-1*constraint.constant}`;  
         }
@@ -171,10 +177,14 @@ class App extends Component {
 
     return {
       module: 'Constraints',
+      id: `${uiElement.uid}:c`,
       collapsed: true,
-      children: uiElement['constraints'].map(constraint => {
+      children: uiElement['constraints'].map((constraint, idx) => {
+        console.log(constraint);
         return {
           module: constraintToNodeName(constraint),
+          type: 'NSLayoutConstraint',
+          id: `${uiElement.uid}:c${idx}`,
           properties: constraint,
           leaf: true
         }

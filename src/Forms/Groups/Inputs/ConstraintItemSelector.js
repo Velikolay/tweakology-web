@@ -14,7 +14,6 @@ const ConstraintItemSelector = (props) => {
 
   const handleAttributeChange = (e) => {
     const attrVal = e.target.value;
-    console.log('handleAttributeChange ' + attrVal);
     if (attrVal) {
       const modifiers = attributeToModifiers[attrVal];
       setFieldValue(nameWithPrefix(props, 'attribute.relativeToMargin'), modifiers[0]);
@@ -33,8 +32,6 @@ const ConstraintItemSelector = (props) => {
       setFieldValue(nameWithPrefix(props, 'attribute.value'), modifierSwitch[attribute.value]);
     }
   }
-
-  console.log(attribute);
 
   const attributeGroupsDOM = buildAttributeGroupsDOM(attribute, props);
   const itemsDOM = buildItemsDOM(item, props);

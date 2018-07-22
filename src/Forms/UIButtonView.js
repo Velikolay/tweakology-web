@@ -23,7 +23,7 @@ const InnerUIButtonViewForm = props => {
         <Persist name={props.id} />
     </form>
   );
-}
+};
 
 const EnhancedUIButtonViewForm = withFormik({
   enableReinitialize: true,
@@ -67,6 +67,6 @@ const EnhancedUIButtonViewForm = withFormik({
 
 const UIButtonViewForm = props => {
   return <EnhancedUIButtonViewForm {...props} />
-}
+};
 
 export default UIButtonViewForm;
