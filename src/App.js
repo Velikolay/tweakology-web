@@ -146,16 +146,20 @@ class App extends Component {
   transformConstraintPayloadToTree = uiElement => {
     const constraintItemOptions = uiElement => {
       const itemOptions = [];
-      if (uiElement.subviews) {
+      if (isLeaf(uiElement)) {
+        itemOptions.push({ label: uiElement.type, value: uiElement.uid });
+      } else {
         itemOptions.push({ label: 'Superview', value: uiElement.uid });
         for (let subview of uiElement.subviews) {
           itemOptions.push({ label: subview.type, value: subview.uid });
         }
-      } else {
-        itemOptions.push({ label: uiElement.type, value: uiElement.uid });
       }
       return itemOptions;
     };
+
+    const isLeaf = (uiElement) => {
+      return !uiElement.subviews || uiElement.type === 'UIButton';
+    }
 
     const numToFixed = num => {
       if (num % 1 !== 0) {
