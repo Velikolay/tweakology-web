@@ -86,14 +86,14 @@ class App extends Component {
   }
 
   onNodeClick = node => {
-    if (!node.id.endsWith(':c')) {
+    if (node.id) {
       this.setState({ activeNode: node });
     }
   }
 
   onNodeFocus = (node, event) => {
     if (!this.dragging) {
-      if ((!this.state.activeNode || node.id !== this.state.activeNode.id) && !node.id.endsWith(':c')) {
+      if (node.id && (!this.state.activeNode || node.id !== this.state.activeNode.id)) {
         this.setState({ onFocusNode: node });
       } else {
         this.setState({ onFocusNode: null });
@@ -144,32 +144,53 @@ class App extends Component {
   }
 
   transformConstraintPayloadToTree = uiElement => {
-    const constraintToNodeName = constraint => {
+    const constraintItemOptions = uiElement => {
+      const itemOptions = [];
+      if (uiElement.subviews) {
+        itemOptions.push({ label: 'Superview', value: uiElement.uid });
+        for (let subview of uiElement.subviews) {
+          itemOptions.push({ label: subview.type, value: subview.uid });
+        }
+      } else {
+        itemOptions.push({ label: uiElement.type, value: uiElement.uid });
+      }
+      return itemOptions;
+    };
+
+    const numToFixed = num => {
+      if (num % 1 !== 0) {
+        return Number.parseFloat(num).toFixed(1);
+      }
+      return num;
+    }
+
+    const constraintNodeName = constraint => {
       let name = `${attributeNames[constraint.first.attribute]} = `;
-      if (constraint.first.item === uiElement.uid) {
+      if (constraint.first.item !== uiElement.uid) {
         name = `${constraint.first.item}.${name}`;
       }
 
       if (constraint.second) {
         if (constraint.multiplier !== 1) {
-          name += `${constraint.multiplier} * `;
+          name += `${numToFixed(constraint.multiplier)} * `;
         }
         let secondItem = `${attributeNames[constraint.second.attribute]}`;
-        if (constraint.second.item === uiElement.uid) {
+        if (constraint.second.item !== uiElement.uid) {
           secondItem = `${constraint.second.item}.${secondItem}`;
         }
         name += secondItem;
       }
 
       if (constraint.constant !== 0) {
+        const constantToPrint = numToFixed(constraint.constant);
         if (constraint.constant > 0) {
           if (constraint.second) {
-            name += ` + ${constraint.constant}`;
+            name += ` + ${constantToPrint}`;
           } else {
-            name += ` ${constraint.constant}`;
+            name += ` ${constantToPrint}`;
           }
         } else {
-          name += ` - ${-1*constraint.constant}`;  
+          name += ` - ${-1*constantToPrint}`;
         }
       }
       return name;
@@ -177,15 +198,16 @@ class App extends Component {
 
     return {
       module: 'Constraints',
-      id: `${uiElement.uid}:c`,
       collapsed: true,
       children: uiElement['constraints'].map((constraint, idx) => {
-        console.log(constraint);
         return {
-          module: constraintToNodeName(constraint),
+          module: constraintNodeName(constraint),
           type: 'NSLayoutConstraint',
           id: `${uiElement.uid}:c${idx}`,
-          properties: constraint,
+          properties: {
+            constraint: constraint,
+            itemOptions: constraintItemOptions(uiElement)
+          },
           leaf: true
         }
       })
@@ -196,7 +218,7 @@ class App extends Component {
     if (Object.keys(uiElement).length === 0) {
       return [];
     }
-    
+
     const properties = uiElement['properties'];
     const frame = properties['frame'];
     const width = frame['maxX'] - frame['minX'];

@@ -5,9 +5,6 @@ import Yup from 'yup';
 
 import FrameGroup from './Groups/Frame';
 import ColorGroup from './Groups/Color';
-import Constraint from './Groups/Constraint';
-
-import ConstraintTransformer from './Transformers/Constraints';
 
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUIViewForm = props => {
@@ -21,8 +18,6 @@ const InnerUIViewForm = props => {
           </div>
           ): null
         }
-        <hr/>
-        <Constraint prefix="constraint" formik={props} />
         <Persist name={props.id} />
     </form>
   );
@@ -40,22 +35,6 @@ const EnhancedUIViewForm = withFormik({
     },
     // Background color
     backgroundColor: props.viewProps.backgroundColor,
-    // Test constraint
-    constraint: ConstraintTransformer.payloadToFormikProps({
-      relation: '0',
-      first: {
-        item: 'ZDNjNGRhNW',
-        attribute: '7'
-      },
-      second: {
-        item: 'MGQ3MDAyZD',
-        attribute: '7'
-      },
-      constant: 0,
-      priority: 1000,
-      multiplier: 1,
-      isActive: true
-    })
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()

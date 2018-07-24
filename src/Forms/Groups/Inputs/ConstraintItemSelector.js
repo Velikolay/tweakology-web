@@ -85,7 +85,7 @@ const buildItemsDOM = (item, props) => {
       <option value="" disabled selected>{item.placeholder}</option>
     );
   }
-  const _itemsDOM = item.options.map(option => <option value={option.value}>{option.label}</option>);
+  const _itemsDOM = props.items.map(option => <option value={option.value}>{option.label}</option>);
   itemsDOM.push(..._itemsDOM);
   return itemsDOM;
 }

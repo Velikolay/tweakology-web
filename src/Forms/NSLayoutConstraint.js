@@ -11,7 +11,7 @@ import ConstraintTransformer from './Transformers/Constraints';
 const InnerNSLayoutConstraint = props => {
   return (
     <form onSubmit={props.handleSubmit}>
-        <Constraint formik={props} />
+        <Constraint itemOptions={props.viewProps.itemOptions} formik={props} />
         {/* <Persist name={props.id} /> */}
     </form>
   );
@@ -19,7 +19,7 @@ const InnerNSLayoutConstraint = props => {
 
 const EnhancedNSLayoutConstraint = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ConstraintTransformer.payloadToFormikProps(props.viewProps),
+  mapPropsToValues: props => ConstraintTransformer.payloadToFormikProps(props.viewProps.constraint),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
   //     .email('Invalid email address')

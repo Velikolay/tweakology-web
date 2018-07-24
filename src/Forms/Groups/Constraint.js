@@ -47,10 +47,11 @@ const Constraint = props => {
     }
   }
   const attributes2 = getAttributes2(attribute1);
+
   return (
     <div className="form-group">
       <div className="form-row">
-        <ConstraintItemSelector prefix={nameWithPrefix(props, "first")} formik={props.formik} attributes={constraintAttributes} />
+        <ConstraintItemSelector prefix={nameWithPrefix(props, "first")} formik={props.formik} items={props.itemOptions} attributes={constraintAttributes} />
       </div>
       <div className="form-row">
         <select
@@ -65,7 +66,7 @@ const Constraint = props => {
       {
         attributes2.length > 0 ?
         <div className="form-row">
-          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={props.formik} attributes={attributes2} />
+          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={props.formik} items={props.itemOptions} attributes={attributes2} />
         </div>
         : null
       }

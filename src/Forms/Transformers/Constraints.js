@@ -3,7 +3,6 @@ import { attributeToModifiers } from '../../Static/Constraints';
 const ConstraintTransformer = {
 
   payloadToFormikProps: (payload) => {
-    console.log(payload);
     const formikProps = {
       first: toFormikItem(payload.first, 'Item1'),
       isActive: payload.isActive,
@@ -22,12 +21,7 @@ const ConstraintTransformer = {
         },
         item: {
           value: '',
-          placeholder: 'Item2',
-          options: [ // To be removed
-            { label: 'UIButton', value: 'MGQ3MDAyZD' },
-            { label: 'UILabel', value: 'N2MyOTZhNT' },
-            { label: 'superview', value: 'ZDNjNGRhNW' }
-          ]
+          placeholder: 'Item2'
         }
       }
     }
@@ -40,19 +34,14 @@ const ConstraintTransformer = {
 };
 
 const toFormikItem = (payloadItem, placeholder) => {
-  const attrVal = payloadItem.attribute;
+  const attrVal = payloadItem.attribute.toString();
   const item = {
     attribute: {
       value: attrVal
     },
     item: {
       value: payloadItem.item,
-      placeholder: placeholder,
-      options: [ // To be removed
-        { label: 'UIButton', value: 'MGQ3MDAyZD' },
-        { label: 'UILabel', value: 'N2MyOTZhNT' },
-        { label: 'superview', value: 'ZDNjNGRhNW' }
-      ]
+      placeholder: placeholder
     }
   };
   if (attrVal) {
