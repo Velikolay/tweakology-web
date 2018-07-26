@@ -20,7 +20,7 @@ const ConstraintItemSelector = (props) => {
       setFieldValue(nameWithPrefix(props, 'attribute.respectLanguageDirection'), modifiers[1]);
     }
     handleChange(e);
-  }
+  };
 
   const item = formikValueWithPrefix(props, 'item');
   const attribute = formikValueWithPrefix(props, 'attribute');
@@ -31,7 +31,7 @@ const ConstraintItemSelector = (props) => {
     if (attribute.value in modifierSwitch) {
       setFieldValue(nameWithPrefix(props, 'attribute.value'), modifierSwitch[attribute.value]);
     }
-  }
+  };
 
   const attributeGroupsDOM = buildAttributeGroupsDOM(attribute, props);
   const itemsDOM = buildItemsDOM(item, props);

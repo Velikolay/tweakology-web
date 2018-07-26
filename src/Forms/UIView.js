@@ -28,13 +28,13 @@ const EnhancedUIViewForm = withFormik({
   mapPropsToValues: props => ({
     // Frame
     frame: {
-      x: props.viewProps.frame.minX,
-      y: props.viewProps.frame.minY,
-      width: props.viewProps.frame.maxX - props.viewProps.frame.minX,
-      height: props.viewProps.frame.maxY - props.viewProps.frame.minY
+      x: props.formProps.frame.minX,
+      y: props.formProps.frame.minY,
+      width: props.formProps.frame.maxX - props.formProps.frame.minX,
+      height: props.formProps.frame.maxY - props.formProps.frame.minY
     },
     // Background color
-    backgroundColor: props.viewProps.backgroundColor,
+    backgroundColor: props.formProps.backgroundColor,
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()

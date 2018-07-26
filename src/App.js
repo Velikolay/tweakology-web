@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import ViewForm from './Forms/ViewForm.js';
+import Form from './Forms/Form';
 import { submitChanges } from './Forms/Submit.js';
 import { enrichFontsData } from './Utils/Font.js';
-import { attributeNames } from './Static/Constraints.js';
+import { transformConstraintPayloadToTree, updatedConstraintNodeName } from './Utils/Tree.js';
 
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
@@ -35,6 +35,7 @@ class App extends Component {
     this.dragging = false;
 
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
+    this.onFormChange = this.onFormChange.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onNodeFocus = this.onNodeFocus.bind(this);
     this.onNodeFocusOut = this.onNodeFocus.bind(this);
@@ -85,6 +86,15 @@ class App extends Component {
     // window.localStorage.clear();
   }
 
+  onFormChange = (id, type, values) => {
+    if (type === 'NSLayoutConstraint') {
+      this.state.activeNode.module = updatedConstraintNodeName(values, this.state.activeNode)
+      this.setState({
+        activeNode: this.state.activeNode
+      });
+    }
+  }
+
   onNodeClick = node => {
     if (node.id) {
       this.setState({ activeNode: node });
@@ -131,7 +141,7 @@ class App extends Component {
     }
 
     if (uiElement.constraints && uiElement.constraints.length > 0) {
-      children.push(this.transformConstraintPayloadToTree(uiElement));
+      children.push(transformConstraintPayloadToTree(uiElement));
     }
 
     if (children.length > 0) {
@@ -141,81 +151,6 @@ class App extends Component {
     }
 
     return treeNode;
-  }
-
-  transformConstraintPayloadToTree = uiElement => {
-    const constraintItemOptions = uiElement => {
-      const itemOptions = [];
-      if (isLeaf(uiElement)) {
-        itemOptions.push({ label: uiElement.type, value: uiElement.uid });
-      } else {
-        itemOptions.push({ label: 'Superview', value: uiElement.uid });
-        for (let subview of uiElement.subviews) {
-          itemOptions.push({ label: subview.type, value: subview.uid });
-        }
-      }
-      return itemOptions;
-    };
-
-    const isLeaf = (uiElement) => {
-      return !uiElement.subviews || uiElement.type === 'UIButton';
-    }
-
-    const numToFixed = num => {
-      if (num % 1 !== 0) {
-        return Number.parseFloat(num).toFixed(1);
-      }
-      return num;
-    }
-
-    const constraintNodeName = constraint => {
-      let name = `${attributeNames[constraint.first.attribute]} = `;
-      if (constraint.first.item !== uiElement.uid) {
-        name = `${constraint.first.item}.${name}`;
-      }
-
-      if (constraint.second) {
-        if (constraint.multiplier !== 1) {
-          name += `${numToFixed(constraint.multiplier)} * `;
-        }
-        let secondItem = `${attributeNames[constraint.second.attribute]}`;
-        if (constraint.second.item !== uiElement.uid) {
-          secondItem = `${constraint.second.item}.${secondItem}`;
-        }
-        name += secondItem;
-      }
-
-      if (constraint.constant !== 0) {
-        const constantToPrint = numToFixed(constraint.constant);
-        if (constraint.constant > 0) {
-          if (constraint.second) {
-            name += ` + ${constantToPrint}`;
-          } else {
-            name += ` ${constantToPrint}`;
-          }
-        } else {
-          name += ` - ${-1*constantToPrint}`;
-        }
-      }
-      return name;
-    };
-
-    return {
-      module: 'Constraints',
-      collapsed: true,
-      children: uiElement['constraints'].map((constraint, idx) => {
-        return {
-          module: constraintNodeName(constraint),
-          type: 'NSLayoutConstraint',
-          id: `${uiElement.uid}:c${idx}`,
-          properties: {
-            constraint: constraint,
-            itemOptions: constraintItemOptions(uiElement)
-          },
-          leaf: true
-        }
-      })
-    };
   }
 
   transformPayloadToMeshProps = (uiElement, baseX, baseY, depth) => {
@@ -256,6 +191,7 @@ class App extends Component {
     if (this.updateMesh) {
       this.updateMesh = false;
     }
+
     return (
       <div className="App">
         <UIHierarchyTree
@@ -273,11 +209,12 @@ class App extends Component {
         </UIHierarchyScene>
         <div ref="config" className="config-pane">
           { this.state.activeNode !== null ? (
-            <ViewForm
+            <Form
               id={this.state.activeNode.id}
               type={this.state.activeNode.type}
-              viewProps={this.state.activeNode.properties}
-              systemMetadata={this.systemMetadata} />
+              formProps={this.state.activeNode.properties}
+              systemMetadata={this.systemMetadata}
+              onFormChange={this.onFormChange} />
             ): null
           }
         </div>

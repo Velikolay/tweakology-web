@@ -30,24 +30,24 @@ const EnhancedUIButtonViewForm = withFormik({
   mapPropsToValues: props => ({
     // Frame
     frame: {
-      x: props.viewProps.frame.minX,
-      y: props.viewProps.frame.minY,
-      width: props.viewProps.frame.maxX - props.viewProps.frame.minX,
-      height: props.viewProps.frame.maxY - props.viewProps.frame.minY
+      x: props.formProps.frame.minX,
+      y: props.formProps.frame.minY,
+      width: props.formProps.frame.maxX - props.formProps.frame.minX,
+      height: props.formProps.frame.maxY - props.formProps.frame.minY
     },
     // Background color
-    backgroundColor: props.viewProps.backgroundColor,
+    backgroundColor: props.formProps.backgroundColor,
     // Title
     title: {
       // Title Text
-      text: props.viewProps.title.properties.text,
+      text: props.formProps.title.properties.text,
       // Title Color
-      textColor: props.viewProps.title.properties.textColor,
+      textColor: props.formProps.title.properties.textColor,
       // Title Font
       font: {
-        familyName: transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.title.properties.font.familyName),
-        fontStyle: transformFontName(props.viewProps.title.properties.font.fontName),
-        pointSize: props.viewProps.title.properties.font.pointSize
+        familyName: transformFontFamily(props.systemMetadata.fonts.systemFont, props.formProps.title.properties.font.familyName),
+        fontStyle: transformFontName(props.formProps.title.properties.font.fontName),
+        pointSize: props.formProps.title.properties.font.pointSize
       }
     }
   }),

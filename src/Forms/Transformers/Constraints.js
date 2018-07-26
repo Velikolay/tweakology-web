@@ -34,13 +34,13 @@ const ConstraintTransformer = {
 };
 
 const toFormikItem = (payloadItem, placeholder) => {
-  const attrVal = payloadItem.attribute.toString();
+  const attrVal = payloadItem.attribute.value.toString();
   const item = {
     attribute: {
       value: attrVal
     },
     item: {
-      value: payloadItem.item,
+      value: payloadItem.item.value,
       placeholder: placeholder
     }
   };

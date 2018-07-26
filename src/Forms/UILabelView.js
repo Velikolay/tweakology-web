@@ -35,22 +35,22 @@ const EnhancedUILabelViewForm = withFormik({
   mapPropsToValues: props => ({
     // Frame
     frame: {
-      x: props.viewProps.frame.minX,
-      y: props.viewProps.frame.minY,
-      width: props.viewProps.frame.maxX - props.viewProps.frame.minX,
-      height: props.viewProps.frame.maxY - props.viewProps.frame.minY
+      x: props.formProps.frame.minX,
+      y: props.formProps.frame.minY,
+      width: props.formProps.frame.maxX - props.formProps.frame.minX,
+      height: props.formProps.frame.maxY - props.formProps.frame.minY
     },
     // Background color
-    backgroundColor: props.viewProps.backgroundColor,
+    backgroundColor: props.formProps.backgroundColor,
     // Text
-    text: props.viewProps.text,
+    text: props.formProps.text,
     // Text color
-    textColor: props.viewProps.textColor,
+    textColor: props.formProps.textColor,
     // Font
     font: {
-      familyName: props.viewProps.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.viewProps.font.familyName) : null,
-      fontStyle: props.viewProps.font ? transformFontName(props.viewProps.font.fontName) : null,
-      pointSize: props.viewProps.font ? props.viewProps.font.pointSize : null
+      familyName: props.formProps.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.formProps.font.familyName) : null,
+      fontStyle: props.formProps.font ? transformFontName(props.formProps.font.fontName) : null,
+      pointSize: props.formProps.font ? props.formProps.font.pointSize : null
     }
   }),
   // validationSchema: Yup.object().shape({

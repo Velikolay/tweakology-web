@@ -17,7 +17,7 @@ const getAttributeGroup = (attribute) => {
     }
   }
   return null;
-}
+};
 
 const getAttributes1 = (itemOptions) => {
   if (itemOptions.length === 1) {
@@ -25,7 +25,7 @@ const getAttributes1 = (itemOptions) => {
     return [constraintAttributes[constraintAttributes.length - 1]];
   }
   return constraintAttributes;
-}
+};
 
 const getAttributes2 = (attribute1) => {
   const group = getAttributeGroup(attribute1);
@@ -34,7 +34,11 @@ const getAttributes2 = (attribute1) => {
   } else {
     return [];
   }
-}
+};
+
+const getItems2 = (itemOptions, item1) => {
+  return itemOptions.filter(item => item.value !== item1.value);
+};
 
 const Constraint = props => {
   const {
@@ -50,6 +54,7 @@ const Constraint = props => {
 
   const attribute1 = formikValueWithPrefix(props, "first.attribute");
   const attribute2 = formikValueWithPrefix(props, "second.attribute");
+  const item1 = formikValueWithPrefix(props, "first.item");
 
   if (attribute2 && attribute2.value) {
     const group1 = getAttributeGroup(attribute1);
@@ -59,8 +64,10 @@ const Constraint = props => {
       setFieldValue(nameWithPrefix(props, "second.attribute.value"), '');
     }
   }
-  const attributes1 = getAttributes1(itemOptions)
+
+  const attributes1 = getAttributes1(itemOptions);
   const attributes2 = getAttributes2(attribute1);
+  const items2 = getItems2(itemOptions, item1);
 
   return (
     <div className="form-group">
@@ -78,9 +85,9 @@ const Constraint = props => {
         </select>
       </div>
       {
-        attributes2.length > 0 ?
+        items2.length > 0 && attributes2.length > 0 ?
         <div className="form-row">
-          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={formik} items={itemOptions} attributes={attributes2} />
+          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={formik} items={items2} attributes={attributes2} />
         </div>
         : null
       }
