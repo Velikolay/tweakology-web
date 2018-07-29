@@ -1,7 +1,7 @@
 import { attributeNames } from '../Static/Constraints.js';
 
 const updatedConstraintNodeName = (updated, node) => {
-  return constraintNodeName(updated, node.id.split(':')[0]);
+  return constraintNodeName(updated, node.superview);
 }
 
 const itemTypeById = (itemId, superview) => {
@@ -20,12 +20,20 @@ const itemTypeById = (itemId, superview) => {
   return itemId;
 }
 
-const constraintNodeName = (constraint, superviewId) => {
+const constraintNodeName = (constraint, superview) => {
   const isFirstInit = constraint.first && constraint.first.item.value && constraint.first.attribute.value;
   if (isFirstInit) {
-    let name = `${attributeNames[constraint.first.attribute.value]} = `;
-    if (constraint.first.item.value !== superviewId) {
-      name = `${constraint.first.item.value}.${name}`;
+    let relation = '=';
+    if (constraint.relation === '1') {
+      relation = '≥';
+    }
+    if (constraint.relation === '2') {
+      relation = '≤';
+    }
+
+    let name = `${attributeNames[constraint.first.attribute.value]} ${relation} `;
+    if (constraint.first.item.value !== superview.id) {
+      name = `${itemTypeById(constraint.first.item.value, superview)}.${name}`;
     }
 
     const isSecondInit = constraint.second && constraint.second.item.value && constraint.second.attribute.value;
@@ -34,8 +42,8 @@ const constraintNodeName = (constraint, superviewId) => {
         name += `${numToFixed(constraint.multiplier)} * `;
       }
       let secondItem = `${attributeNames[constraint.second.attribute.value]}`;
-      if (constraint.second.item.value !== superviewId) {
-        secondItem = `${constraint.second.item.value}.${secondItem}`;
+      if (constraint.second.item.value !== superview.id) {
+        secondItem = `${itemTypeById(constraint.second.item.value, superview)}.${secondItem}`;
       }
       name += secondItem;
     }
@@ -115,7 +123,8 @@ const addNewConstraintToTreeNode = (node) => {
   if (constraintsListNode.module === 'Constraints') {
     const constraint = newConstraint();
     const constraintNode = {
-      module: constraintNodeName(constraint, node.id),
+      module: constraintNodeName(constraint, node),
+      superview: node,
       type: 'NSLayoutConstraint',
       id: `${node.id}:c${constraintsListNode.children.length}`,
       properties: {
@@ -131,10 +140,12 @@ const addNewConstraintToTreeNode = (node) => {
 const transformConstraintPayloadToTree = (viewNode, constraints)  => {
   return {
     module: 'Constraints',
+    superview: viewNode,
     collapsed: true,
     children: constraints.map((constraint, idx) => {
       return {
-        module: constraintNodeName(constraint, viewNode.id),
+        module: constraintNodeName(constraint, viewNode),
+        superview: viewNode,
         type: 'NSLayoutConstraint',
         id: `${viewNode.id}:c${idx}`,
         properties: {

@@ -16,7 +16,7 @@ const InnerNSLayoutConstraint = props => {
         <FormikObserver
             onChange={({ values }) => props.onFormChange(props.id, props.type, values)}
         />
-        {/* <Persist name={props.id} /> */}
+        <Persist name={props.id} />
     </form>
   );
 };
