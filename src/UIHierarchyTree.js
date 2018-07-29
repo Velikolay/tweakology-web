@@ -26,8 +26,8 @@ class UIHierarchyTree extends Component {
         'is-active': this.state.activeNode && node.id === this.state.activeNode.id
       })}>
         { this.state.activeNode && node.id === this.state.activeNode.id && !('leaf' in node) ?
-          <button className='add-button'>
-            add view
+          <button className='add-button' onClick={this.props.onClickAdd.bind(null, node)}>
+            add
           </button>
           :
           ""

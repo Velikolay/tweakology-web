@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Form from './Forms/Form';
 import { submitChanges } from './Forms/Submit.js';
 import { enrichFontsData } from './Utils/Font.js';
-import { transformConstraintPayloadToTree, updatedConstraintNodeName } from './Utils/Tree.js';
+import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree.js';
 
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
@@ -95,6 +95,11 @@ class App extends Component {
     }
   }
 
+  onClickAdd = node => {
+    addNewConstraintToTreeNode(node);
+    this.setState({ activeNode: node });
+  }
+
   onNodeClick = node => {
     if (node.id) {
       this.setState({ activeNode: node });
@@ -133,21 +138,19 @@ class App extends Component {
       properties: uiElement['properties']
     };
 
-    const children = [];
+    treeNode.children = [];
     if ('subviews' in uiElement) {
       for (let subview of uiElement.subviews) {
-        children.push(this.transformPayloadToTree(subview));
+        treeNode.children.push(this.transformPayloadToTree(subview));
       }
     }
 
     if (uiElement.constraints && uiElement.constraints.length > 0) {
-      children.push(transformConstraintPayloadToTree(uiElement));
+      treeNode.children.push(transformConstraintPayloadToTree(treeNode, uiElement.constraints));
     }
 
-    if (children.length > 0) {
-      treeNode['children'] = children;
-    } else {
-      treeNode['leaf'] = true;
+    if (treeNode.children.length === 0) {
+      treeNode.leaf = true;
     }
 
     return treeNode;
@@ -157,6 +160,20 @@ class App extends Component {
     if (Object.keys(uiElement).length === 0) {
       return [];
     }
+
+    const isSelected = (activeNode, uiElement) => {
+      let selected = activeNode && activeNode.id === uiElement.uid;
+      if (!selected && activeNode.type === 'NSLayoutConstraint') {
+        const constraint = activeNode.properties.constraint;
+        if (constraint.first && constraint.first.item.value === uiElement.uid) {
+          selected = true;
+        }
+        if (constraint.second && constraint.second.item.value === uiElement.uid) {
+          selected = true;
+        }
+      }
+      return selected;
+    };
 
     const properties = uiElement['properties'];
     const frame = properties['frame'];
@@ -170,8 +187,8 @@ class App extends Component {
       height: height,
       imgUrl: 'http://nikoivan01m.local:8080/images?path=' + uiElement['hierarchyMetadata'],
       updateTexture: this.updateMesh,
-      selected: this.state.activeNode && this.state.activeNode.id === uiElement['uid'] ? true: false,
-      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === uiElement['uid'] ? true: false
+      selected: isSelected(this.state.activeNode, uiElement),
+      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === uiElement.uid
     }];
     if ('subviews' in uiElement) {
       const nextBaseX = baseX + frame['minX'] - (depth === 0? width/2: 0);
@@ -198,6 +215,7 @@ class App extends Component {
           ref="tree"
           tree={this.state.tree}
           activeNode={this.state.activeNode}
+          onClickAdd={this.onClickAdd}
           onNodeClick={this.onNodeClick}
           onNodeFocus={this.onNodeFocus}
           onNodeFocusOut={this.onNodeFocusOut}
