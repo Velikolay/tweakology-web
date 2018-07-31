@@ -1,7 +1,8 @@
 import React from 'react';
 import { withFormik } from 'formik';
 import FormikObserver from 'formik-observer';
-import { Persist } from 'formik-persist'
+import { Persist } from './Persistence/Presistence'
+// import { Persist } from 'formik-persist'
 import Yup from 'yup';
 
 import Constraint from './Groups/Constraint';
@@ -12,18 +13,18 @@ import ConstraintTransformer from './Transformers/Constraints';
 const InnerNSLayoutConstraint = props => {
   return (
     <form onSubmit={props.handleSubmit}>
-        <Constraint itemOptions={props.formProps.itemOptions} formik={props} />
-        <FormikObserver
-            onChange={({ values }) => props.onFormChange(props.id, props.type, values)}
-        />
-        <Persist name={props.id} />
+      <Constraint itemOptions={props.formData.itemOptions} formik={props} />
+      <FormikObserver
+        onChange={({ values }) => props.onFormChange(props.id, props.type, values)}
+      />
+      <Persist name={props.id} formik={props} />
     </form>
   );
 };
 
 const EnhancedNSLayoutConstraint = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ConstraintTransformer.payloadToFormikProps(props.formProps.constraint),
+  mapPropsToValues: props => ConstraintTransformer.payloadToFormikProps(props.formData.constraint),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
   //     .email('Invalid email address')

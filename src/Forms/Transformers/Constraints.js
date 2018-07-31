@@ -3,6 +3,7 @@ import { attributeToModifiers } from '../../Static/Constraints';
 const ConstraintTransformer = {
 
   payloadToFormikProps: (payload) => {
+    // console.log(payload);
     const formikProps = {
       first: toFormikItem(payload.first, 'Item1'),
       isActive: payload.isActive,

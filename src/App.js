@@ -230,7 +230,7 @@ class App extends Component {
             <Form
               id={this.state.activeNode.id}
               type={this.state.activeNode.type}
-              formProps={this.state.activeNode.properties}
+              formData={this.state.activeNode.properties}
               systemMetadata={this.systemMetadata}
               onFormChange={this.onFormChange} />
             ): null

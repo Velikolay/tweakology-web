@@ -1,6 +1,7 @@
 import React from 'react';
 import { withFormik } from 'formik';
-import { Persist } from 'formik-persist'
+import { Persist } from './Persistence/Presistence'
+// import { Persist } from 'formik-persist'
 import Yup from 'yup';
 
 import { transformFontName, transformFontFamily } from '../Utils/Font';
@@ -13,19 +14,19 @@ import ColorGroup from './Groups/Color';
 const InnerUILabelViewForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
-        <FrameGroup prefix="frame" {...props} />
-        <hr/>
-        <TextGroup {...props} />
-        <FontGroup prefix="font" {...props} />
-        <ColorGroup prefix="textColor" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
-        { props.values.backgroundColor ? (
-          <div>
-            <hr/>
-            <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
-          </div>
-          ): null
-        }
-        <Persist name={props.id} />
+      <FrameGroup prefix="frame" {...props} />
+      <hr/>
+      <TextGroup {...props} />
+      <FontGroup prefix="font" {...props} />
+      <ColorGroup prefix="textColor" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
+      { props.values.backgroundColor ? (
+        <div>
+          <hr/>
+          <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
+        </div>
+        ): null
+      }
+      <Persist name={props.id} formik={props} />
     </form>
   );
 };
@@ -35,22 +36,22 @@ const EnhancedUILabelViewForm = withFormik({
   mapPropsToValues: props => ({
     // Frame
     frame: {
-      x: props.formProps.frame.minX,
-      y: props.formProps.frame.minY,
-      width: props.formProps.frame.maxX - props.formProps.frame.minX,
-      height: props.formProps.frame.maxY - props.formProps.frame.minY
+      x: props.formData.frame.minX,
+      y: props.formData.frame.minY,
+      width: props.formData.frame.maxX - props.formData.frame.minX,
+      height: props.formData.frame.maxY - props.formData.frame.minY
     },
     // Background color
-    backgroundColor: props.formProps.backgroundColor,
+    backgroundColor: props.formData.backgroundColor,
     // Text
-    text: props.formProps.text,
+    text: props.formData.text,
     // Text color
-    textColor: props.formProps.textColor,
+    textColor: props.formData.textColor,
     // Font
     font: {
-      familyName: props.formProps.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.formProps.font.familyName) : null,
-      fontStyle: props.formProps.font ? transformFontName(props.formProps.font.fontName) : null,
-      pointSize: props.formProps.font ? props.formProps.font.pointSize : null
+      familyName: props.formData.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.formData.font.familyName) : null,
+      fontStyle: props.formData.font ? transformFontName(props.formData.font.fontName) : null,
+      pointSize: props.formData.font ? props.formData.font.pointSize : null
     }
   }),
   // validationSchema: Yup.object().shape({

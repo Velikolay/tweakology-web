@@ -1,6 +1,7 @@
 import React from 'react';
 import { withFormik } from 'formik';
-import { Persist } from 'formik-persist'
+import { Persist } from './Persistence/Presistence'
+// import { Persist } from 'formik-persist'
 import Yup from 'yup';
 
 import FrameGroup from './Groups/Frame';
@@ -10,15 +11,15 @@ import ColorGroup from './Groups/Color';
 const InnerUIViewForm = props => {
   return (
     <form onSubmit={props.handleSubmit}>
-        <FrameGroup prefix="frame" {...props} />
-        { props.values.backgroundColor? (
-          <div>
-            <hr/>
-            <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
-          </div>
-          ): null
-        }
-        <Persist name={props.id} />
+      <FrameGroup prefix="frame" {...props} />
+      { props.values.backgroundColor? (
+        <div>
+          <hr/>
+          <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
+        </div>
+        ): null
+      }
+      <Persist name={props.id} formik={props} />
     </form>
   );
 };
@@ -28,13 +29,13 @@ const EnhancedUIViewForm = withFormik({
   mapPropsToValues: props => ({
     // Frame
     frame: {
-      x: props.formProps.frame.minX,
-      y: props.formProps.frame.minY,
-      width: props.formProps.frame.maxX - props.formProps.frame.minX,
-      height: props.formProps.frame.maxY - props.formProps.frame.minY
+      x: props.formData.frame.minX,
+      y: props.formData.frame.minY,
+      width: props.formData.frame.maxX - props.formData.frame.minX,
+      height: props.formData.frame.maxY - props.formData.frame.minY
     },
     // Background color
-    backgroundColor: props.formProps.backgroundColor,
+    backgroundColor: props.formData.backgroundColor,
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()

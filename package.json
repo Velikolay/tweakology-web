@@ -6,7 +6,6 @@
     "css-element-queries": "^1.0.2",
     "formik": "^0.11.11",
     "formik-observer": "^1.0.1",
-    "formik-persist": "^1.0.0",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-three": "^0.9.7",

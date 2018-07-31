@@ -1,4 +1,5 @@
-import { attributeNames } from '../Static/Constraints.js';
+import { attributeNames, relationSymbols } from '../Static/Constraints.js';
+import { readPersistedValues } from '../Forms/Persistence/Presistence';
 
 const updatedConstraintNodeName = (updated, node) => {
   return constraintNodeName(updated, node.superview);
@@ -23,14 +24,7 @@ const itemTypeById = (itemId, superview) => {
 const constraintNodeName = (constraint, superview) => {
   const isFirstInit = constraint.first && constraint.first.item.value && constraint.first.attribute.value;
   if (isFirstInit) {
-    let relation = '=';
-    if (constraint.relation === '1') {
-      relation = '≥';
-    }
-    if (constraint.relation === '2') {
-      relation = '≤';
-    }
-
+    const relation = relationSymbols[constraint.relation];
     let name = `${attributeNames[constraint.first.attribute.value]} ${relation} `;
     if (constraint.first.item.value !== superview.id) {
       name = `${itemTypeById(constraint.first.item.value, superview)}.${name}`;
@@ -143,11 +137,13 @@ const transformConstraintPayloadToTree = (viewNode, constraints)  => {
     superview: viewNode,
     collapsed: true,
     children: constraints.map((constraint, idx) => {
+      const constraintId = `${viewNode.id}:c${idx}`;
+      const persistedConstraint = readPersistedValues(constraintId);
       return {
-        module: constraintNodeName(constraint, viewNode),
+        module: constraintNodeName(persistedConstraint ? persistedConstraint : constraint, viewNode),
         superview: viewNode,
         type: 'NSLayoutConstraint',
-        id: `${viewNode.id}:c${idx}`,
+        id: constraintId,
         properties: {
           constraint: constraint,
           itemOptions: constraintItemOptions(viewNode)

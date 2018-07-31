@@ -26,6 +26,10 @@ const attributeNames = [
   'centerXWithinMargins', 'centerYWithinMargins'
 ];
 
+const relationSymbols = [
+  '=', '≥', '≤'
+];
+
 const valueSwitch = {
   respectLanguageDirection: {
     '1': '5',
@@ -162,4 +166,4 @@ const constraintAttributes = [
   },
 ];
 
-export { attributeNames, valueSwitch, attributeToModifiers, constraintAttributes };
+export { attributeNames, relationSymbols, valueSwitch, attributeToModifiers, constraintAttributes };
