@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import Form from './Forms/Form';
 import { submitChanges } from './Forms/Submit.js';
 import { enrichFontsData } from './Utils/Font.js';
-import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree.js';
+import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint.js';
 
 import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';

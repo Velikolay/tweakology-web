@@ -7,8 +7,6 @@ import Yup from 'yup';
 
 import Constraint from './Groups/Constraint';
 
-import ConstraintTransformer from './Transformers/Constraints';
-
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerNSLayoutConstraint = props => {
   return (
@@ -24,7 +22,7 @@ const InnerNSLayoutConstraint = props => {
 
 const EnhancedNSLayoutConstraint = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ConstraintTransformer.payloadToFormikProps(props.formData.constraint),
+  mapPropsToValues: props => props.formData.constraint,
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
   //     .email('Invalid email address')

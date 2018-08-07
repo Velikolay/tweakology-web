@@ -68,29 +68,37 @@ const Constraint = props => {
   const attributes1 = getAttributes1(itemOptions);
   const attributes2 = getAttributes2(attribute1);
   const items2 = getItems2(itemOptions, item1);
+  const disabled = !formik.formData.added;
 
   return (
     <div className="form-group">
       <div className="form-row">
-        <ConstraintItemSelector prefix={nameWithPrefix(props, "first")} formik={formik} items={itemOptions} attributes={attributes1} />
+        <ConstraintItemSelector prefix={nameWithPrefix(props, "first")} formik={formik} items={itemOptions} attributes={attributes1} disabled={disabled} />
       </div>
       <div className="form-row">
         <select
           id={nameWithPrefix(props, "relation")}
           value={formikValueWithPrefix(props, "relation")}
-          onChange={props.formik.handleChange}>
+          onChange={props.formik.handleChange}
+          disabled={disabled}>
+          <option value="-1">Less Than or Equal</option>
           <option value="0">Equal</option>
           <option value="1">Greater Than or Equal</option>
-          <option value="2">Less Than or Equal</option>
         </select>
       </div>
       {
         items2.length > 0 && attributes2.length > 0 ?
         <div className="form-row">
-          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={formik} items={items2} attributes={attributes2} />
+          <ConstraintItemSelector prefix={nameWithPrefix(props, "second")} formik={formik} items={items2} attributes={attributes2} disabled={disabled} />
         </div>
         : null
       }
+      <div className="form-row">
+        <label className="input-title">
+          Multiplier
+        </label>
+        <Field name={nameWithPrefix(props, "multiplier")} type="number" min={0} step={0.1} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} disabled={disabled} />
+      </div>
       <div className="form-row">
         <label className="input-title">
           Constant
@@ -102,12 +110,6 @@ const Constraint = props => {
           Priority
         </label>
         <Field name={nameWithPrefix(props, "priority")} type="number" min={0} className={errors.priority && touched.priority ? 'full-width-input error' : 'full-width-input'} />
-      </div>
-      <div className="form-row">
-        <label className="input-title">
-          Multiplier
-        </label>
-        <Field name={nameWithPrefix(props, "multiplier")} type="number" min={0} step={0.1} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} />
       </div>
       <div className="form-row">
         <label className="input-title">

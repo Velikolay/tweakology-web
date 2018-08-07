@@ -1,4 +1,5 @@
 import { getFontName } from '../Utils/Font';
+import ConstraintTransformer from '../Transformers/Constraints';
 
 const _treeToFormIds = uiElement => {
   let treeNode = [uiElement['id']];
@@ -19,7 +20,21 @@ const submitChanges = (tree, systemMetadata) => {
     const formState = window.localStorage.getItem(id);
     if (formState) {
       const state = JSON.parse(formState);
-      if (state.dirty === true) {
+      if (state.type === 'NSLayoutConstraint' && (state.dirty || state.added)) {
+        const idParts = id.split(':');
+        const constraint = ConstraintTransformer.toPayload(state.values);
+        changeSet.push({
+          operation: 'modify',
+          view: {
+            id: idParts[0],
+            constraints: [{
+              idx: parseInt(idParts[1].substring(1)),
+              added: state.added ? true : false,
+              ...constraint
+            }]
+          }
+        });
+      } else if (state.dirty === true) {
         enrichValues(state.values, systemMetadata);
         changeSet.push({
           operation: 'modify',
@@ -33,6 +48,7 @@ const submitChanges = (tree, systemMetadata) => {
     }
   }
 
+  console.log(changeSet);
   return fetch('http://nikoivan01m.local:8080/tweaks/test', {
     method: 'put',
     headers: {'Content-Type': 'application/json'},

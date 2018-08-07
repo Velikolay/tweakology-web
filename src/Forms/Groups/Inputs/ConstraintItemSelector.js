@@ -37,6 +37,7 @@ const ConstraintItemSelector = (props) => {
   const itemsDOM = buildItemsDOM(item, props);
   const modifiers = getModifiers(attribute, props.attributes);
   const hasModifiers = modifiers ? true : false;
+
   return (
     <div className="cis-container">
       <div className={cx('cis-item', {
@@ -45,7 +46,8 @@ const ConstraintItemSelector = (props) => {
         <select
           id={nameWithPrefix(props, 'item.value')}
           value={item.value}
-          onChange={handleChange}>
+          onChange={handleChange}
+          disabled={props.disabled}>
           {itemsDOM}
         </select>
       </div>
@@ -57,7 +59,8 @@ const ConstraintItemSelector = (props) => {
         <select
           id={nameWithPrefix(props, 'attribute.value')}
           value={attribute.value}
-          onChange={handleAttributeChange}>
+          onChange={handleAttributeChange}
+          disabled={props.disabled}>
           {attributeGroupsDOM}
         </select>
       </div>
@@ -69,6 +72,7 @@ const ConstraintItemSelector = (props) => {
             options={modifiers}
             formik={props.formik}
             onSwitch={handleSwitchModifier}
+            disabled={props.disabled}
           />
         </div>
         :

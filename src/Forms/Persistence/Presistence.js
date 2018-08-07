@@ -6,6 +6,7 @@ import isEqual from 'lodash.isequal';
 class Persist extends Component {
   static defaultProps = {
     debounce: 300,
+    excludeSystemMetadata: true,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -14,7 +15,7 @@ class Persist extends Component {
     } else {
       if (!isEqual(nextProps.formik, this.props.formik)) {
         // console.log('Form saving..');
-        this.saveForm(nextProps.formik);
+        this.saveForm(nextProps.name, nextProps.formik);
       } else {
         // console.log('Form wont save');
       }
@@ -25,9 +26,13 @@ class Persist extends Component {
     this.setForm(this.props);
   }
 
-  saveForm = debounce(data => {
-    // BUG!!
-    window.localStorage.setItem(this.props.name, JSON.stringify(data));
+  saveForm = debounce((name, data) => {
+    if (this.props.excludeSystemMetadata) {
+      const { systemMetadata, ...other } = data;
+      window.localStorage.setItem(name, JSON.stringify(other));
+    } else {
+      window.localStorage.setItem(name, JSON.stringify(data));
+    }
     // console.log('Form saved');
   }, this.props.debounce);
 

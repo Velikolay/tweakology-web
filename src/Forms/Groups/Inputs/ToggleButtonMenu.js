@@ -9,9 +9,10 @@ const ToggleButtonMenu = (props) => {
     const width = 100 / props.options.length;
     const buttons = props.options.map(option => {
       const optionValue = formikValueWithPrefix(props, option.name);
-      return <ToggleButton 
+      return <ToggleButton
                 width={`${width}%`}
                 isOn={optionValue}
+                disabled={props.disabled}
                 {...option}
                 onSwitch={() => props.onSwitch(option.name, !optionValue)} />
     });
@@ -38,6 +39,7 @@ const ToggleButton = (props) => {
         'is-active': props.isOn
       })}
       type="button"
+      disabled={props.disabled}
       onClick={props.onSwitch}>
       {props.text}
     </button>

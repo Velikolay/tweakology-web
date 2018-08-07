@@ -11,7 +11,7 @@ const Form = props => {
   } else if (props.type === 'UILabel' || props.type === 'UIButtonLabel') {
     return <UILabelView {...props} />;
   } else if (props.type === 'NSLayoutConstraint') {
-    return <NSLayoutConstraint {...props} onFormChange={props.onFormChange} />;
+    return <NSLayoutConstraint {...props} />;
   } else {
     return <UIView {...props} />;
   }
