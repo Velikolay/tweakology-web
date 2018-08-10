@@ -16,36 +16,59 @@ const _treeToFormIds = uiElement => {
 const submitChanges = (tree, systemMetadata) => {
   const ids = _treeToFormIds(tree);
   let changeSet = [];
+
+  const constraints = {};
   for (let id of ids) {
     const formState = window.localStorage.getItem(id);
     if (formState) {
       const state = JSON.parse(formState);
       if (state.type === 'NSLayoutConstraint' && (state.dirty || state.added)) {
-        const idParts = id.split(':');
-        const constraint = ConstraintTransformer.toPayload(state.values);
-        changeSet.push({
-          operation: 'modify',
-          view: {
-            id: idParts[0],
-            constraints: [{
-              idx: parseInt(idParts[1].substring(1)),
-              added: state.added ? true : false,
-              ...constraint
-            }]
-          }
-        });
-      } else if (state.dirty === true) {
+        const viewId = id.split('.')[0];
+        const constraintFormValues = ConstraintTransformer.toPayload(state.values);
+        const constraint = {
+          idx: parseInt(id.split(':')[1]),
+          added: state.added ? true : false,
+          ...constraintFormValues
+        };
+        if (!(viewId in constraints)) {
+          constraints[viewId] = [];
+        }
+        constraints[viewId].push(constraint);
+      }
+    }
+  }
+
+  for (let id of ids) {
+    const formState = window.localStorage.getItem(id);
+    if (formState) {
+      const state = JSON.parse(formState);
+      if (state.type !== 'NSLayoutConstraint' && state.dirty) {
         enrichValues(state.values, systemMetadata);
-        changeSet.push({
+        const change = {
           operation: 'modify',
           view: {
             id: id,
             properties: state.values,
-            frame: state.values.frame
+            frame: state.values.frame,
           }
-        });
+        };
+        if (id in constraints) {
+          change.view['constraints'] = constraints[id];
+          delete constraints[id];
+        }
+        changeSet.push(change);
       }
     }
+  }
+
+  for (let id in constraints) {
+    changeSet.push({
+      operation: 'modify',
+      view: {
+        id: id,
+        constraints: constraints[id],
+      }
+    });
   }
 
   console.log(changeSet);

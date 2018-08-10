@@ -117,7 +117,7 @@ const addNewConstraintToTreeNode = (node) => {
   const constraintsListNode = node.children[node.children.length - 1];
   if (constraintsListNode.module === 'Constraints') {
     const idx = constraintsListNode.children.length;
-    const constraintId = `${node.id}:c${idx}`;
+    const constraintId = `${node.id}.constraints:${idx}`;
     const constraint = newConstraint();
     const constraintNode = {
       module: constraintNodeName(constraint, node),
@@ -135,13 +135,13 @@ const addNewConstraintToTreeNode = (node) => {
   }
 }
 
-const transformConstraintPayloadToTree = (viewNode, constraints)  => {
+const transformConstraintPayloadToTree = (viewNode, constraints) => {
   return {
     module: 'Constraints',
     superview: viewNode,
     collapsed: true,
     children: constraints.map((constraint, idx) => {
-      const constraintId = `${viewNode.id}:c${idx}`;
+      const constraintId = `${viewNode.id}.constraints:${idx}`;
       const persistedConstraint = readPersistedValues(constraintId);
       return {
         module: constraintNodeName(persistedConstraint ? persistedConstraint : ConstraintTransformer.fromPayload(constraint), viewNode),
@@ -150,11 +150,11 @@ const transformConstraintPayloadToTree = (viewNode, constraints)  => {
         id: constraintId,
         properties: {
           constraint: constraint,
-          itemOptions: constraintItemOptions(viewNode)
+          itemOptions: constraintItemOptions(viewNode),
         },
-        leaf: true
-      }
-    })
+        leaf: true,
+      };
+    }),
   };
 };
 
