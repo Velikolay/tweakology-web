@@ -2,7 +2,6 @@ import { Component } from 'react';
 import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
-
 class Persist extends Component {
   static defaultProps = {
     debounce: 300,
@@ -84,4 +83,30 @@ const readPersistedValues = (item) => {
   return maybeState ? JSON.parse(maybeState).values : null;
 }
 
-export { Persist, readPersistedValues };
+const readPersistedConstraints = () => {
+  const constraints = {};
+  for (let i = 0; i < window.localStorage.length; i++) {
+    const id = window.localStorage.key(i);
+    const formState = window.localStorage.getItem(id);
+    if (formState) {
+      const state = JSON.parse(formState);
+      if (state.type === 'NSLayoutConstraint' && (state.dirty || state.formData.added)) {
+        const viewId = id.split('.')[0];
+        if (!(viewId in constraints)) {
+          constraints[viewId] = [];
+        }
+        constraints[viewId].push(state);
+      }
+    }
+  }
+
+  // for (let viewId in constraints) {
+  //   console.log(constraints[viewId]);
+  //   constraints[viewId].sort((a, b) => parseInt(a.split(':')[1]) < parseInt(b.split(':')[1]));
+  //   console.log(constraints[viewId]);
+  // }
+
+  return constraints
+}
+
+export { Persist, readPersistedValues, readPersistedConstraints };

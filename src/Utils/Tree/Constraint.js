@@ -1,5 +1,5 @@
 import { attributeNames, relationSymbols } from '../../Static/Constraints.js';
-import { readPersistedValues } from '../../Forms/Persistence/Presistence';
+import { readPersistedValues, readPersistedConstraints } from '../../Forms/Persistence/Presistence';
 import ConstraintTransformer from '../../Transformers/Constraints';
 
 const updatedConstraintNodeName = (updated, node) => {
@@ -94,7 +94,8 @@ const newConstraint = () => {
         value: ''
       },
       item: {
-        value: ''
+        value: '',
+        placeholder: 'Item1',
       }
     },
     second: {
@@ -102,7 +103,8 @@ const newConstraint = () => {
         value: ''
       },
       item: {
-        value: ''
+        value: '',
+        placeholder: 'Item2'
       }
     },
     isActive: true,
@@ -136,25 +138,41 @@ const addNewConstraintToTreeNode = (node) => {
 }
 
 const transformConstraintPayloadToTree = (viewNode, constraints) => {
+  constraints = constraints.map(ConstraintTransformer.fromPayload);
+  const lastIdx = constraints.length - 1;
+  const constraintsByView = readPersistedConstraints();
+  if (viewNode.id in constraintsByView) {
+    console.log(constraintsByView[viewNode.id]);
+    const localOnly = constraintsByView[viewNode.id]
+      .filter(c => c.formData.added && parseInt(c.id.split(':')[1]) > lastIdx)
+      .map(c => c.values);
+    constraints.push(...localOnly);
+  }
+
+  const itemOptions = constraintItemOptions(viewNode);
+  const children = constraints.map((constraint, idx) => {
+    const constraintId = `${viewNode.id}.constraints:${idx}`;
+    const local = readPersistedValues(constraintId);
+
+    return {
+      module: constraintNodeName(local ? local : constraint, viewNode),
+      superview: viewNode,
+      type: 'NSLayoutConstraint',
+      id: constraintId,
+      properties: {
+        added: idx > lastIdx,
+        constraint: constraint,
+        itemOptions: itemOptions,
+      },
+      leaf: true,
+    };
+  });
+
   return {
     module: 'Constraints',
     superview: viewNode,
     collapsed: true,
-    children: constraints.map((constraint, idx) => {
-      const constraintId = `${viewNode.id}.constraints:${idx}`;
-      const persistedConstraint = readPersistedValues(constraintId);
-      return {
-        module: constraintNodeName(persistedConstraint ? persistedConstraint : ConstraintTransformer.fromPayload(constraint), viewNode),
-        superview: viewNode,
-        type: 'NSLayoutConstraint',
-        id: constraintId,
-        properties: {
-          constraint: constraint,
-          itemOptions: constraintItemOptions(viewNode),
-        },
-        leaf: true,
-      };
-    }),
+    children: children,
   };
 };
 

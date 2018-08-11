@@ -1,4 +1,5 @@
 import { getFontName } from '../Utils/Font';
+import { readPersistedConstraints } from './Persistence/Presistence';
 import ConstraintTransformer from '../Transformers/Constraints';
 
 const _treeToFormIds = uiElement => {
@@ -13,30 +14,20 @@ const _treeToFormIds = uiElement => {
   return treeNode;
 };
 
+const constraintToPayload = (constraintForm) => {
+  const constraintValues = ConstraintTransformer.toPayload(constraintForm.values);
+  return {
+    idx: parseInt(constraintForm.id.split(':')[1]),
+    added: constraintForm.added ? true : false,
+    ...constraintValues
+  };
+};
+
 const submitChanges = (tree, systemMetadata) => {
   const ids = _treeToFormIds(tree);
   let changeSet = [];
 
-  const constraints = {};
-  for (let id of ids) {
-    const formState = window.localStorage.getItem(id);
-    if (formState) {
-      const state = JSON.parse(formState);
-      if (state.type === 'NSLayoutConstraint' && (state.dirty || state.added)) {
-        const viewId = id.split('.')[0];
-        const constraintFormValues = ConstraintTransformer.toPayload(state.values);
-        const constraint = {
-          idx: parseInt(id.split(':')[1]),
-          added: state.added ? true : false,
-          ...constraintFormValues
-        };
-        if (!(viewId in constraints)) {
-          constraints[viewId] = [];
-        }
-        constraints[viewId].push(constraint);
-      }
-    }
-  }
+  const constraints = readPersistedConstraints();
 
   for (let id of ids) {
     const formState = window.localStorage.getItem(id);
@@ -53,7 +44,7 @@ const submitChanges = (tree, systemMetadata) => {
           }
         };
         if (id in constraints) {
-          change.view['constraints'] = constraints[id];
+          change.view['constraints'] = constraints[id].map(constraintToPayload);
           delete constraints[id];
         }
         changeSet.push(change);
@@ -66,7 +57,7 @@ const submitChanges = (tree, systemMetadata) => {
       operation: 'modify',
       view: {
         id: id,
-        constraints: constraints[id],
+        constraints: constraints[id].map(constraintToPayload),
       }
     });
   }
