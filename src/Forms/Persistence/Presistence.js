@@ -100,11 +100,9 @@ const readPersistedConstraints = () => {
     }
   }
 
-  // for (let viewId in constraints) {
-  //   console.log(constraints[viewId]);
-  //   constraints[viewId].sort((a, b) => parseInt(a.split(':')[1]) < parseInt(b.split(':')[1]));
-  //   console.log(constraints[viewId]);
-  // }
+  for (let viewId in constraints) {
+    console.log(constraints[viewId].sort((a, b) => parseInt(a.id.split(':')[1]) > parseInt(b.id.split(':')[1])));
+  }
 
   return constraints
 }

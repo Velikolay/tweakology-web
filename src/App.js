@@ -88,7 +88,6 @@ class App extends Component {
 
   onFormChange = (id, type, values) => {
     if (type === 'NSLayoutConstraint') {
-      console.log(values);
       this.state.activeNode.module = updatedConstraintNodeName(values, this.state.activeNode)
       this.setState({
         activeNode: this.state.activeNode

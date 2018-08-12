@@ -142,7 +142,6 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
   const lastIdx = constraints.length - 1;
   const constraintsByView = readPersistedConstraints();
   if (viewNode.id in constraintsByView) {
-    console.log(constraintsByView[viewNode.id]);
     const localOnly = constraintsByView[viewNode.id]
       .filter(c => c.formData.added && parseInt(c.id.split(':')[1]) > lastIdx)
       .map(c => c.values);
