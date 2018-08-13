@@ -88,7 +88,9 @@ class App extends Component {
 
   onFormChange = (id, type, values) => {
     if (type === 'NSLayoutConstraint') {
-      this.state.activeNode.module = updatedConstraintNodeName(values, this.state.activeNode)
+      this.updateMesh = true;
+      this.state.activeNode.properties.constraint = values;
+      this.state.activeNode.module = updatedConstraintNodeName(this.state.activeNode)
       this.setState({
         activeNode: this.state.activeNode
       });
@@ -132,10 +134,11 @@ class App extends Component {
 
   transformPayloadToTree = uiElement => {
     let treeNode = {
-      module: uiElement['type'],
-      id: uiElement['uid'],
-      type: uiElement['type'],
-      properties: uiElement['properties']
+      module: uiElement.type,
+      id: uiElement.uid,
+      type: uiElement.type,
+      hierarchyMetadata: uiElement.hierarchyMetadata,
+      properties: uiElement.properties,
     };
 
     treeNode.children = [];
@@ -156,26 +159,28 @@ class App extends Component {
     return treeNode;
   }
 
-  transformPayloadToMeshProps = (uiElement, baseX, baseY, depth) => {
-    if (Object.keys(uiElement).length === 0) {
+  treeToMeshProps = (treeNode, baseX, baseY, depth) => {
+    if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
       return [];
     }
 
-    const isSelected = (activeNode, uiElement) => {
-      let selected = activeNode && activeNode.id === uiElement.uid;
+    const isSelected = (activeNode, treeNode) => {
+      let selected = activeNode && activeNode.id === treeNode.id;
       if (!selected && activeNode.type === 'NSLayoutConstraint') {
         const constraint = activeNode.properties.constraint;
-        if (constraint.first && constraint.first.item.value === uiElement.uid) {
+
+        if (constraint.first && constraint.first.item.value === treeNode.id) {
           selected = true;
         }
-        if (constraint.second && constraint.second.item.value === uiElement.uid) {
+
+        if (constraint.second && constraint.second.item.value === treeNode.id) {
           selected = true;
         }
       }
       return selected;
     };
 
-    const properties = uiElement['properties'];
+    const properties = treeNode['properties'];
     const frame = properties['frame'];
     const width = frame['maxX'] - frame['minX'];
     const height = frame['maxY'] - frame['minY'];
@@ -185,24 +190,26 @@ class App extends Component {
       z: depth,
       width: width,
       height: height,
-      imgUrl: 'http://nikoivan01m.local:8080/images?path=' + uiElement['hierarchyMetadata'],
+      imgUrl: 'http://nikoivan01m.local:8080/images?path=' + treeNode['hierarchyMetadata'],
       updateTexture: this.updateMesh,
-      selected: isSelected(this.state.activeNode, uiElement),
-      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === uiElement.uid
+      selected: isSelected(this.state.activeNode, treeNode),
+      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === treeNode.id
     }];
-    if ('subviews' in uiElement) {
+    if ('children' in treeNode) {
       const nextBaseX = baseX + frame['minX'] - (depth === 0? width/2: 0);
       const nextBaseY = baseY - frame['minY'] + (depth === 0? height/2: 0);
-      for (let subview of uiElement.subviews) {
-        const childrenMeshProps = this.transformPayloadToMeshProps(subview, nextBaseX, nextBaseY, depth + 1);
-        meshProps.push(...childrenMeshProps);
+      for (let childNode of treeNode.children) {
+        if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
+          const childrenMeshProps = this.treeToMeshProps(childNode, nextBaseX, nextBaseY, depth + 1);
+          meshProps.push(...childrenMeshProps);
+        }
       }
     }
     return meshProps;
   }
 
   render() {
-    var meshComponents = this.transformPayloadToMeshProps(this.state.hierarchyData, 0, 0, 0).map(function(meshProps) {
+    var meshComponents = this.treeToMeshProps(this.state.tree, 0, 0, 0).map(function(meshProps) {
       return <UIElementMesh {...meshProps} />;
     });
     if (this.updateMesh) {

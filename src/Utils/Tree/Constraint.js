@@ -2,8 +2,8 @@ import { attributeNames, relationSymbols } from '../../Static/Constraints.js';
 import { readPersistedValues, readPersistedConstraints } from '../../Forms/Persistence/Presistence';
 import ConstraintTransformer from '../../Transformers/Constraints';
 
-const updatedConstraintNodeName = (updated, node) => {
-  return constraintNodeName(updated, node.superview);
+const updatedConstraintNodeName = (node) => {
+  return constraintNodeName(node.properties.constraint, node.superview);
 }
 
 const itemTypeById = (itemId, superview) => {
@@ -109,7 +109,7 @@ const newConstraint = () => {
     },
     isActive: true,
     relation: 0,
-    multiplier: 0,
+    multiplier: 1,
     constant: 0,
     priority: 1000
   }
