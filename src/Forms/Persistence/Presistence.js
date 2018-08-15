@@ -90,7 +90,6 @@ const readPersistedConstraints = () => {
     const formState = window.localStorage.getItem(id);
     if (formState) {
       const state = JSON.parse(formState);
-      console.log(state);
       if (state.type === 'NSLayoutConstraint' && (state.dirty || state.values.meta.added)) {
         const viewId = id.split('.')[0];
         if (!(viewId in constraints)) {

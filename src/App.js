@@ -200,7 +200,8 @@ class App extends Component {
       const nextBaseY = baseY - frame['minY'] + (depth === 0? height/2: 0);
       for (let childNode of treeNode.children) {
         if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
-          const childrenMeshProps = this.treeToMeshProps(childNode, nextBaseX, nextBaseY, depth + 1);
+          depth += 1;
+          const childrenMeshProps = this.treeToMeshProps(childNode, nextBaseX, nextBaseY, depth);
           meshProps.push(...childrenMeshProps);
         }
       }

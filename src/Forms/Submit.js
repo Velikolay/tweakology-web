@@ -27,7 +27,6 @@ const submitChanges = (tree, systemMetadata) => {
   let changeSet = [];
 
   const constraints = readPersistedConstraints();
-  console.log(constraints);
   for (let id of ids) {
     const formState = window.localStorage.getItem(id);
     if (formState) {
