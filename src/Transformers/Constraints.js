@@ -5,12 +5,13 @@ const ConstraintTransformer = {
   fromPayload: (payload) => {
     // console.log(payload);
     const formikProps = {
+      meta: payload.meta,
       first: toItem(payload.first, 'Item1'),
       relation: payload.relation,
       multiplier: payload.multiplier,
       constant: payload.constant,
       isActive: payload.isActive,
-      priority: payload.priority
+      priority: payload.priority,
     };
 
     if (payload.second) {
@@ -31,6 +32,7 @@ const ConstraintTransformer = {
 
   toPayload: (props) => {
     const payload = {
+      meta: props.meta,
       first: {
         item: props.first.item.value,
         attribute: parseInt(props.first.attribute.value)

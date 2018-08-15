@@ -3,7 +3,7 @@ import { readPersistedValues, readPersistedConstraints } from '../../Forms/Persi
 import ConstraintTransformer from '../../Transformers/Constraints';
 
 const updatedConstraintNodeName = (node) => {
-  return constraintNodeName(node.properties.constraint, node.superview);
+  return constraintNodeName(node.updatedProperties.constraint, node.superview);
 }
 
 const itemTypeById = (itemId, superview) => {
@@ -89,6 +89,9 @@ const isLeaf = (viewNode) => {
 
 const newConstraint = () => {
   return {
+    meta: {
+      added: true,
+    },
     first: {
       attribute: {
         value: ''
@@ -127,7 +130,6 @@ const addNewConstraintToTreeNode = (node) => {
       type: 'NSLayoutConstraint',
       id: constraintId,
       properties: {
-        added: true,
         constraint: constraint,
         itemOptions: constraintItemOptions(node)
       },
@@ -143,7 +145,7 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
   const constraintsByView = readPersistedConstraints();
   if (viewNode.id in constraintsByView) {
     const localOnly = constraintsByView[viewNode.id]
-      .filter(c => c.formData.added && parseInt(c.id.split(':')[1]) > lastIdx)
+      .filter(c => c.values.meta.added && parseInt(c.id.split(':')[1]) > lastIdx)
       .map(c => c.values);
     constraints.push(...localOnly);
   }
@@ -159,7 +161,6 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
       type: 'NSLayoutConstraint',
       id: constraintId,
       properties: {
-        added: idx > lastIdx,
         constraint: constraint,
         itemOptions: itemOptions,
       },

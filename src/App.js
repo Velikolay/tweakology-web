@@ -89,8 +89,8 @@ class App extends Component {
   onFormChange = (id, type, values) => {
     if (type === 'NSLayoutConstraint') {
       this.updateMesh = true;
-      this.state.activeNode.properties.constraint = values;
-      this.state.activeNode.module = updatedConstraintNodeName(this.state.activeNode)
+      this.state.activeNode.updatedProperties = { constraint: values };
+      this.state.activeNode.module = updatedConstraintNodeName(this.state.activeNode);
       this.setState({
         activeNode: this.state.activeNode
       });
@@ -167,7 +167,7 @@ class App extends Component {
     const isSelected = (activeNode, treeNode) => {
       let selected = activeNode && activeNode.id === treeNode.id;
       if (!selected && activeNode.type === 'NSLayoutConstraint') {
-        const constraint = activeNode.properties.constraint;
+        const constraint = 'updatedProperties' in activeNode ? activeNode.updatedProperties.constraint: activeNode.properties.constraint;
 
         if (constraint.first && constraint.first.item.value === treeNode.id) {
           selected = true;

@@ -47,6 +47,7 @@ const Constraint = props => {
   } = props;
 
   const {
+    values,
     errors,
     touched,
     setFieldValue
@@ -68,7 +69,7 @@ const Constraint = props => {
   const attributes1 = getAttributes1(itemOptions);
   const attributes2 = getAttributes2(attribute1);
   const items2 = getItems2(itemOptions, item1);
-  const disabled = !formik.formData.added;
+  const disabled = !values.meta.added;
 
   return (
     <div className="form-group">

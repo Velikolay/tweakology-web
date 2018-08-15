@@ -14,11 +14,10 @@ const _treeToFormIds = uiElement => {
   return treeNode;
 };
 
-const constraintToPayload = (constraintForm) => {
-  const constraintValues = ConstraintTransformer.toPayload(constraintForm.values);
+const constraintToPayload = (constraints) => {
+  const constraintValues = ConstraintTransformer.toPayload(constraints.values);
   return {
-    idx: parseInt(constraintForm.id.split(':')[1]),
-    added: constraintForm.added ? true : false,
+    idx: parseInt(constraints.id.split(':')[1]),
     ...constraintValues
   };
 };
@@ -28,7 +27,7 @@ const submitChanges = (tree, systemMetadata) => {
   let changeSet = [];
 
   const constraints = readPersistedConstraints();
-
+  console.log(constraints);
   for (let id of ids) {
     const formState = window.localStorage.getItem(id);
     if (formState) {
