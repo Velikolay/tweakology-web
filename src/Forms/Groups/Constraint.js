@@ -48,6 +48,7 @@ const Constraint = props => {
 
   const {
     values,
+    formData,
     errors,
     touched,
     setFieldValue
@@ -70,6 +71,9 @@ const Constraint = props => {
   const attributes2 = getAttributes2(attribute1);
   const items2 = getItems2(itemOptions, item1);
   const disabled = !values.meta.added;
+
+  const priorityDisabled = formData.constraint.meta.synced && values.priority === 1000;
+  const priorityMax = formData.constraint.meta.synced && values.priority < 1000 ? 999 : 1000;
 
   return (
     <div className="form-group">
@@ -98,7 +102,7 @@ const Constraint = props => {
         <label className="input-title">
           Multiplier
         </label>
-        <Field name={nameWithPrefix(props, "multiplier")} type="number" min={0} step={0.1} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} disabled={disabled} />
+        <Field name={nameWithPrefix(props, "multiplier")} type="number" min={0} step={0.1} disabled={disabled} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} />
       </div>
       <div className="form-row">
         <label className="input-title">
@@ -110,7 +114,7 @@ const Constraint = props => {
         <label className="input-title">
           Priority
         </label>
-        <Field name={nameWithPrefix(props, "priority")} type="number" min={0} className={errors.priority && touched.priority ? 'full-width-input error' : 'full-width-input'} />
+        <Field name={nameWithPrefix(props, "priority")} type="number" min={0} max={priorityMax} disabled={priorityDisabled} className={errors.priority && touched.priority ? 'full-width-input error' : 'full-width-input'} />
       </div>
       <div className="form-row">
         <label className="input-title">

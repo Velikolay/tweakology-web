@@ -90,6 +90,7 @@ const isLeaf = (viewNode) => {
 const newConstraint = () => {
   return {
     meta: {
+      synced: false,
       added: true,
     },
     first: {
@@ -145,7 +146,7 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
   const constraintsByView = readPersistedConstraints();
   if (viewNode.id in constraintsByView) {
     const localOnly = constraintsByView[viewNode.id]
-      .filter(c => c.values.meta.added && parseInt(c.id.split(':')[1]) > lastIdx)
+      .filter(c => c.values.meta.added && parseInt(c.id.split(':')[1], 10) > lastIdx)
       .map(c => c.values);
     constraints.push(...localOnly);
   }

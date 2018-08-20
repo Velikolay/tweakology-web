@@ -32,7 +32,7 @@ class Persist extends Component {
     } else {
       window.localStorage.setItem(name, JSON.stringify(data));
     }
-    // console.log('Form saved');
+    console.log('Form saved');
   }, this.props.debounce);
 
   setForm = props => {
@@ -69,7 +69,7 @@ class Persist extends Component {
       if (status) {
         formik.setStatus(status);
       }
-      // console.log('Form Loaded');
+      console.log('Form Loaded');
     }
   }
 
@@ -101,7 +101,7 @@ const readPersistedConstraints = () => {
   }
 
   for (let viewId in constraints) {
-    constraints[viewId].sort((a, b) => parseInt(a.id.split(':')[1]) > parseInt(b.id.split(':')[1]));
+    constraints[viewId].sort((a, b) => parseInt(a.id.split(':')[1], 10) > parseInt(b.id.split(':')[1], 10));
   }
 
   return constraints

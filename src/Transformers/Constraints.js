@@ -5,7 +5,10 @@ const ConstraintTransformer = {
   fromPayload: (payload) => {
     // console.log(payload);
     const formikProps = {
-      meta: payload.meta,
+      meta: {
+        synced: true,
+        ...payload.meta,
+      },
       first: toItem(payload.first, 'Item1'),
       relation: payload.relation,
       multiplier: payload.multiplier,
@@ -35,9 +38,9 @@ const ConstraintTransformer = {
       meta: props.meta,
       first: {
         item: props.first.item.value,
-        attribute: parseInt(props.first.attribute.value)
+        attribute: parseInt(props.first.attribute.value, 10)
       },
-      relation: parseInt(props.relation),
+      relation: parseInt(props.relation, 10),
       multiplier: props.multiplier,
       constant: props.constant,
       isActive: props.isActive,
@@ -48,7 +51,7 @@ const ConstraintTransformer = {
       if (props.second.attribute.value && props.second.item.value) {
         payload.second = {
           item: props.second.item.value,
-          attribute: parseInt(props.second.attribute.value)
+          attribute: parseInt(props.second.attribute.value, 10)
         }
       } else {
         console.log('Incomplete constraint definition');
