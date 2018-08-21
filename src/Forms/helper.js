@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const DisplayFormikState = props =>
+export const DisplayFormikState = props => (
   <div style={{ margin: '1rem 0' }}>
     <h3 style={{ fontFamily: 'monospace' }} />
     <pre
@@ -10,12 +10,16 @@ export const DisplayFormikState = props =>
         padding: '.5rem',
       }}
     >
-      <strong>props</strong> ={' '}
+      <strong>props</strong>
+      {' '}
+=
+      {' '}
       {JSON.stringify(props, null, 2)}
     </pre>
-  </div>;
+  </div>
+);
 
-export const MoreResources = props =>
+export const MoreResources = props => (
   <div>
     <hr style={{ margin: '3rem 0' }} />
     <h3>More Examples</h3>
@@ -99,4 +103,5 @@ export const MoreResources = props =>
         </a>
       </li>
     </ul>
-  </div>;
+  </div>
+);

@@ -16,12 +16,20 @@
     "yup": "^0.25.1"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
     "react-scripts": "1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:js": "eslint . --ignore-path .gitignore --ext .js,.jsx",
+    "lint:js:fix": "eslint . --fix --ignore-path .gitignore --ext .js,.jsx"
   }
 }

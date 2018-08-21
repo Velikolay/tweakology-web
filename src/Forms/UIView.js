@@ -1,28 +1,26 @@
 import React from 'react';
 import { withFormik } from 'formik';
-import { Persist } from './Persistence/Presistence'
-// import { Persist } from 'formik-persist'
 import Yup from 'yup';
+import { Persist } from './Persistence/Presistence';
+// import { Persist } from 'formik-persist'
 
 import FrameGroup from './Groups/Frame';
 import ColorGroup from './Groups/Color';
 
 // Our inner form component. Will be wrapped with Formik({..})
-const InnerUIViewForm = props => {
-  return (
-    <form onSubmit={props.handleSubmit}>
-      <FrameGroup prefix="frame" {...props} />
-      { props.values.backgroundColor? (
-        <div>
-          <hr/>
-          <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
-        </div>
-        ): null
+const InnerUIViewForm = props => (
+  <form onSubmit={props.handleSubmit}>
+    <FrameGroup prefix="frame" {...props} />
+    { props.values.backgroundColor ? (
+      <div>
+        <hr />
+        <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} {...props} />
+      </div>
+    ) : null
       }
-      <Persist name={props.id} formik={props} />
-    </form>
-  );
-};
+    <Persist name={props.id} formik={props} />
+  </form>
+);
 
 const EnhancedUIViewForm = withFormik({
   enableReinitialize: true,
@@ -32,7 +30,7 @@ const EnhancedUIViewForm = withFormik({
       x: props.formData.frame.minX,
       y: props.formData.frame.minY,
       width: props.formData.frame.maxX - props.formData.frame.minX,
-      height: props.formData.frame.maxY - props.formData.frame.minY
+      height: props.formData.frame.maxY - props.formData.frame.minY,
     },
     // Background color
     backgroundColor: props.formData.backgroundColor,
@@ -51,8 +49,6 @@ const EnhancedUIViewForm = withFormik({
   displayName: 'UIViewForm', // helps with React DevTools
 })(InnerUIViewForm);
 
-const UIViewForm = props => {
-  return <EnhancedUIViewForm {...props} />
-};
+const UIViewForm = props => <EnhancedUIViewForm {...props} />;
 
 export default UIViewForm;

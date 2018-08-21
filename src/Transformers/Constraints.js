@@ -22,13 +22,13 @@ const ConstraintTransformer = {
     } else {
       formikProps.second = {
         attribute: {
-          value: ''
+          value: '',
         },
         item: {
           value: '',
-          placeholder: 'Item2'
-        }
-      }
+          placeholder: 'Item2',
+        },
+      };
     }
     return formikProps;
   },
@@ -38,39 +38,39 @@ const ConstraintTransformer = {
       meta: props.meta,
       first: {
         item: props.first.item.value,
-        attribute: parseInt(props.first.attribute.value, 10)
+        attribute: parseInt(props.first.attribute.value, 10),
       },
       relation: parseInt(props.relation, 10),
       multiplier: props.multiplier,
       constant: props.constant,
       isActive: props.isActive,
-      priority: props.priority
+      priority: props.priority,
     };
 
     if (props.second) {
       if (props.second.attribute.value && props.second.item.value) {
         payload.second = {
           item: props.second.item.value,
-          attribute: parseInt(props.second.attribute.value, 10)
-        }
+          attribute: parseInt(props.second.attribute.value, 10),
+        };
       } else {
         console.log('Incomplete constraint definition');
       }
     }
     return payload;
-  }
+  },
 };
 
 const toItem = (payloadItem, placeholder) => {
   const attrVal = payloadItem.attribute.toString();
   const item = {
     attribute: {
-      value: attrVal
+      value: attrVal,
     },
     item: {
       value: payloadItem.item,
-      placeholder: placeholder
-    }
+      placeholder,
+    },
   };
   if (attrVal) {
     const mods = attributeToModifiers[attrVal];

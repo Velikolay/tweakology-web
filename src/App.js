@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import Split from 'split.js';
 import Form from './Forms/Form';
 import { submitChanges } from './Forms/Submit.js';
 import { enrichFontsData } from './Utils/Font.js';
@@ -10,27 +11,25 @@ import UIElementMesh from './UIElementMesh.js';
 import UIHierarchyScene from './UIHierarchyScene.js';
 import UIHierarchyTree from './UIHierarchyTree.js';
 
-import Split from 'split.js'
 
 import './App.css';
 
-require("react-ui-tree/dist/react-ui-tree.css");
+require('react-ui-tree/dist/react-ui-tree.css');
 
-let APP_INSPECTOR_EP = 'http://nikoivan01m.local:8080/';
+const APP_INSPECTOR_EP = 'http://nikoivan01m.local:8080/';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       hierarchyData: {},
       tree: {
         module: 'Loading...',
-        leaf: true
+        leaf: true,
       },
       activeNode: null,
       onFocusNode: null,
-    }
+    };
 
     this.dragging = false;
 
@@ -52,11 +51,11 @@ class App extends Component {
 
     this.updateHierarchyData();
 
-    fetch(APP_INSPECTOR_EP + 'fonts')
+    fetch(`${APP_INSPECTOR_EP}fonts`)
       .then(response => response.json())
-      .then(fontsData => {
+      .then((fontsData) => {
         this.systemMetadata = {
-          fonts: enrichFontsData(fontsData)
+          fonts: enrichFontsData(fontsData),
         };
       });
   }
@@ -64,25 +63,22 @@ class App extends Component {
   updateHierarchyData = () => {
     fetch(APP_INSPECTOR_EP)
       .then(response => response.json())
-      .then(data => {
+      .then((data) => {
         this.updateMesh = true;
         const tree = this.transformPayloadToTree(data);
         const updatedState = {
           hierarchyData: data,
-          tree: tree
+          tree,
         };
         if (!this.state.activeNode) {
           updatedState.activeNode = tree;
         }
         this.setState(updatedState);
-      }
-    );
+      });
   }
 
   onSubmitChanges = () => {
-    submitChanges(this.state.tree, this.systemMetadata).then(response =>
-      this.updateHierarchyData()
-    );
+    submitChanges(this.state.tree, this.systemMetadata).then(response => this.updateHierarchyData());
     // window.localStorage.clear();
   }
 
@@ -92,17 +88,17 @@ class App extends Component {
       this.state.activeNode.updatedProperties = { constraint: values };
       this.state.activeNode.module = updatedConstraintNodeName(this.state.activeNode);
       this.setState({
-        activeNode: this.state.activeNode
+        activeNode: this.state.activeNode,
       });
     }
   }
 
-  onClickAdd = node => {
+  onClickAdd = (node) => {
     addNewConstraintToTreeNode(node);
     this.setState({ activeNode: node });
   }
 
-  onNodeClick = node => {
+  onNodeClick = (node) => {
     if (node.id) {
       this.setState({ activeNode: node });
     }
@@ -132,8 +128,8 @@ class App extends Component {
     this.dragging = false;
   }
 
-  transformPayloadToTree = uiElement => {
-    let treeNode = {
+  transformPayloadToTree = (uiElement) => {
+    const treeNode = {
       module: uiElement.type,
       id: uiElement.uid,
       type: uiElement.type,
@@ -143,7 +139,7 @@ class App extends Component {
 
     treeNode.children = [];
     if ('subviews' in uiElement) {
-      for (let subview of uiElement.subviews) {
+      for (const subview of uiElement.subviews) {
         treeNode.children.push(this.transformPayloadToTree(subview));
       }
     }
@@ -167,7 +163,7 @@ class App extends Component {
     const isSelected = (activeNode, treeNode) => {
       let selected = activeNode && activeNode.id === treeNode.id;
       if (!selected && activeNode.type === 'NSLayoutConstraint') {
-        const constraint = 'updatedProperties' in activeNode ? activeNode.updatedProperties.constraint: activeNode.properties.constraint;
+        const constraint = 'updatedProperties' in activeNode ? activeNode.updatedProperties.constraint : activeNode.properties.constraint;
 
         if (constraint.first && constraint.first.item.value === treeNode.id) {
           selected = true;
@@ -180,25 +176,25 @@ class App extends Component {
       return selected;
     };
 
-    const properties = treeNode['properties'];
-    const frame = properties['frame'];
-    const width = frame['maxX'] - frame['minX'];
-    const height = frame['maxY'] - frame['minY'];
-    let meshProps = [{
-      x: depth === 0? 0: baseX + frame['minX'] + width/2,
-      y: depth === 0? 0: baseY - frame['minY'] - height/2,
+    const properties = treeNode.properties;
+    const frame = properties.frame;
+    const width = frame.maxX - frame.minX;
+    const height = frame.maxY - frame.minY;
+    const meshProps = [{
+      x: depth === 0 ? 0 : baseX + frame.minX + width / 2,
+      y: depth === 0 ? 0 : baseY - frame.minY - height / 2,
       z: depth,
-      width: width,
-      height: height,
-      imgUrl: 'http://nikoivan01m.local:8080/images?path=' + treeNode['hierarchyMetadata'],
+      width,
+      height,
+      imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
       updateTexture: this.updateMesh,
       selected: isSelected(this.state.activeNode, treeNode),
-      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === treeNode.id
+      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === treeNode.id,
     }];
     if ('children' in treeNode) {
-      const nextBaseX = baseX + frame['minX'] - (depth === 0? width/2: 0);
-      const nextBaseY = baseY - frame['minY'] + (depth === 0? height/2: 0);
-      for (let childNode of treeNode.children) {
+      const nextBaseX = baseX + frame.minX - (depth === 0 ? width / 2 : 0);
+      const nextBaseY = baseY - frame.minY + (depth === 0 ? height / 2 : 0);
+      for (const childNode of treeNode.children) {
         if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
           depth += 1;
           const childrenMeshProps = this.treeToMeshProps(childNode, nextBaseX, nextBaseY, depth);
@@ -210,9 +206,7 @@ class App extends Component {
   }
 
   render() {
-    var meshComponents = this.treeToMeshProps(this.state.tree, 0, 0, 0).map(function(meshProps) {
-      return <UIElementMesh {...meshProps} />;
-    });
+    const meshComponents = this.treeToMeshProps(this.state.tree, 0, 0, 0).map(meshProps => <UIElementMesh {...meshProps} />);
     if (this.updateMesh) {
       this.updateMesh = false;
     }
@@ -231,7 +225,7 @@ class App extends Component {
           onNodeMouseUp={this.onNodeMouseUp}
         />
         <UIHierarchyScene ref="scene" onSubmitChanges={this.onSubmitChanges}>
-            {meshComponents}
+          {meshComponents}
         </UIHierarchyScene>
         <div ref="config" className="config-pane">
           { this.state.activeNode !== null ? (
@@ -240,8 +234,9 @@ class App extends Component {
               type={this.state.activeNode.type}
               formData={this.state.activeNode.properties}
               systemMetadata={this.systemMetadata}
-              onFormChange={this.onFormChange} />
-            ): null
+              onFormChange={this.onFormChange}
+            />
+          ) : null
           }
         </div>
       </div>

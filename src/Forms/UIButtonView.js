@@ -1,8 +1,8 @@
 import React from 'react';
 import { withFormik } from 'formik';
-import { Persist } from './Persistence/Presistence'
-// import { Persist } from 'formik-persist'
 import Yup from 'yup';
+import { Persist } from './Persistence/Presistence';
+// import { Persist } from 'formik-persist'
 
 import { transformFontName, transformFontFamily } from '../Utils/Font';
 import FrameGroup from './Groups/Frame';
@@ -11,20 +11,18 @@ import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
 // Our inner form component. Will be wrapped with Formik({..})
-const InnerUIButtonViewForm = props => {
-  return (
-    <form onSubmit={props.handleSubmit}>
-      <FrameGroup prefix="frame" {...props} />
-      <hr/>
-      <ColorGroup prefix="backgroundColor" titles={{alpha: "Alpha", color: "Background"}} {...props} />
-      <hr/>
-      <TextGroup prefix="title" titles={{text: "Title"}} {...props} />
-      <FontGroup prefix="title.font" {...props} />
-      <ColorGroup prefix="title.textColor" titles={{alpha: "Opacity", color: "Text Color"}} {...props} />
-      <Persist name={props.id} formik={props} />
-    </form>
-  );
-};
+const InnerUIButtonViewForm = props => (
+  <form onSubmit={props.handleSubmit}>
+    <FrameGroup prefix="frame" {...props} />
+    <hr />
+    <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} {...props} />
+    <hr />
+    <TextGroup prefix="title" titles={{ text: 'Title' }} {...props} />
+    <FontGroup prefix="title.font" {...props} />
+    <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} {...props} />
+    <Persist name={props.id} formik={props} />
+  </form>
+);
 
 const EnhancedUIButtonViewForm = withFormik({
   enableReinitialize: true,
@@ -34,7 +32,7 @@ const EnhancedUIButtonViewForm = withFormik({
       x: props.formData.frame.minX,
       y: props.formData.frame.minY,
       width: props.formData.frame.maxX - props.formData.frame.minX,
-      height: props.formData.frame.maxY - props.formData.frame.minY
+      height: props.formData.frame.maxY - props.formData.frame.minY,
     },
     // Background color
     backgroundColor: props.formData.backgroundColor,
@@ -48,9 +46,9 @@ const EnhancedUIButtonViewForm = withFormik({
       font: {
         familyName: transformFontFamily(props.systemMetadata.fonts.systemFont, props.formData.title.properties.font.familyName),
         fontStyle: transformFontName(props.formData.title.properties.font.fontName),
-        pointSize: props.formData.title.properties.font.pointSize
-      }
-    }
+        pointSize: props.formData.title.properties.font.pointSize,
+      },
+    },
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
@@ -66,8 +64,6 @@ const EnhancedUIButtonViewForm = withFormik({
   displayName: 'UIButtonViewForm', // helps with React DevTools
 })(InnerUIButtonViewForm);
 
-const UIButtonViewForm = props => {
-  return <EnhancedUIButtonViewForm {...props} />
-};
+const UIButtonViewForm = props => <EnhancedUIButtonViewForm {...props} />;
 
 export default UIButtonViewForm;

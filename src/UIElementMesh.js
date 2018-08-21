@@ -8,26 +8,26 @@ class UIElementMesh extends Component {
     super(props);
     this.state = {
       selected: props.selected,
-      onFocus: props.onFocus
-    }
+      onFocus: props.onFocus,
+    };
   }
 
   componentWillMount() {
     this.setState({
-      texture: new THREE.TextureLoader().load(this.props.imgUrl)
-    })
+      texture: new THREE.TextureLoader().load(this.props.imgUrl),
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.updateTexture) {
       new THREE.TextureLoader().load(
         this.props.imgUrl,
-        (texture) => this.setState({texture: texture})
+        texture => this.setState({ texture }),
       );
     }
     this.setState({
       selected: nextProps.selected,
-      onFocus: nextProps.onFocus
+      onFocus: nextProps.onFocus,
     });
   }
 
@@ -51,7 +51,7 @@ class UIElementMesh extends Component {
       transparent: true,
       polygonOffset: true,
       polygonOffsetFactor: 1, // positive value pushes polygon further away
-      polygonOffsetUnits: 1
+      polygonOffsetUnits: 1,
     });
     // img.map.needsUpdate = true;
     img.map.minFilter = THREE.LinearFilter;
@@ -60,13 +60,13 @@ class UIElementMesh extends Component {
       color: 0x00bfff,
       side: THREE.DoubleSide,
       opacity: 0.35,
-      transparent: true
+      transparent: true,
     });
 
     const meshProps = {
-      position : new THREE.Vector3(this.props.x, this.props.y, this.props.z*5),
+      position: new THREE.Vector3(this.props.x, this.props.y, this.props.z * 5),
       geometry: new THREE.PlaneGeometry(this.props.width, this.props.height),
-      material: img
+      material: img,
     };
 
     let wireframeColor = 0x666666;
@@ -80,23 +80,24 @@ class UIElementMesh extends Component {
       geometry: new THREE.EdgesGeometry(meshProps.geometry),
       material: new THREE.LineBasicMaterial({
         color: wireframeColor,
-        linewidth: 1
-      })
-    }
+        linewidth: 1,
+      }),
+    };
 
     const overlayProps = {
       geometry: meshProps.geometry,
-      material: selectOverlay
-    }
+      material: selectOverlay,
+    };
 
-    return <Mesh {...meshProps}>
-      <LineSegments {...wireframeProps} />
-      { this.state.selected ?
-          <Mesh {...overlayProps} />
-          :
-          null
+    return (
+      <Mesh {...meshProps}>
+        <LineSegments {...wireframeProps} />
+        { this.state.selected
+          ? <Mesh {...overlayProps} />
+          : null
       }
-    </Mesh>
+      </Mesh>
+    );
   }
 }
 

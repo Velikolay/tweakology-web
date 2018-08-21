@@ -2,25 +2,22 @@ import { attributeNames, relationSymbols } from '../../Static/Constraints.js';
 import { readPersistedValues, readPersistedConstraints } from '../../Forms/Persistence/Presistence';
 import ConstraintTransformer from '../../Transformers/Constraints';
 
-const updatedConstraintNodeName = (node) => {
-  return constraintNodeName(node.updatedProperties.constraint, node.superview);
-}
+const updatedConstraintNodeName = node => constraintNodeName(node.updatedProperties.constraint, node.superview);
 
 const itemTypeById = (itemId, superview) => {
   if (superview) {
     if (superview.id === itemId) {
       return superview.type;
-    } else {
-      for (const childView of superview.children) {
-        if (childView.type && childView.id === itemId) {
-          return childView.type;
-        }
+    }
+    for (const childView of superview.children) {
+      if (childView.type && childView.id === itemId) {
+        return childView.type;
       }
     }
   }
   // if the type hasn't been found return id
   return itemId;
-}
+};
 
 const constraintNodeName = (constraint, superview) => {
   const isFirstInit = constraint.first && constraint.first.item.value && constraint.first.attribute.value;
@@ -52,22 +49,21 @@ const constraintNodeName = (constraint, superview) => {
           name += ` ${constantToPrint}`;
         }
       } else {
-        name += ` - ${-1*constantToPrint}`;
+        name += ` - ${-1 * constantToPrint}`;
       }
     }
     return name;
-  } else {
-    return 'New Constraint';
   }
+  return 'New Constraint';
 };
 
-const constraintItemOptions = viewNode => {
+const constraintItemOptions = (viewNode) => {
   const itemOptions = [];
   if (isLeaf(viewNode)) {
     itemOptions.push({ label: viewNode.type, value: viewNode.id });
   } else {
     itemOptions.push({ label: 'Superview', value: viewNode.id });
-    for (let childViewNode of viewNode.children) {
+    for (const childViewNode of viewNode.children) {
       if (childViewNode.type) {
         itemOptions.push({ label: childViewNode.type, value: childViewNode.id });
       }
@@ -76,48 +72,44 @@ const constraintItemOptions = viewNode => {
   return itemOptions;
 };
 
-const numToFixed = num => {
+const numToFixed = (num) => {
   if (num % 1 !== 0) {
     return Number.parseFloat(num).toFixed(1);
   }
   return num;
 };
 
-const isLeaf = (viewNode) => {
-  return viewNode.type === 'UILabel' || viewNode.type === 'UIButton';
-};
+const isLeaf = viewNode => viewNode.type === 'UILabel' || viewNode.type === 'UIButton';
 
-const newConstraint = () => {
-  return {
-    meta: {
-      synced: false,
-      added: true,
+const newConstraint = () => ({
+  meta: {
+    synced: false,
+    added: true,
+  },
+  first: {
+    attribute: {
+      value: '',
     },
-    first: {
-      attribute: {
-        value: ''
-      },
-      item: {
-        value: '',
-        placeholder: 'Item1',
-      }
+    item: {
+      value: '',
+      placeholder: 'Item1',
     },
-    second: {
-      attribute: {
-        value: ''
-      },
-      item: {
-        value: '',
-        placeholder: 'Item2'
-      }
+  },
+  second: {
+    attribute: {
+      value: '',
     },
-    isActive: true,
-    relation: 0,
-    multiplier: 1,
-    constant: 0,
-    priority: 1000
-  }
-}
+    item: {
+      value: '',
+      placeholder: 'Item2',
+    },
+  },
+  isActive: true,
+  relation: 0,
+  multiplier: 1,
+  constant: 0,
+  priority: 1000,
+});
 
 const addNewConstraintToTreeNode = (node) => {
   const constraintsListNode = node.children[node.children.length - 1];
@@ -131,14 +123,14 @@ const addNewConstraintToTreeNode = (node) => {
       type: 'NSLayoutConstraint',
       id: constraintId,
       properties: {
-        constraint: constraint,
-        itemOptions: constraintItemOptions(node)
+        constraint,
+        itemOptions: constraintItemOptions(node),
       },
-      leaf: true
+      leaf: true,
     };
     constraintsListNode.children.push(constraintNode);
   }
-}
+};
 
 const transformConstraintPayloadToTree = (viewNode, constraints) => {
   constraints = constraints.map(ConstraintTransformer.fromPayload);
@@ -157,13 +149,13 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
     const local = readPersistedValues(constraintId);
 
     return {
-      module: constraintNodeName(local ? local : constraint, viewNode),
+      module: constraintNodeName(local || constraint, viewNode),
       superview: viewNode,
       type: 'NSLayoutConstraint',
       id: constraintId,
       properties: {
-        constraint: constraint,
-        itemOptions: itemOptions,
+        constraint,
+        itemOptions,
       },
       leaf: true,
     };
@@ -173,7 +165,7 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
     module: 'Constraints',
     superview: viewNode,
     collapsed: true,
-    children: children,
+    children,
   };
 };
 

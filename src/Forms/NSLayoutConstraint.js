@@ -1,24 +1,22 @@
 import React from 'react';
 import { withFormik } from 'formik';
 import FormikObserver from 'formik-observer';
-import { Persist } from './Persistence/Presistence'
-// import { Persist } from 'formik-persist'
 import Yup from 'yup';
+import { Persist } from './Persistence/Presistence';
+// import { Persist } from 'formik-persist'
 
 import Constraint from './Groups/Constraint';
 
 // Our inner form component. Will be wrapped with Formik({..})
-const InnerNSLayoutConstraint = props => {
-  return (
-    <form onSubmit={props.handleSubmit}>
-      <Constraint itemOptions={props.formData.itemOptions} formik={props} />
-      <FormikObserver
-        onChange={({ values }) => props.onFormChange(props.id, props.type, values)}
-      />
-      <Persist name={props.id} formik={props} />
-    </form>
-  );
-};
+const InnerNSLayoutConstraint = props => (
+  <form onSubmit={props.handleSubmit}>
+    <Constraint itemOptions={props.formData.itemOptions} formik={props} />
+    <FormikObserver
+      onChange={({ values }) => props.onFormChange(props.id, props.type, values)}
+    />
+    <Persist name={props.id} formik={props} />
+  </form>
+);
 
 const EnhancedNSLayoutConstraint = withFormik({
   enableReinitialize: true,
@@ -37,8 +35,6 @@ const EnhancedNSLayoutConstraint = withFormik({
   displayName: 'NSLayoutConstraint', // helps with React DevTools
 })(InnerNSLayoutConstraint);
 
-const NSLayoutConstraint = props => {
-  return <EnhancedNSLayoutConstraint {...props} />
-};
+const NSLayoutConstraint = props => <EnhancedNSLayoutConstraint {...props} />;
 
 export default NSLayoutConstraint;

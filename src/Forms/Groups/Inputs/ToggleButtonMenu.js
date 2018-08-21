@@ -7,14 +7,17 @@ import './ToggleButtonMenu.css';
 const ToggleButtonMenu = (props) => {
   if (props.options.length) {
     const width = 100 / props.options.length;
-    const buttons = props.options.map(option => {
+    const buttons = props.options.map((option) => {
       const optionValue = formikValueWithPrefix(props, option.name);
-      return <ToggleButton
-                width={`${width}%`}
-                isOn={optionValue}
-                disabled={props.disabled}
-                {...option}
-                onSwitch={() => props.onSwitch(option.name, !optionValue)} />
+      return (
+        <ToggleButton
+          width={`${width}%`}
+          isOn={optionValue}
+          disabled={props.disabled}
+          {...option}
+          onSwitch={() => props.onSwitch(option.name, !optionValue)}
+        />
+      );
     });
     return (
       <div className="toggle-buttons-menu">
@@ -25,8 +28,8 @@ const ToggleButtonMenu = (props) => {
 };
 
 const ToggleButton = (props) => {
-  let style = {
-    width: props.width
+  const style = {
+    width: props.width,
   };
   if (props.image) {
     style.background = `url(${props.image})`;
@@ -36,11 +39,12 @@ const ToggleButton = (props) => {
     <button
       style={style}
       className={cx('toggle-button', {
-        'is-active': props.isOn
+        'is-active': props.isOn,
       })}
       type="button"
       disabled={props.disabled}
-      onClick={props.onSwitch}>
+      onClick={props.onSwitch}
+    >
       {props.text}
     </button>
   );

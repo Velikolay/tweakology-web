@@ -11,13 +11,11 @@ class Persist extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.name !== this.props.name) {
       this.setForm(nextProps);
+    } else if (!isEqual(nextProps.formik, this.props.formik)) {
+      // console.log('Form saving..');
+      this.saveForm(nextProps.name, nextProps.formik);
     } else {
-      if (!isEqual(nextProps.formik, this.props.formik)) {
-        // console.log('Form saving..');
-        this.saveForm(nextProps.name, nextProps.formik);
-      } else {
-        // console.log('Form wont save');
-      }
+      // console.log('Form wont save');
     }
   }
 
@@ -35,18 +33,20 @@ class Persist extends Component {
     console.log('Form saved');
   }, this.props.debounce);
 
-  setForm = props => {
+  setForm = (props) => {
     // console.log('Form loading..');
     const maybeState = window.localStorage.getItem(props.name);
-    
+
     let modifiedProps = props.formik;
     if (maybeState && maybeState !== null) {
       modifiedProps = JSON.parse(
-        maybeState
+        maybeState,
       );
     }
 
-    const { values, errors, touched, isSubmitting, status } = modifiedProps; 
+    const {
+      values, errors, touched, isSubmitting, status,
+    } = modifiedProps;
 
     const { formik } = this.props;
     if (formik) {
@@ -81,7 +81,7 @@ class Persist extends Component {
 const readPersistedValues = (item) => {
   const maybeState = window.localStorage.getItem(item);
   return maybeState ? JSON.parse(maybeState).values : null;
-}
+};
 
 const readPersistedConstraints = () => {
   const constraints = {};
@@ -100,11 +100,11 @@ const readPersistedConstraints = () => {
     }
   }
 
-  for (let viewId in constraints) {
+  for (const viewId in constraints) {
     constraints[viewId].sort((a, b) => parseInt(a.id.split(':')[1], 10) > parseInt(b.id.split(':')[1], 10));
   }
 
-  return constraints
-}
+  return constraints;
+};
 
 export { Persist, readPersistedValues, readPersistedConstraints };

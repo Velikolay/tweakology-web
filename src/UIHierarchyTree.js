@@ -3,52 +3,51 @@ import cx from 'classnames';
 import Tree from 'react-ui-tree';
 
 class UIHierarchyTree extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       activeNode: this.props.activeNode,
-      tree: this.props.tree
-    }
+      tree: this.props.tree,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-      const newState = {
-        activeNode: nextProps.activeNode,
-        tree: nextProps.tree
-      };
-      this.setState(newState);
+    const newState = {
+      activeNode: nextProps.activeNode,
+      tree: nextProps.tree,
+    };
+    this.setState(newState);
   }
 
-  renderNode = node => {
-    return (
-      <div className={cx('container', {
-        'is-active': this.state.activeNode && node.id === this.state.activeNode.id
-      })}>
-        { this.state.activeNode && node.id === this.state.activeNode.id && !('leaf' in node) ?
-          <button className='add-button' onClick={this.props.onClickAdd.bind(null, node)}>
+  renderNode = node => (
+    <div className={cx('container', {
+      'is-active': this.state.activeNode && node.id === this.state.activeNode.id,
+    })}
+    >
+      { this.state.activeNode && node.id === this.state.activeNode.id && !('leaf' in node)
+        ? (
+          <button className="add-button" onClick={this.props.onClickAdd.bind(null, node)}>
             add
           </button>
-          :
-          ""
+        )
+        : ''
         }
-        <div
-          className='text'
-          onClick={this.props.onNodeClick.bind(null, node)}
-          onMouseEnter={this.props.onNodeFocus.bind(null, node)}
-          onMouseLeave={this.props.onNodeFocusOut.bind(null, node)}
-          onMouseDown={this.props.onNodeMouseDown.bind(null, node)}
-          onMouseUp={this.props.onNodeMouseUp.bind(null, node)}
-        >
-          {node.module}
-        </div>
+      <div
+        className="text"
+        onClick={this.props.onNodeClick.bind(null, node)}
+        onMouseEnter={this.props.onNodeFocus.bind(null, node)}
+        onMouseLeave={this.props.onNodeFocusOut.bind(null, node)}
+        onMouseDown={this.props.onNodeMouseDown.bind(null, node)}
+        onMouseUp={this.props.onNodeMouseUp.bind(null, node)}
+      >
+        {node.module}
       </div>
-    );
-  };
+    </div>
+  );
 
-  handleChange = tree => {
+  handleChange = (tree) => {
     this.setState({
-      tree: tree
+      tree,
     });
   };
 
@@ -56,7 +55,7 @@ class UIHierarchyTree extends Component {
     const { tree } = this.state;
     tree.children.push({ module: 'test' });
     this.setState({
-      tree: tree
+      tree,
     });
   };
 
