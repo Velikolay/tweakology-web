@@ -1,15 +1,16 @@
+import 'isomorphic-fetch';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import Split from 'split.js';
 import Form from './Forms/Form';
-import { submitChanges } from './Forms/Submit.js';
-import { enrichFontsData } from './Utils/Font.js';
-import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint.js';
+import { submitChanges } from './Forms/Submit';
+import { enrichFontsData } from './Utils/Font';
+import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
 
-import UIElementMesh from './UIElementMesh.js';
-import UIHierarchyScene from './UIHierarchyScene.js';
-import UIHierarchyTree from './UIHierarchyTree.js';
+import UIElementMesh from './UIElementMesh';
+import UIHierarchyScene from './UIHierarchyScene';
+import UIHierarchyTree from './UIHierarchyTree';
 
 
 import './App.css';
@@ -22,7 +23,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hierarchyData: {},
       tree: {
         module: 'Loading...',
         leaf: true,
@@ -43,13 +43,17 @@ class App extends Component {
   }
 
   componentDidMount() {
-    Split([ReactDOM.findDOMNode(this.refs.tree), ReactDOM.findDOMNode(this.refs.scene), ReactDOM.findDOMNode(this.refs.config)], {
+    Split([
+      ReactDOM.findDOMNode(this.treeRef), // eslint-disable-line react/no-find-dom-node
+      ReactDOM.findDOMNode(this.sceneRef), // eslint-disable-line react/no-find-dom-node
+      ReactDOM.findDOMNode(this.configRef), // eslint-disable-line react/no-find-dom-node
+    ], {
       sizes: [20, 60, 20],
       minSize: [200, 300, 200],
       gutterSize: 5,
     });
 
-    this.updateHierarchyData();
+    this.updateTree();
 
     fetch(`${APP_INSPECTOR_EP}fonts`)
       .then(response => response.json())
@@ -60,17 +64,17 @@ class App extends Component {
       });
   }
 
-  updateHierarchyData = () => {
+  updateTree = () => {
     fetch(APP_INSPECTOR_EP)
       .then(response => response.json())
       .then((data) => {
+        const { activeNode } = this.state;
         this.updateMesh = true;
         const tree = this.transformPayloadToTree(data);
         const updatedState = {
-          hierarchyData: data,
           tree,
         };
-        if (!this.state.activeNode) {
+        if (!activeNode) {
           updatedState.activeNode = tree;
         }
         this.setState(updatedState);
@@ -78,17 +82,19 @@ class App extends Component {
   }
 
   onSubmitChanges = () => {
-    submitChanges(this.state.tree, this.systemMetadata).then(response => this.updateHierarchyData());
+    const { tree } = this.state;
+    submitChanges(tree, this.systemMetadata).then(() => this.updateTree());
     // window.localStorage.clear();
   }
 
   onFormChange = (id, type, values) => {
     if (type === 'NSLayoutConstraint') {
+      const { activeNode } = this.state;
       this.updateMesh = true;
-      this.state.activeNode.updatedProperties = { constraint: values };
-      this.state.activeNode.module = updatedConstraintNodeName(this.state.activeNode);
+      activeNode.updatedProperties = { constraint: values };
+      activeNode.module = updatedConstraintNodeName(activeNode);
       this.setState({
-        activeNode: this.state.activeNode,
+        activeNode,
       });
     }
   }
@@ -106,7 +112,8 @@ class App extends Component {
 
   onNodeFocus = (node, event) => {
     if (!this.dragging) {
-      if (node.id && (!this.state.activeNode || node.id !== this.state.activeNode.id)) {
+      const { activeNode } = this.state;
+      if (node.id && (!activeNode || node.id !== activeNode.id)) {
         this.setState({ onFocusNode: node });
       } else {
         this.setState({ onFocusNode: null });
@@ -115,7 +122,8 @@ class App extends Component {
   }
 
   onNodeFocusOut = (node, event) => {
-    if (!this.dragging && this.state.onFocusNode && node.id === this.state.onFocusNode.id) {
+    const { onFocusNode } = this.state;
+    if (!this.dragging && onFocusNode && node.id === onFocusNode.id) {
       this.setState({ onFocusNode: null });
     }
   }
@@ -160,24 +168,25 @@ class App extends Component {
       return [];
     }
 
-    const isSelected = (activeNode, treeNode) => {
-      let selected = activeNode && activeNode.id === treeNode.id;
+    const isSelected = (activeNode, node) => {
+      let selected = activeNode && activeNode.id === node.id;
       if (!selected && activeNode.type === 'NSLayoutConstraint') {
         const constraint = 'updatedProperties' in activeNode ? activeNode.updatedProperties.constraint : activeNode.properties.constraint;
 
-        if (constraint.first && constraint.first.item.value === treeNode.id) {
+        if (constraint.first && constraint.first.item.value === node.id) {
           selected = true;
         }
 
-        if (constraint.second && constraint.second.item.value === treeNode.id) {
+        if (constraint.second && constraint.second.item.value === node.id) {
           selected = true;
         }
       }
       return selected;
     };
 
-    const properties = treeNode.properties;
-    const frame = properties.frame;
+    const { activeNode, onFocusNode } = this.state;
+    const { properties } = treeNode;
+    const { frame } = properties;
     const width = frame.maxX - frame.minX;
     const height = frame.maxY - frame.minY;
     const meshProps = [{
@@ -188,16 +197,23 @@ class App extends Component {
       height,
       imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
       updateTexture: this.updateMesh,
-      selected: isSelected(this.state.activeNode, treeNode),
-      onFocus: this.state.onFocusNode && this.state.onFocusNode.id === treeNode.id,
+      selected: isSelected(activeNode, treeNode),
+      onFocus: onFocusNode && onFocusNode.id === treeNode.id,
     }];
     if ('children' in treeNode) {
       const nextBaseX = baseX + frame.minX - (depth === 0 ? width / 2 : 0);
       const nextBaseY = baseY - frame.minY + (depth === 0 ? height / 2 : 0);
+      let depthCounter = depth;
+
       for (const childNode of treeNode.children) {
         if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
-          depth += 1;
-          const childrenMeshProps = this.treeToMeshProps(childNode, nextBaseX, nextBaseY, depth);
+          depthCounter += 1;
+          const childrenMeshProps = this.treeToMeshProps(
+            childNode,
+            nextBaseX,
+            nextBaseY,
+            depthCounter,
+          );
           meshProps.push(...childrenMeshProps);
         }
       }
@@ -206,7 +222,10 @@ class App extends Component {
   }
 
   render() {
-    const meshComponents = this.treeToMeshProps(this.state.tree, 0, 0, 0).map(meshProps => <UIElementMesh {...meshProps} />);
+    const { tree, activeNode } = this.state;
+    const meshComponents = this.treeToMeshProps(tree, 0, 0, 0).map(
+      meshProps => <UIElementMesh {...meshProps} />,
+    );
     if (this.updateMesh) {
       this.updateMesh = false;
     }
@@ -214,9 +233,9 @@ class App extends Component {
     return (
       <div className="App">
         <UIHierarchyTree
-          ref="tree"
-          tree={this.state.tree}
-          activeNode={this.state.activeNode}
+          ref={(el) => { this.treeRef = el; }}
+          tree={tree}
+          activeNode={activeNode}
           onClickAdd={this.onClickAdd}
           onNodeClick={this.onNodeClick}
           onNodeFocus={this.onNodeFocus}
@@ -224,15 +243,18 @@ class App extends Component {
           onNodeMouseDown={this.onNodeMouseDown}
           onNodeMouseUp={this.onNodeMouseUp}
         />
-        <UIHierarchyScene ref="scene" onSubmitChanges={this.onSubmitChanges}>
+        <UIHierarchyScene
+          ref={(el) => { this.sceneRef = el; }}
+          onSubmitChanges={this.onSubmitChanges}
+        >
           {meshComponents}
         </UIHierarchyScene>
-        <div ref="config" className="config-pane">
-          { this.state.activeNode !== null ? (
+        <div ref={(el) => { this.configRef = el; }} className="config-pane">
+          { activeNode !== null ? (
             <Form
-              id={this.state.activeNode.id}
-              type={this.state.activeNode.type}
-              formData={this.state.activeNode.properties}
+              id={activeNode.id}
+              type={activeNode.type}
+              formData={activeNode.properties}
               systemMetadata={this.systemMetadata}
               onFormChange={this.onFormChange}
             />

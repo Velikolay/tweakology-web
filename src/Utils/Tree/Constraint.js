@@ -1,8 +1,15 @@
-import { attributeNames, relationSymbols } from '../../Static/Constraints.js';
+import { attributeNames, relationSymbols } from '../../Static/Constraints';
 import { readPersistedValues, readPersistedConstraints } from '../../Forms/Persistence/Presistence';
 import ConstraintTransformer from '../../Transformers/Constraints';
 
-const updatedConstraintNodeName = node => constraintNodeName(node.updatedProperties.constraint, node.superview);
+const numToFixed = (num) => {
+  if (num % 1 !== 0) {
+    return Number.parseFloat(num).toFixed(1);
+  }
+  return num;
+};
+
+const isLeaf = viewNode => viewNode.type === 'UILabel' || viewNode.type === 'UIButton';
 
 const itemTypeById = (itemId, superview) => {
   if (superview) {
@@ -20,7 +27,9 @@ const itemTypeById = (itemId, superview) => {
 };
 
 const constraintNodeName = (constraint, superview) => {
-  const isFirstInit = constraint.first && constraint.first.item.value && constraint.first.attribute.value;
+  const isFirstInit = constraint.first
+                    && constraint.first.item.value
+                    && constraint.first.attribute.value;
   if (isFirstInit) {
     const relation = relationSymbols[constraint.relation];
     let name = `${attributeNames[constraint.first.attribute.value]} ${relation} `;
@@ -28,7 +37,9 @@ const constraintNodeName = (constraint, superview) => {
       name = `${itemTypeById(constraint.first.item.value, superview)}.${name}`;
     }
 
-    const isSecondInit = constraint.second && constraint.second.item.value && constraint.second.attribute.value;
+    const isSecondInit = constraint.second
+                      && constraint.second.item.value
+                      && constraint.second.attribute.value;
     if (isSecondInit) {
       if (constraint.multiplier !== 1) {
         name += `${numToFixed(constraint.multiplier)} * `;
@@ -72,15 +83,6 @@ const constraintItemOptions = (viewNode) => {
   return itemOptions;
 };
 
-const numToFixed = (num) => {
-  if (num % 1 !== 0) {
-    return Number.parseFloat(num).toFixed(1);
-  }
-  return num;
-};
-
-const isLeaf = viewNode => viewNode.type === 'UILabel' || viewNode.type === 'UIButton';
-
 const newConstraint = () => ({
   meta: {
     synced: false,
@@ -111,6 +113,11 @@ const newConstraint = () => ({
   priority: 1000,
 });
 
+const updatedConstraintNodeName = node => constraintNodeName(
+  node.updatedProperties.constraint,
+  node.superview,
+);
+
 const addNewConstraintToTreeNode = (node) => {
   const constraintsListNode = node.children[node.children.length - 1];
   if (constraintsListNode.module === 'Constraints') {
@@ -133,18 +140,18 @@ const addNewConstraintToTreeNode = (node) => {
 };
 
 const transformConstraintPayloadToTree = (viewNode, constraints) => {
-  constraints = constraints.map(ConstraintTransformer.fromPayload);
-  const lastIdx = constraints.length - 1;
+  const constraintNodes = constraints.map(ConstraintTransformer.fromPayload);
+  const lastIdx = constraintNodes.length - 1;
   const constraintsByView = readPersistedConstraints();
   if (viewNode.id in constraintsByView) {
     const localOnly = constraintsByView[viewNode.id]
       .filter(c => c.values.meta.added && parseInt(c.id.split(':')[1], 10) > lastIdx)
       .map(c => c.values);
-    constraints.push(...localOnly);
+    constraintNodes.push(...localOnly);
   }
 
   const itemOptions = constraintItemOptions(viewNode);
-  const children = constraints.map((constraint, idx) => {
+  const children = constraintNodes.map((constraint, idx) => {
     const constraintId = `${viewNode.id}.constraints:${idx}`;
     const local = readPersistedValues(constraintId);
 

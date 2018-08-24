@@ -1,4 +1,26 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb"
+  "extends": "airbnb",
+  "rules": {
+    "quote-props": [1, "consistent-as-needed"],
+    "no-cond-assign": [2, "except-parens"],
+    "no-unused-vars": [1, {"vars": "local", "args": "none"}],
+    "no-restricted-syntax": [
+      "error",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "jsx-a11y/label-has-for": [ 2, {
+      "components": [ "label" ],
+      "required": {
+          "every": [ "id" ]
+      },
+      "allowChildren": false
+    }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
 }

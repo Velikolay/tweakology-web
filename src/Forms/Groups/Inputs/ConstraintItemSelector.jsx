@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import ToggleButtonMenu from './ToggleButtonMenu.js';
+import ToggleButtonMenu from './ToggleButtonMenu';
 import { nameWithPrefix, formikValueWithPrefix } from '../Utils';
 import { attributeToModifiers, valueSwitch } from '../../../Static/Constraints';
 

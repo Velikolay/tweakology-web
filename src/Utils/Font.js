@@ -8,7 +8,7 @@ const mergeEnchancers = (styles) => {
       i += 2;
     } else {
       enchancedStyles.push(styles[i]);
-      i++;
+      i += 1;
     }
   }
   return enchancedStyles;
@@ -38,9 +38,11 @@ const getFontName = (fontFamily, fontStyle, styles) => {
 };
 
 const enrichFontsData = (fontsData) => {
-  fontsData.styles = {};
-  Object.keys(fontsData.names).map(key => fontsData.styles[key] = fontsData.names[key].map(transformFontName));
-  return fontsData;
+  const styles = Object.keys(fontsData.names).reduce((map, obj) => {
+    map[obj] = fontsData.names[obj].map(transformFontName); // eslint-disable-line no-param-reassign
+    return map;
+  }, {});
+  return Object.assign(fontsData, { styles });
 };
 
 export {

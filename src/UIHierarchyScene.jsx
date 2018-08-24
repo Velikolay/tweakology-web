@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Renderer, Scene, PerspectiveCamera } from 'react-three';
 
-import UIHierarchySceneFooter from './UIHierarchySceneFooter.js';
+import UIHierarchySceneFooter from './UIHierarchySceneFooter';
 
 const THREE = require('three');
 const OrbitControls = require('three-orbit-controls')(THREE);

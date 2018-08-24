@@ -6,11 +6,12 @@ import NSLayoutConstraint from './NSLayoutConstraint';
 import UIView from './UIView';
 
 const Form = (props) => {
-  if (props.type === 'UIButton') {
+  const { type } = props;
+  if (type === 'UIButton') {
     return <UIButtonView {...props} />;
-  } if (props.type === 'UILabel' || props.type === 'UIButtonLabel') {
+  } if (type === 'UILabel' || type === 'UIButtonLabel') {
     return <UILabelView {...props} />;
-  } if (props.type === 'NSLayoutConstraint') {
+  } if (type === 'NSLayoutConstraint') {
     return <NSLayoutConstraint {...props} />;
   }
   return <UIView {...props} />;

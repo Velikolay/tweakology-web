@@ -49,6 +49,7 @@ const Constraint = (props) => {
     errors,
     touched,
     setFieldValue,
+    handleChange,
   } = formik;
 
   const attribute1 = formikValueWithPrefix(props, 'first.attribute');
@@ -81,7 +82,7 @@ const Constraint = (props) => {
         <select
           id={nameWithPrefix(props, 'relation')}
           value={formikValueWithPrefix(props, 'relation')}
-          onChange={props.formik.handleChange}
+          onChange={handleChange}
           disabled={disabled}
         >
           <option value="-1">Less Than or Equal</option>

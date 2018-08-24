@@ -13,15 +13,17 @@ class UIElementMesh extends Component {
   }
 
   componentWillMount() {
+    const { imgUrl } = this.props;
     this.setState({
-      texture: new THREE.TextureLoader().load(this.props.imgUrl),
+      texture: new THREE.TextureLoader().load(imgUrl),
     });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.updateTexture) {
+      const { imgUrl } = this.props;
       new THREE.TextureLoader().load(
-        this.props.imgUrl,
+        imgUrl,
         texture => this.setState({ texture }),
       );
     }
@@ -35,18 +37,32 @@ class UIElementMesh extends Component {
     if (nextProps.updateTexture) {
       return true;
     }
-    if (this.state.selected !== nextState.selected) {
+    const {
+      selected,
+      onFocus,
+    } = this.state;
+    if (selected !== nextState.selected) {
       return true;
     }
-    if (this.state.onFocus !== nextState.onFocus) {
+    if (onFocus !== nextState.onFocus) {
       return true;
     }
     return false;
   }
 
   render() {
+    const {
+      texture,
+      selected,
+      onFocus,
+    } = this.state;
+
+    const {
+      x, y, z,
+      width, height,
+    } = this.props;
     const img = new THREE.MeshBasicMaterial({
-      map: this.state.texture,
+      map: texture,
       side: THREE.DoubleSide,
       transparent: true,
       polygonOffset: true,
@@ -64,15 +80,15 @@ class UIElementMesh extends Component {
     });
 
     const meshProps = {
-      position: new THREE.Vector3(this.props.x, this.props.y, this.props.z * 5),
-      geometry: new THREE.PlaneGeometry(this.props.width, this.props.height),
+      position: new THREE.Vector3(x, y, z * 5),
+      geometry: new THREE.PlaneGeometry(width, height),
       material: img,
     };
 
     let wireframeColor = 0x666666;
-    if (this.state.selected) {
+    if (selected) {
       wireframeColor = 0x2566c6;
-    } else if (this.state.onFocus) {
+    } else if (onFocus) {
       wireframeColor = 0xcccccc;
     }
 
@@ -92,7 +108,7 @@ class UIElementMesh extends Component {
     return (
       <Mesh {...meshProps}>
         <LineSegments {...wireframeProps} />
-        { this.state.selected
+        { selected
           ? <Mesh {...overlayProps} />
           : null
       }
