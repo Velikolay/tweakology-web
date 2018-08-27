@@ -9,6 +9,7 @@ import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
 
 import UIElementMesh from './UIElementMesh';
+import UIElementConstraintLine, { lineProps } from './UIElementConstraintLine';
 import UIHierarchyScene from './UIHierarchyScene';
 import UIHierarchyTree from './UIHierarchyTree';
 
@@ -70,7 +71,7 @@ class App extends Component {
       .then((data) => {
         const { activeNode } = this.state;
         this.updateMesh = true;
-        const tree = this.transformPayloadToTree(data);
+        const tree = this.transformPayloadToTree(data, { threeD: { baseX: 0, baseY: 0, depth: 0 }});
         const updatedState = {
           tree,
         };
@@ -136,24 +137,61 @@ class App extends Component {
     this.dragging = false;
   }
 
-  transformPayloadToTree = (uiElement) => {
+  transformPayloadToTree = (uiElement, { threeD: { baseX, baseY, depth } }) => {
+    const {
+      uid,
+      type,
+      hierarchyMetadata,
+      properties,
+      constraints,
+      subviews,
+    } = uiElement;
+
+    const {
+      maxX,
+      minX,
+      maxY,
+      minY,
+    } = properties.frame;
+
+    const width = maxX - minX;
+    const height = maxY - minY;
+
     const treeNode = {
-      module: uiElement.type,
-      id: uiElement.uid,
-      type: uiElement.type,
-      hierarchyMetadata: uiElement.hierarchyMetadata,
-      properties: uiElement.properties,
+      module: type,
+      id: uid,
+      type,
+      hierarchyMetadata,
+      properties,
+      threeD: {
+        x: depth === 0 ? 0 : baseX + minX + width / 2,
+        y: depth === 0 ? 0 : baseY - minY - height / 2,
+        z: depth,
+        width,
+        height,
+      },
     };
 
     treeNode.children = [];
-    if ('subviews' in uiElement) {
-      for (const subview of uiElement.subviews) {
-        treeNode.children.push(this.transformPayloadToTree(subview));
+    if (subviews) {
+      const nextBaseX = baseX + minX - (depth === 0 ? width / 2 : 0);
+      const nextBaseY = baseY - minY + (depth === 0 ? height / 2 : 0);
+      let depthCounter = depth;
+      for (const subview of subviews) {
+        depthCounter += 1;
+        const threeD = {
+          threeD: {
+            baseX: nextBaseX,
+            baseY: nextBaseY,
+            depth: depthCounter,
+          },
+        };
+        treeNode.children.push(this.transformPayloadToTree(subview, threeD));
       }
     }
 
-    if (uiElement.constraints && uiElement.constraints.length > 0) {
-      treeNode.children.push(transformConstraintPayloadToTree(treeNode, uiElement.constraints));
+    if (constraints && constraints.length > 0) {
+      treeNode.children.push(transformConstraintPayloadToTree(treeNode, constraints));
     }
 
     if (treeNode.children.length === 0) {
@@ -163,7 +201,7 @@ class App extends Component {
     return treeNode;
   }
 
-  treeToMeshProps = (treeNode, baseX, baseY, depth) => {
+  treeToMeshProps = (treeNode) => {
     if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
       return [];
     }
@@ -185,35 +223,19 @@ class App extends Component {
     };
 
     const { activeNode, onFocusNode } = this.state;
-    const { properties } = treeNode;
-    const { frame } = properties;
-    const width = frame.maxX - frame.minX;
-    const height = frame.maxY - frame.minY;
+    const { children, threeD } = treeNode;
+
     const meshProps = [{
-      x: depth === 0 ? 0 : baseX + frame.minX + width / 2,
-      y: depth === 0 ? 0 : baseY - frame.minY - height / 2,
-      z: depth,
-      width,
-      height,
+      ...threeD,
       imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
       updateTexture: this.updateMesh,
       selected: isSelected(activeNode, treeNode),
       onFocus: onFocusNode && onFocusNode.id === treeNode.id,
     }];
-    if ('children' in treeNode) {
-      const nextBaseX = baseX + frame.minX - (depth === 0 ? width / 2 : 0);
-      const nextBaseY = baseY - frame.minY + (depth === 0 ? height / 2 : 0);
-      let depthCounter = depth;
-
-      for (const childNode of treeNode.children) {
+    if (children) {
+      for (const childNode of children) {
         if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
-          depthCounter += 1;
-          const childrenMeshProps = this.treeToMeshProps(
-            childNode,
-            nextBaseX,
-            nextBaseY,
-            depthCounter,
-          );
+          const childrenMeshProps = this.treeToMeshProps(childNode);
           meshProps.push(...childrenMeshProps);
         }
       }
@@ -223,12 +245,17 @@ class App extends Component {
 
   render() {
     const { tree, activeNode } = this.state;
-    const meshComponents = this.treeToMeshProps(tree, 0, 0, 0).map(
+    const meshComponents = this.treeToMeshProps(tree).map(
       meshProps => <UIElementMesh {...meshProps} />,
     );
     if (this.updateMesh) {
       this.updateMesh = false;
     }
+
+    const constraintLine = lineProps({
+      x1: 50, y1: 50, z1: 100,
+      x2: 150, y2: 90, z2: 100,
+    }).map(props => <UIElementConstraintLine {...props} />);
 
     return (
       <div className="App">
@@ -248,6 +275,7 @@ class App extends Component {
           onSubmitChanges={this.onSubmitChanges}
         >
           {meshComponents}
+          {constraintLine}
         </UIHierarchyScene>
         <div ref={(el) => { this.configRef = el; }} className="config-pane">
           { activeNode !== null ? (
