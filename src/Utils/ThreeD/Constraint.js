@@ -16,56 +16,29 @@ const getThreeD = (itemId, superview) => {
   return null;
 };
 
-const toLinePoints = ({
+const toHorizontalIndicatorLines = ({
   x1, y1, z1, x2, y2, z2,
-}) => {
-  const deltaY = y2 - y1;
-  const deltaX = x2 - x1;
-  const angleInRad = Math.atan2(deltaY, deltaX);
-
-  const xOffset = Math.sin(angleInRad) * bracketLen / 2;
-  const yOffset = Math.cos(angleInRad) * bracketLen / 2;
-
-  const bfx1 = x1 + xOffset;
-  const bfx2 = x1 - xOffset;
-  const bfy1 = y1 + yOffset;
-  const bfy2 = y1 - yOffset;
-
-  const bsx1 = x2 + xOffset;
-  const bsx2 = x2 - xOffset;
-  const bsy1 = y2 + yOffset;
-  const bsy2 = y2 - yOffset;
-
-  return [{
+}) => (
+  [{
     x1, y1, z1, x2, y2, z2,
   }, {
-    x1: bfx1, y1: bfy1, z1, x2: bfx2, y2: bfy2, z2: z1,
+    x1, y1: y1 + bracketLen / 2, z1, x2: x1, y2: y1 - bracketLen / 2, z2: z1,
   }, {
-    x1: bsx1, y1: bsy1, z1: z2, x2: bsx2, y2: bsy2, z2,
-  }];
-};
+    x1: x2, y1: y2 + bracketLen / 2, z1: z2, x2, y2: y2 - bracketLen / 2, z2,
+  }]
+);
 
-// case noAttribute 0
-// case left 1
-// case right 2
-// case top 3
-// case bottom 4
-// case leading 5
-// case trailing 6
-// case width 7
-// case height 8
-// case centerX 9
-// case centerY 10
-// case lastBaseline 11
-// case firstBaseline 12
-// case leftMargin 13
-// case rightMargin 14
-// case topMargin 15
-// case bottomMargin 16
-// case leadingMargin 17
-// case trailingMargin 18
-// case centerXWithinMargins 19
-// case centerYWithinMargins 20
+const toVerticalIndicatorLines = ({
+  x1, y1, z1, x2, y2, z2,
+}) => (
+  [{
+    x1, y1, z1, x2, y2, z2,
+  }, {
+    x1: x1 + bracketLen / 2, y1, z1, x2: x1 - bracketLen / 2, y2: y1, z2: z1,
+  }, {
+    x1: x2 + bracketLen / 2, y1: y2, z1: z2, x2: x2 - bracketLen / 2, y2, z2,
+  }]
+);
 
 const anchorPoint = (attr, {
   x, y, z, width, height,
@@ -112,14 +85,14 @@ const toConstraintIndicator = (node) => {
     if (firstAttr === 7) { // width
       const x1 = x - width / 2;
       const y1 = y + height / 2 - 10;
-      return toLinePoints({
+      return toHorizontalIndicatorLines({
         x1, y1, z1: z, x2: x1 + width, y2: y1, z2: z,
       });
     }
     if (firstAttr === 8) { // height
       const x1 = x - width / 2 + 10;
       const y1 = y + height / 2;
-      return toLinePoints({
+      return toVerticalIndicatorLines({
         x1, y1, z1: z, x2: x1, y2: y1 - height, z2: z,
       });
     }
@@ -131,12 +104,12 @@ const toConstraintIndicator = (node) => {
         const p2 = anchorPoint(secondAttr, secondItem3D);
         if (p1 && p2) {
           if (p1.direction === HORIZONTAL_ANCHOR) {
-            return toLinePoints({
+            return toHorizontalIndicatorLines({
               x1: p1.x, y1: p1.y, z1: p1.z, x2: p2.x, y2: p1.y, z2: p2.z,
             });
           }
           if (p1.direction === VERTICAL_ANCHOR) {
-            return toLinePoints({
+            return toVerticalIndicatorLines({
               x1: p1.x, y1: p1.y, z1: p1.z, x2: p1.x, y2: p2.y, z2: p2.z,
             });
           }
