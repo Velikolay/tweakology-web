@@ -7,9 +7,10 @@ import Form from './Forms/Form';
 import { submitChanges } from './Forms/Submit';
 import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
+import toConstraintIndicator from './Utils/ThreeD/Constraint';
 
 import UIElementMesh from './UIElementMesh';
-import UIElementConstraintLine, { lineProps } from './UIElementConstraintLine';
+import UIElementConstraintLine from './UIElementConstraintLine';
 import UIHierarchyScene from './UIHierarchyScene';
 import UIHierarchyTree from './UIHierarchyTree';
 
@@ -71,7 +72,9 @@ class App extends Component {
       .then((data) => {
         const { activeNode } = this.state;
         this.updateMesh = true;
-        const tree = this.transformPayloadToTree(data, { threeD: { baseX: 0, baseY: 0, depth: 0 }});
+        const tree = this.transformPayloadToTree(data, {
+          threeD: { baseX: 0, baseY: 0, depth: 0 },
+        });
         const updatedState = {
           tree,
         };
@@ -148,10 +151,7 @@ class App extends Component {
     } = uiElement;
 
     const {
-      maxX,
-      minX,
-      maxY,
-      minY,
+      maxX, minX, maxY, minY,
     } = properties.frame;
 
     const width = maxX - minX;
@@ -252,10 +252,15 @@ class App extends Component {
       this.updateMesh = false;
     }
 
-    const constraintLine = lineProps({
-      x1: 50, y1: 50, z1: 100,
-      x2: 150, y2: 90, z2: 100,
-    }).map(props => <UIElementConstraintLine {...props} />);
+    let constraintIndicator = [];
+    if (activeNode && activeNode.type === 'NSLayoutConstraint') {
+      constraintIndicator = toConstraintIndicator(activeNode).map(
+        props => <UIElementConstraintLine {...props} />,
+      );
+    }
+    // const constraintLine = lineProps({
+    //   x1: 50, y1: 50, z1: 100, x2: 150, y2: 90, z2: 100,
+    // }).map(props => <UIElementConstraintLine {...props} />);
 
     return (
       <div className="App">
@@ -275,7 +280,7 @@ class App extends Component {
           onSubmitChanges={this.onSubmitChanges}
         >
           {meshComponents}
-          {constraintLine}
+          {constraintIndicator}
         </UIHierarchyScene>
         <div ref={(el) => { this.configRef = el; }} className="config-pane">
           { activeNode !== null ? (
