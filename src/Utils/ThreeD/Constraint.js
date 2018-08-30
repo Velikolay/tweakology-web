@@ -1,6 +1,9 @@
-const HORIZONTAL_ANCHOR = 1;
-const VERTICAL_ANCHOR = 2;
-const bracketLen = 10;
+const Direction = Object.freeze({
+  HORIZONTAL: Symbol('horizontal'),
+  VERTICAL: Symbol('vertical'),
+});
+
+const BRACKET_LEN = 10;
 
 const getThreeD = (itemId, superview) => {
   if (superview.id === itemId) {
@@ -22,9 +25,9 @@ const toHorizontalIndicatorLines = ({
   [{
     x1, y1, z1, x2, y2, z2,
   }, {
-    x1, y1: y1 + bracketLen / 2, z1, x2: x1, y2: y1 - bracketLen / 2, z2: z1,
+    x1, y1: y1 + BRACKET_LEN / 2, z1, x2: x1, y2: y1 - BRACKET_LEN / 2, z2: z1,
   }, {
-    x1: x2, y1: y2 + bracketLen / 2, z1: z2, x2, y2: y2 - bracketLen / 2, z2,
+    x1: x2, y1: y2 + BRACKET_LEN / 2, z1: z2, x2, y2: y2 - BRACKET_LEN / 2, z2,
   }]
 );
 
@@ -34,11 +37,32 @@ const toVerticalIndicatorLines = ({
   [{
     x1, y1, z1, x2, y2, z2,
   }, {
-    x1: x1 + bracketLen / 2, y1, z1, x2: x1 - bracketLen / 2, y2: y1, z2: z1,
+    x1: x1 + BRACKET_LEN / 2, y1, z1, x2: x1 - BRACKET_LEN / 2, y2: y1, z2: z1,
   }, {
-    x1: x2 + bracketLen / 2, y1: y2, z1: z2, x2: x2 - bracketLen / 2, y2, z2,
+    x1: x2 + BRACKET_LEN / 2, y1: y2, z1: z2, x2: x2 - BRACKET_LEN / 2, y2, z2,
   }]
 );
+
+const anchorDirection = (attr) => {
+  switch (attr) {
+    case 1: // left
+    case 5:
+    case 13:
+    case 17:
+    case 2: // right
+    case 6:
+    case 14:
+    case 18:
+      return Direction.HORIZONTAL;
+    case 3: // top
+    case 15:
+    case 4: // bottom
+    case 16:
+      return Direction.VERTICAL;
+    default:
+      return null;
+  }
+};
 
 const anchorPoint = (attr, {
   x, y, z, width, height,
@@ -49,24 +73,24 @@ const anchorPoint = (attr, {
     case 13:
     case 17:
       return {
-        x: x - width / 2, y, z, direction: HORIZONTAL_ANCHOR,
+        x: x - width / 2, y, z,
       };
     case 2: // right
     case 6:
     case 14:
     case 18:
       return {
-        x: x + width / 2, y, z, direction: HORIZONTAL_ANCHOR,
+        x: x + width / 2, y, z,
       };
     case 3: // top
     case 15:
       return {
-        x, y: y + height / 2, z, direction: VERTICAL_ANCHOR,
+        x, y: y + height / 2, z,
       };
     case 4: // bottom
     case 16:
       return {
-        x, y: y - height / 2, z, direction: VERTICAL_ANCHOR,
+        x, y: y - height / 2, z,
       };
     default:
       return null;
@@ -103,12 +127,13 @@ const toConstraintIndicator = (node) => {
         const p1 = anchorPoint(firstAttr, firstItem3D);
         const p2 = anchorPoint(secondAttr, secondItem3D);
         if (p1 && p2) {
-          if (p1.direction === HORIZONTAL_ANCHOR) {
+          const direction = anchorDirection(firstAttr);
+          if (direction === Direction.HORIZONTAL) {
             return toHorizontalIndicatorLines({
               x1: p1.x, y1: p1.y, z1: p1.z, x2: p2.x, y2: p1.y, z2: p2.z,
             });
           }
-          if (p1.direction === VERTICAL_ANCHOR) {
+          if (direction === Direction.VERTICAL) {
             return toVerticalIndicatorLines({
               x1: p1.x, y1: p1.y, z1: p1.z, x2: p1.x, y2: p2.y, z2: p2.z,
             });

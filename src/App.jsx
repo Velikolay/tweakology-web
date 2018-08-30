@@ -9,6 +9,8 @@ import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
 import toConstraintIndicator from './Utils/ThreeD/Constraint';
 
+import ThreeScene from './Three/ThreeScene';
+
 import UIElementMesh from './UIElementMesh';
 import UIElementConstraintLine from './UIElementConstraintLine';
 import UIHierarchyScene from './UIHierarchyScene';
@@ -275,13 +277,17 @@ class App extends Component {
           onNodeMouseDown={this.onNodeMouseDown}
           onNodeMouseUp={this.onNodeMouseUp}
         />
-        <UIHierarchyScene
+        <ThreeScene
+          ref={(el) => { this.sceneRef = el; }}
+          views={this.treeToMeshProps(tree)}
+        />
+        {/* <UIHierarchyScene
           ref={(el) => { this.sceneRef = el; }}
           onSubmitChanges={this.onSubmitChanges}
         >
           {meshComponents}
           {constraintIndicator}
-        </UIHierarchyScene>
+        </UIHierarchyScene> */}
         <div ref={(el) => { this.configRef = el; }} className="config-pane">
           { activeNode !== null ? (
             <Form
