@@ -8,6 +8,7 @@
     "formik": "^0.11.11",
     "formik-observer": "^1.0.1",
     "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.17.10",
     "prop-types": "^15.6.2",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",

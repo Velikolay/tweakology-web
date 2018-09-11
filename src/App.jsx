@@ -229,6 +229,7 @@ class App extends Component {
 
     const meshProps = [{
       ...threeD,
+      id: treeNode.id,
       imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
       updateTexture: this.updateMesh,
       selected: isSelected(activeNode, treeNode),
