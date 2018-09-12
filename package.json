@@ -10,23 +10,22 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.10",
     "prop-types": "^15.6.2",
-    "react": "^15.6.2",
-    "react-dom": "^15.6.2",
-    "react-three": "^0.9.7",
+    "react": "^16.5.0",
+    "react-dom": "^16.5.0",
     "react-ui-tree": "^3.1.0",
     "split.js": "^1.3.5",
-    "three": "^0.92.0",
+    "three": "^0.96.0",
     "three-orbit-controls": "^82.1.0",
-    "yup": "^0.25.1"
+    "yup": "^0.26.5"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.6",
-    "eslint": "^5.4.0",
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.5.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "^1.1.5"
   },
   "scripts": {
     "start": "react-scripts start",

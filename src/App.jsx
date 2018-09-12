@@ -11,9 +11,6 @@ import toConstraintIndicator from './Utils/ThreeD/Constraint';
 
 import ThreeScene from './Three/ThreeScene';
 
-import UIElementMesh from './UIElementMesh';
-import UIElementConstraintLine from './UIElementConstraintLine';
-import UIHierarchyScene from './UIHierarchyScene';
 import UIHierarchyTree from './UIHierarchyTree';
 
 
@@ -233,7 +230,7 @@ class App extends Component {
       imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
       updateTexture: this.updateMesh,
       selected: isSelected(activeNode, treeNode),
-      onFocus: onFocusNode && onFocusNode.id === treeNode.id,
+      onFocus: onFocusNode !== null && onFocusNode.id === treeNode.id,
     }];
     if (children) {
       for (const childNode of children) {
@@ -248,18 +245,16 @@ class App extends Component {
 
   render() {
     const { tree, activeNode } = this.state;
-    const meshComponents = this.treeToMeshProps(tree).map(
-      meshProps => <UIElementMesh {...meshProps} />,
-    );
     if (this.updateMesh) {
       this.updateMesh = false;
     }
 
-    let constraintIndicator = [];
+    const constraintIndicators = [];
     if (activeNode && activeNode.type === 'NSLayoutConstraint') {
-      constraintIndicator = toConstraintIndicator(activeNode).map(
-        props => <UIElementConstraintLine {...props} />,
-      );
+      constraintIndicators.push({
+        id: activeNode.id,
+        lineGroup: toConstraintIndicator(activeNode),
+      });
     }
     // const constraintLine = lineProps({
     //   x1: 50, y1: 50, z1: 100, x2: 150, y2: 90, z2: 100,
@@ -281,14 +276,8 @@ class App extends Component {
         <ThreeScene
           ref={(el) => { this.sceneRef = el; }}
           views={this.treeToMeshProps(tree)}
+          constraintIndicators={constraintIndicators}
         />
-        {/* <UIHierarchyScene
-          ref={(el) => { this.sceneRef = el; }}
-          onSubmitChanges={this.onSubmitChanges}
-        >
-          {meshComponents}
-          {constraintIndicator}
-        </UIHierarchyScene> */}
         <div ref={(el) => { this.configRef = el; }} className="config-pane">
           { activeNode !== null ? (
             <Form

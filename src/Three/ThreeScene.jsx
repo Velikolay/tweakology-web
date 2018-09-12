@@ -27,7 +27,7 @@ const createMesh = (props) => {
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(x, y, z * 5);
   return mesh;
-}
+};
 
 const createOverLayMesh = (props) => {
   const {
@@ -119,6 +119,32 @@ const updateTHREEMesh = (group, viewProps, nextViewProps) => {
   }
 };
 
+const createLine = (props) => {
+  const {
+    x1, y1, z1,
+    x2, y2, z2,
+  } = props;
+
+  const p1 = new THREE.Vector3(x1, y1, z1 * 5 + 1);
+  const p2 = new THREE.Vector3(x2, y2, z2 * 5 + 1);
+
+  const matertial = new THREE.LineBasicMaterial({ color: 0xc89637, linewidth: 2 });
+  const geometry = new THREE.Geometry();
+  geometry.vertices.push(p1);
+  geometry.vertices.push(p2);
+
+  return new THREE.Line(geometry, matertial);
+};
+
+const createConstraintIndicator = (constraintIndicatorProps) => {
+  const lineGroup = new THREE.Group();
+  for (const indicator of constraintIndicatorProps) {
+    lineGroup.add(createLine(indicator));
+  }
+  return lineGroup;
+};
+
+
 const initOrbitControls = (camera, constainer) => {
   const controls = new OrbitControls(camera, constainer);
   controls.minPolarAngle = 0;
@@ -138,20 +164,43 @@ class SceneManager {
   constructor(scene) {
     this.scene = scene;
     this.viewsMap = {};
+    this.constraintIndicatorsMap = {};
   }
 
   updateViews(views) {
     for (const nextViewProps of views) {
       if (nextViewProps.id in this.viewsMap) {
-        const { viewMesh, viewProps } = this.viewsMap[nextViewProps.id];
+        const { meshGroup, viewProps } = this.viewsMap[nextViewProps.id];
         if (!_.isEqual(viewProps, nextViewProps)) {
-          updateTHREEMesh(viewMesh, viewProps, nextViewProps);
+          updateTHREEMesh(meshGroup, viewProps, nextViewProps);
+          this.viewsMap[nextViewProps.id].viewProps = nextViewProps;
         }
       } else {
-        const viewMesh = createTHREEMesh(nextViewProps);
-        this.viewsMap[nextViewProps.id] = { viewMesh, viewProps: nextViewProps };
-        this.scene.add(viewMesh);
+        const meshGroup = createTHREEMesh(nextViewProps);
+        this.viewsMap[nextViewProps.id] = { meshGroup, viewProps: nextViewProps };
+        this.scene.add(meshGroup);
       }
+    }
+  }
+
+  updateConstraintIndicators(indicators) {
+    for (const nextIndicatorProps of indicators) {
+      if (!(nextIndicatorProps.id in this.constraintIndicatorsMap)) {
+        const lineGroup = createConstraintIndicator(nextIndicatorProps.lineGroup);
+        this.constraintIndicatorsMap[nextIndicatorProps.id] = {
+          lineGroup,
+          indicatorProps: nextIndicatorProps,
+        };
+        this.scene.add(lineGroup);
+      }
+    }
+    const indicatorIds = indicators.map(i => i.id);
+    const remIds = Object.keys(this.constraintIndicatorsMap).filter(
+      id => indicatorIds.indexOf(id) === -1,
+    );
+    for (const remId of remIds) {
+      const { lineGroup } = this.constraintIndicatorsMap[remId];
+      this.scene.remove(lineGroup);
     }
   }
 }
@@ -171,7 +220,7 @@ class ThreeScene extends Component {
       self.updateCanvasDimensions();
     }));
 
-    const { views } = this.props;
+    const { views, constraintIndicators } = this.props;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     const fov = 75;
@@ -191,15 +240,16 @@ class ThreeScene extends Component {
 
     this.sceneManager = new SceneManager(this.scene);
     this.sceneManager.updateViews(views);
+    this.sceneManager.updateConstraintIndicators(constraintIndicators);
 
     this.container.appendChild(this.renderer.domElement);
     this.start();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { views } = nextProps;
+    const { views, constraintIndicators } = nextProps;
     this.sceneManager.updateViews(views);
-    console.log(this.scene);
+    this.sceneManager.updateConstraintIndicators(constraintIndicators);
   }
 
   componentWillUnmount() {
@@ -255,6 +305,17 @@ ThreeScene.propTypes = {
     selected: PropTypes.bool.isRequired,
     onFocus: PropTypes.bool.isRequired,
     imgUrl: PropTypes.string.isRequired,
+  })).isRequired,
+  constraintIndicators: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    lineGroup: PropTypes.arrayOf(PropTypes.shape({
+      x1: PropTypes.number.isRequired,
+      y1: PropTypes.number.isRequired,
+      z1: PropTypes.number.isRequired,
+      x2: PropTypes.number.isRequired,
+      y2: PropTypes.number.isRequired,
+      z2: PropTypes.number.isRequired,
+    })).isRequired,
   })).isRequired,
 };
 
