@@ -7,7 +7,8 @@ import Form from './Forms/Form';
 import { submitChanges } from './Forms/Submit';
 import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
-import toConstraintIndicator from './Utils/ThreeD/Constraint';
+import toThreeConstraintIndicator from './Three/Constraint';
+import toThreeViews from './Three/View';
 
 import ThreeScene from './Three/ThreeScene';
 
@@ -70,7 +71,6 @@ class App extends Component {
       .then(response => response.json())
       .then((data) => {
         const { activeNode } = this.state;
-        this.updateMesh = true;
         const tree = this.transformPayloadToTree(data, {
           threeD: { baseX: 0, baseY: 0, depth: 0 },
         });
@@ -93,7 +93,6 @@ class App extends Component {
   onFormChange = (id, type, values) => {
     if (type === 'NSLayoutConstraint') {
       const { activeNode } = this.state;
-      this.updateMesh = true;
       activeNode.updatedProperties = { constraint: values };
       activeNode.module = updatedConstraintNodeName(activeNode);
       this.setState({
@@ -200,61 +199,14 @@ class App extends Component {
     return treeNode;
   }
 
-  treeToMeshProps = (treeNode) => {
-    if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
-      return [];
-    }
 
-    const isSelected = (activeNode, node) => {
-      let selected = activeNode && activeNode.id === node.id;
-      if (!selected && activeNode.type === 'NSLayoutConstraint') {
-        const constraint = 'updatedProperties' in activeNode ? activeNode.updatedProperties.constraint : activeNode.properties.constraint;
-
-        if (constraint.first && constraint.first.item.value === node.id) {
-          selected = true;
-        }
-
-        if (constraint.second && constraint.second.item.value === node.id) {
-          selected = true;
-        }
-      }
-      return selected;
-    };
-
-    const { activeNode, onFocusNode } = this.state;
-    const { children, threeD } = treeNode;
-
-    const meshProps = [{
-      ...threeD,
-      id: treeNode.id,
-      imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
-      updateTexture: this.updateMesh,
-      selected: isSelected(activeNode, treeNode),
-      onFocus: onFocusNode !== null && onFocusNode.id === treeNode.id,
-    }];
-    if (children) {
-      for (const childNode of children) {
-        if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
-          const childrenMeshProps = this.treeToMeshProps(childNode);
-          meshProps.push(...childrenMeshProps);
-        }
-      }
-    }
-    return meshProps;
-  }
 
   render() {
-    const { tree, activeNode } = this.state;
-    if (this.updateMesh) {
-      this.updateMesh = false;
-    }
+    const { tree, activeNode, onFocusNode } = this.state;
 
     const constraintIndicators = [];
     if (activeNode && activeNode.type === 'NSLayoutConstraint') {
-      constraintIndicators.push({
-        id: activeNode.id,
-        lineGroup: toConstraintIndicator(activeNode),
-      });
+      constraintIndicators.push(toThreeConstraintIndicator(activeNode));
     }
     // const constraintLine = lineProps({
     //   x1: 50, y1: 50, z1: 100, x2: 150, y2: 90, z2: 100,
@@ -275,7 +227,7 @@ class App extends Component {
         />
         <ThreeScene
           ref={(el) => { this.sceneRef = el; }}
-          views={this.treeToMeshProps(tree)}
+          views={toThreeViews({ tree, activeNode, onFocusNode })}
           constraintIndicators={constraintIndicators}
         />
         <div ref={(el) => { this.configRef = el; }} className="config-pane">

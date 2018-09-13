@@ -97,7 +97,7 @@ const anchorPoint = (attr, {
   }
 };
 
-const toConstraintIndicator = (node) => {
+const toThreeConstraintIndicatorLineGroup = (node) => {
   const { properties: { constraint }, superview } = node;
   const { first, second } = constraint;
   const firstItem3D = getThreeD(first.item.value, superview);
@@ -145,4 +145,9 @@ const toConstraintIndicator = (node) => {
   return [];
 };
 
-export default toConstraintIndicator;
+const toThreeConstraintIndicator = node => ({
+  id: node.id,
+  lineGroup: toThreeConstraintIndicatorLineGroup(node),
+});
+
+export default toThreeConstraintIndicator;
