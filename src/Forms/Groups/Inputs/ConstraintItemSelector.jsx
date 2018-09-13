@@ -1,5 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
+import { withFormikContext } from '../../FormikContext';
 import ToggleButtonMenu from './ToggleButtonMenu';
 import { nameWithPrefix, formikValueWithPrefix } from '../Utils';
 import { attributeToModifiers, valueSwitch } from '../../../Static/Constraints';
@@ -8,9 +9,13 @@ import './ConstraintItemSelector.css';
 
 const ConstraintItemSelector = (props) => {
   const {
-    setFieldValue,
-    handleChange,
-  } = props.formik;
+    prefix,
+    attributes,
+    disabled,
+    formik,
+  } = props;
+
+  const { setFieldValue, handleChange } = formik;
 
   const handleAttributeChange = (e) => {
     const attrVal = e.target.value;
@@ -35,7 +40,7 @@ const ConstraintItemSelector = (props) => {
 
   const attributeGroupsDOM = buildAttributeGroupsDOM(attribute, props);
   const itemsDOM = buildItemsDOM(item, props);
-  const modifiers = getModifiers(attribute, props.attributes);
+  const modifiers = getModifiers(attribute, attributes);
   const hasModifiers = !!modifiers;
 
   return (
@@ -48,7 +53,7 @@ const ConstraintItemSelector = (props) => {
           id={nameWithPrefix(props, 'item.value')}
           value={item.value}
           onChange={handleChange}
-          disabled={props.disabled}
+          disabled={disabled}
         >
           {itemsDOM}
         </select>
@@ -63,7 +68,7 @@ const ConstraintItemSelector = (props) => {
           id={nameWithPrefix(props, 'attribute.value')}
           value={attribute.value}
           onChange={handleAttributeChange}
-          disabled={props.disabled}
+          disabled={disabled}
         >
           {attributeGroupsDOM}
         </select>
@@ -73,11 +78,10 @@ const ConstraintItemSelector = (props) => {
           ? (
             <div className="cis-options">
               <ToggleButtonMenu
-                prefix={`${props.prefix}.attribute`}
+                prefix={`${prefix}.attribute`}
                 options={modifiers}
-                formik={props.formik}
                 onSwitch={handleSwitchModifier}
-                disabled={props.disabled}
+                disabled={disabled}
               />
             </div>
           )
@@ -151,4 +155,4 @@ const variantFilter = (variant, attribute) => {
   return true;
 };
 
-export default ConstraintItemSelector;
+export default withFormikContext(ConstraintItemSelector);

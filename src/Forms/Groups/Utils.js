@@ -5,16 +5,23 @@ const nameWithPrefix = (props, name) => {
   return name;
 };
 
-const valueWithPrefix = (props, name) => deep_value(props.values, nameWithPrefix(props, name));
-
-const formikValueWithPrefix = (props, name) => deep_value(props.formik.values, nameWithPrefix(props, name));
-
-const deep_value = (obj, path) => {
-  for (var i = 0, path = path.split('.'), len = path.length; i < len; i++) {
-    obj = obj[path[i]];
+const deepValue = (obj, path) => {
+  let res = obj;
+  for (let i = 0, pathSegments = path.split('.'), len = pathSegments.length; i < len; i += 1) {
+    res = res[pathSegments[i]];
   }
-  return obj;
+  return res;
 };
+
+const valueWithPrefix = (props, name) => deepValue(
+  props.values,
+  nameWithPrefix(props, name),
+);
+
+const formikValueWithPrefix = (props, name) => deepValue(
+  props.formik.values,
+  nameWithPrefix(props, name),
+);
 
 const titleForField = (props, fieldName, defaultTitle) => {
   if (props.titles && fieldName in props.titles) {

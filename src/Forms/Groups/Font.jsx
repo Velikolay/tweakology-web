@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
-import { nameWithPrefix, valueWithPrefix, titleForField } from './Utils';
+import { withFormikContext } from '../FormikContext';
+import { nameWithPrefix, titleForField, formikValueWithPrefix } from './Utils';
 
 import './Groups.css';
 
@@ -11,7 +12,7 @@ const FontGroup = (props) => {
     touched,
     errors,
     handleChange,
-  } = props;
+  } = props.formik;
 
   const familyNameId = nameWithPrefix(props, 'familyName');
   const fontStyleId = nameWithPrefix(props, 'fontStyle');
@@ -28,7 +29,7 @@ const FontGroup = (props) => {
           onChange={handleChange}
         >
           {
-            systemMetadata.fonts.families.map(familyName => (familyName === valueWithPrefix(props, 'familyName') ? (
+            systemMetadata.fonts.families.map(familyName => (familyName === formikValueWithPrefix(props, 'familyName') ? (
               <option selected>
                 {' '}
                 {familyName}
@@ -54,7 +55,7 @@ const FontGroup = (props) => {
           onChange={handleChange}
         >
           {
-            systemMetadata.fonts.styles[valueWithPrefix(props, 'familyName')].map(fontStyle => (fontStyle === valueWithPrefix(props, 'fontStyle') ? (
+            systemMetadata.fonts.styles[formikValueWithPrefix(props, 'familyName')].map(fontStyle => (fontStyle === formikValueWithPrefix(props, 'fontStyle') ? (
               <option selected>
                 {' '}
                 {fontStyle}
@@ -87,4 +88,4 @@ FontGroup.propTypes = {
   systemMetadata: PropTypes.object.isRequired,
 };
 
-export default FontGroup;
+export default withFormikContext(FontGroup);

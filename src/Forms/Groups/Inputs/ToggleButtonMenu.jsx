@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import { withFormikContext } from '../../FormikContext';
 import { formikValueWithPrefix } from '../Utils';
 
 import './ToggleButtonMenu.css';
@@ -79,4 +80,4 @@ ToggleButton.propTypes = {
   onSwitch: PropTypes.func.isRequired,
 };
 
-export default ToggleButtonMenu;
+export default withFormikContext(ToggleButtonMenu);

@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
-import { nameWithPrefix, valueWithPrefix, titleForField } from './Utils';
+import { withFormikContext } from '../FormikContext';
+import { nameWithPrefix, titleForField, formikValueWithPrefix } from './Utils';
 
 import './Groups.css';
 import './Color.css';
 
 const ColorGroup = (props) => {
-  const { setFieldValue } = props;
+  const { setFieldValue } = props.formik;
   const alpha = nameWithPrefix(props, 'alpha');
   const color = nameWithPrefix(props, 'hexValue');
   return (
@@ -25,7 +26,7 @@ const ColorGroup = (props) => {
         <Field name={color} type="text" className="color-input" />
         <input
           type="color"
-          value={valueWithPrefix(props, 'hexValue')}
+          value={formikValueWithPrefix(props, 'hexValue')}
           className="color-picker-input"
           onChange={event => setFieldValue(color, event.target.value)}
         />
@@ -38,4 +39,4 @@ ColorGroup.propTypes = {
   setFieldValue: PropTypes.func.isRequired,
 };
 
-export default ColorGroup;
+export default withFormikContext(ColorGroup);

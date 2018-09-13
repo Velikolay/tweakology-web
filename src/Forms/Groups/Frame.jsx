@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field } from 'formik';
+import { withFormikContext } from '../FormikContext';
 
 import './Groups.css';
 import { nameWithPrefix, titleForField } from './Utils';
@@ -9,7 +10,7 @@ const FrameGroup = (props) => {
   const {
     touched,
     errors,
-  } = props;
+  } = props.formik;
   return (
     <div className="form-group">
       <div className="form-row">
@@ -56,4 +57,4 @@ const FrameGroup = (props) => {
   );
 };
 
-export default FrameGroup;
+export default withFormikContext(FrameGroup);

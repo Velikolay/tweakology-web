@@ -1,5 +1,6 @@
 import React from 'react';
 import { withFormik } from 'formik';
+import { withFormikContextProvider } from './FormikContext';
 import Yup from 'yup';
 import { Persist } from './Persistence/Presistence';
 // import { Persist } from 'formik-persist'
@@ -13,16 +14,16 @@ import ColorGroup from './Groups/Color';
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUILabelViewForm = props => (
   <form onSubmit={props.handleSubmit}>
-    <FrameGroup prefix="frame" {...props} />
+    <FrameGroup prefix="frame" />
     <hr />
-    <TextGroup {...props} />
-    <FontGroup prefix="font" {...props} />
-    <ColorGroup prefix="textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} {...props} />
+    <TextGroup />
+    <FontGroup prefix="font" />
+    <ColorGroup prefix="textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
     { props.values.backgroundColor ? (
-      <div>
+      <React.Fragment>
         <hr />
-        <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} {...props} />
-      </div>
+        <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
+      </React.Fragment>
     ) : null
       }
     <Persist name={props.id} formik={props} />
@@ -64,7 +65,7 @@ const EnhancedUILabelViewForm = withFormik({
     }, 1000);
   },
   displayName: 'UILabelViewForm', // helps with React DevTools
-})(InnerUILabelViewForm);
+})(withFormikContextProvider(InnerUILabelViewForm));
 
 const UILabelViewForm = props => <EnhancedUILabelViewForm {...props} />;
 

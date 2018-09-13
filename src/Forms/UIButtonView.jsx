@@ -1,5 +1,6 @@
 import React from 'react';
 import { withFormik } from 'formik';
+import { withFormikContextProvider } from './FormikContext';
 import Yup from 'yup';
 import { Persist } from './Persistence/Presistence';
 // import { Persist } from 'formik-persist'
@@ -13,13 +14,13 @@ import ColorGroup from './Groups/Color';
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUIButtonViewForm = props => (
   <form onSubmit={props.handleSubmit}>
-    <FrameGroup prefix="frame" {...props} />
+    <FrameGroup prefix="frame" />
     <hr />
-    <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} {...props} />
+    <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
     <hr />
-    <TextGroup prefix="title" titles={{ text: 'Title' }} {...props} />
-    <FontGroup prefix="title.font" {...props} />
-    <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} {...props} />
+    <TextGroup prefix="title" titles={{ text: 'Title' }} />
+    <FontGroup prefix="title.font" />
+    <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
     <Persist name={props.id} formik={props} />
   </form>
 );
@@ -62,7 +63,7 @@ const EnhancedUIButtonViewForm = withFormik({
     }, 1000);
   },
   displayName: 'UIButtonViewForm', // helps with React DevTools
-})(InnerUIButtonViewForm);
+})(withFormikContextProvider(InnerUIButtonViewForm));
 
 const UIButtonViewForm = props => <EnhancedUIButtonViewForm {...props} />;
 

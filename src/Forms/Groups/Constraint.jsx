@@ -3,6 +3,7 @@ import { Field } from 'formik';
 import ConstraintItemSelector from './Inputs/ConstraintItemSelector';
 import { nameWithPrefix, formikValueWithPrefix } from './Utils';
 import { constraintAttributes } from '../../Static/Constraints';
+import { withFormikContext } from '../FormikContext';
 
 import './Groups.css';
 
@@ -76,7 +77,7 @@ const Constraint = (props) => {
   return (
     <div className="form-group">
       <div className="form-row">
-        <ConstraintItemSelector prefix={nameWithPrefix(props, 'first')} formik={formik} items={itemOptions} attributes={attributes1} disabled={disabled} />
+        <ConstraintItemSelector prefix={nameWithPrefix(props, 'first')} items={itemOptions} attributes={attributes1} disabled={disabled} />
       </div>
       <div className="form-row">
         <select
@@ -94,7 +95,7 @@ const Constraint = (props) => {
         items2.length > 0 && attributes2.length > 0
           ? (
             <div className="form-row">
-              <ConstraintItemSelector prefix={nameWithPrefix(props, 'second')} formik={formik} items={items2} attributes={attributes2} disabled={disabled} />
+              <ConstraintItemSelector prefix={nameWithPrefix(props, 'second')} items={items2} attributes={attributes2} disabled={disabled} />
             </div>
           )
           : null
@@ -127,4 +128,4 @@ const Constraint = (props) => {
   );
 };
 
-export default Constraint;
+export default withFormikContext(Constraint);

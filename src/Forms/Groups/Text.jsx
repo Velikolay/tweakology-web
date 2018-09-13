@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field } from 'formik';
+import { withFormikContext } from '../FormikContext';
 
 import './Groups.css';
 import { nameWithPrefix, titleForField } from './Utils';
@@ -15,4 +16,4 @@ const TextGroup = props => (
   </div>
 );
 
-export default TextGroup;
+export default withFormikContext(TextGroup);

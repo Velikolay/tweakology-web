@@ -1,5 +1,6 @@
 import React from 'react';
 import { withFormik } from 'formik';
+import { withFormikContextProvider } from './FormikContext';
 import Yup from 'yup';
 import { Persist } from './Persistence/Presistence';
 // import { Persist } from 'formik-persist'
@@ -10,12 +11,12 @@ import ColorGroup from './Groups/Color';
 // Our inner form component. Will be wrapped with Formik({..})
 const InnerUIViewForm = props => (
   <form onSubmit={props.handleSubmit}>
-    <FrameGroup prefix="frame" {...props} />
+    <FrameGroup prefix="frame" />
     { props.values.backgroundColor ? (
-      <div>
+      <React.Fragment>
         <hr />
-        <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} {...props} />
-      </div>
+        <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
+      </React.Fragment>
     ) : null
       }
     <Persist name={props.id} formik={props} />
@@ -47,7 +48,7 @@ const EnhancedUIViewForm = withFormik({
     }, 1000);
   },
   displayName: 'UIViewForm', // helps with React DevTools
-})(InnerUIViewForm);
+})(withFormikContextProvider(InnerUIViewForm));
 
 const UIViewForm = props => <EnhancedUIViewForm {...props} />;
 
