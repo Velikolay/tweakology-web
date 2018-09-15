@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { withSystemContext } from '../System/SystemContext';
+
 import UIButtonView from './UIButtonView';
 import UILabelView from './UILabelView';
 import NSLayoutConstraint from './NSLayoutConstraint';
@@ -17,4 +19,4 @@ const Form = (props) => {
   return <UIView {...props} />;
 };
 
-export default Form;
+export default withSystemContext(Form);

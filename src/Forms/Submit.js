@@ -2,13 +2,13 @@ import { getFontName } from '../Utils/Font';
 import { readPersistedConstraints } from './Persistence/Presistence';
 import ConstraintTransformer from '../Transformers/Constraints';
 
-const _treeToFormIds = (uiElement) => {
+const treeToFormIds = (uiElement) => {
   const treeNode = [uiElement.id];
   if ('leaf' in uiElement && uiElement.leaf === true) {
     return treeNode;
   }
   for (const child of uiElement.children) {
-    treeNode.push(..._treeToFormIds(child));
+    treeNode.push(...treeToFormIds(child));
   }
 
   return treeNode;
@@ -22,8 +22,8 @@ const constraintToPayload = (constraints) => {
   };
 };
 
-const submitChanges = (tree, systemMetadata) => {
-  const ids = _treeToFormIds(tree);
+const submitChanges = (tree, systemContext) => {
+  const ids = treeToFormIds(tree);
   const changeSet = [];
 
   const constraints = readPersistedConstraints();
@@ -33,7 +33,7 @@ const submitChanges = (tree, systemMetadata) => {
     if (formState) {
       const state = JSON.parse(formState);
       if (state.type !== 'NSLayoutConstraint' && state.dirty) {
-        enrichValues(state.values, systemMetadata);
+        enrichValues(state.values, systemContext);
         const change = {
           operation: 'modify',
           view: {
@@ -72,19 +72,21 @@ const submitChanges = (tree, systemMetadata) => {
   });
 };
 
-const enrichValues = (values, systemMetadata) => {
+const isDict = v => typeof v === 'object' && v !== null && !(v instanceof Array) && !(v instanceof Date);
+
+const enrichValues = (values, systemContext) => {
   Object.keys(values).forEach((key) => {
     const valueObject = values[key];
     if (isDict(valueObject)) {
       if (key === 'font') {
-        valueObject.fontName = getFontName(valueObject.familyName, valueObject.fontStyle, systemMetadata.fonts.names);
+        valueObject.fontName = getFontName(
+          valueObject.familyName, valueObject.fontStyle, systemContext.fonts.names,
+        );
       } else {
-        enrichValues(valueObject, systemMetadata);
+        enrichValues(valueObject, systemContext);
       }
     }
   });
 };
-
-const isDict = v => typeof v === 'object' && v !== null && !(v instanceof Array) && !(v instanceof Date);
 
 export { submitChanges };

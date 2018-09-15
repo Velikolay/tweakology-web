@@ -3,7 +3,8 @@
   height: 100%;
 }
 
-.scene-view-container {
+.middle-section {
+  position: relative;
   float: left;
   height: 100%;
   /* background-color: #1e1e1e; */
@@ -158,7 +159,7 @@
   transform: translate(0%, -50%);
 }
 
-.ui-hierarchy-scene-footer {
+.main-toolbar {
   display: table;
   position: absolute;
   bottom: 0;
@@ -174,12 +175,19 @@
 }
 
 .submit-button {
-  text-align: center;
-  height: 18px;
-  width: 50px;
-  background: #c89637;
+  height: 24px;
+  width: 30px;
+  background: rgb(60, 60, 60);
   border-radius: 2px;
   border: 1px solid rgba(200, 150, 55, 0.5);
+}
+
+.submit-button-icon {
+  color: rgb(180, 180, 180);
+  height: 12px;
+  width: 12px;
+  display: block;
+  margin: 0 auto;
 }
 
 .gutter {

@@ -1,16 +1,19 @@
 import 'isomorphic-fetch';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
 import Split from 'split.js';
+
+import SystemContext from './System/SystemContext';
 import Form from './Forms/Form';
 import { submitChanges } from './Forms/Submit';
+
 import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
+
 import toThreeConstraintIndicator from './Three/Constraint';
 import toThreeViews from './Three/View';
-
 import ThreeScene from './Three/ThreeScene';
+import MainToolbar from './MainToolbar';
 
 import UIHierarchyTree from './UIHierarchyTree';
 
@@ -47,7 +50,7 @@ class App extends Component {
   componentDidMount() {
     Split([
       ReactDOM.findDOMNode(this.treeRef), // eslint-disable-line react/no-find-dom-node
-      ReactDOM.findDOMNode(this.sceneRef), // eslint-disable-line react/no-find-dom-node
+      ReactDOM.findDOMNode(this.middleSectionRef), // eslint-disable-line react/no-find-dom-node
       ReactDOM.findDOMNode(this.configRef), // eslint-disable-line react/no-find-dom-node
     ], {
       sizes: [20, 60, 20],
@@ -60,7 +63,7 @@ class App extends Component {
     fetch(`${APP_INSPECTOR_EP}fonts`)
       .then(response => response.json())
       .then((fontsData) => {
-        this.systemMetadata = {
+        this.systemContext = {
           fonts: enrichFontsData(fontsData),
         };
       });
@@ -86,7 +89,7 @@ class App extends Component {
 
   onSubmitChanges = () => {
     const { tree } = this.state;
-    submitChanges(tree, this.systemMetadata).then(() => this.updateTree());
+    submitChanges(tree, this.systemContext).then(() => this.updateTree());
     // window.localStorage.clear();
   }
 
@@ -199,8 +202,6 @@ class App extends Component {
     return treeNode;
   }
 
-
-
   render() {
     const { tree, activeNode, onFocusNode } = this.state;
 
@@ -214,34 +215,43 @@ class App extends Component {
 
     return (
       <div className="App">
-        <UIHierarchyTree
-          ref={(el) => { this.treeRef = el; }}
-          tree={tree}
-          activeNode={activeNode}
-          onClickAdd={this.onClickAdd}
-          onNodeClick={this.onNodeClick}
-          onNodeFocus={this.onNodeFocus}
-          onNodeFocusOut={this.onNodeFocusOut}
-          onNodeMouseDown={this.onNodeMouseDown}
-          onNodeMouseUp={this.onNodeMouseUp}
-        />
-        <ThreeScene
-          ref={(el) => { this.sceneRef = el; }}
-          views={toThreeViews({ tree, activeNode, onFocusNode })}
-          constraintIndicators={constraintIndicators}
-        />
-        <div ref={(el) => { this.configRef = el; }} className="config-pane">
-          { activeNode !== null ? (
-            <Form
-              id={activeNode.id}
-              type={activeNode.type}
-              formData={activeNode.properties}
-              systemMetadata={this.systemMetadata}
-              onFormChange={this.onFormChange}
+        <SystemContext.Provider value={this.systemContext}>
+          <UIHierarchyTree
+            ref={(el) => { this.treeRef = el; }}
+            tree={tree}
+            activeNode={activeNode}
+            onClickAdd={this.onClickAdd}
+            onNodeClick={this.onNodeClick}
+            onNodeFocus={this.onNodeFocus}
+            onNodeFocusOut={this.onNodeFocusOut}
+            onNodeMouseDown={this.onNodeMouseDown}
+            onNodeMouseUp={this.onNodeMouseUp}
+          />
+          <div
+            ref={(el) => { this.middleSectionRef = el; }}
+            className="middle-section"
+          >
+            <ThreeScene
+              views={toThreeViews({ tree, activeNode, onFocusNode })}
+              constraintIndicators={constraintIndicators}
             />
-          ) : null
-          }
-        </div>
+            <MainToolbar onSubmitChanges={this.onSubmitChanges} />
+          </div>
+          <div
+            ref={(el) => { this.configRef = el; }}
+            className="config-pane"
+          >
+            { activeNode !== null ? (
+              <Form
+                id={activeNode.id}
+                type={activeNode.type}
+                formData={activeNode.properties}
+                onFormChange={this.onFormChange}
+              />
+            ) : null
+            }
+          </div>
+        </SystemContext.Provider>
       </div>
     );
   }

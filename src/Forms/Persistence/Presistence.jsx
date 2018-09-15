@@ -5,7 +5,7 @@ import isEqual from 'lodash.isequal';
 class Persist extends Component {
   static defaultProps = {
     debounce: 300,
-    excludeSystemMetadata: true,
+    excludeSystemContext: true,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -24,8 +24,8 @@ class Persist extends Component {
   }
 
   saveForm = debounce((name, data) => {
-    if (this.props.excludeSystemMetadata) {
-      const { systemMetadata, ...other } = data;
+    if (this.props.excludeSystemContext) {
+      const { systemContext, ...other } = data;
       window.localStorage.setItem(name, JSON.stringify(other));
     } else {
       window.localStorage.setItem(name, JSON.stringify(data));

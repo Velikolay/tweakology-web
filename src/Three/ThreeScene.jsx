@@ -3,6 +3,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
 
+import './ThreeScene.css';
+
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
@@ -290,7 +292,7 @@ class ThreeScene extends Component {
 
   render() {
     return (
-      <div ref={(el) => { this.container = el; }} className="scene-view-container" />
+      <div ref={(el) => { this.container = el; }} className="three-scene-container" />
     );
   }
 }

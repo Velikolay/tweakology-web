@@ -1,7 +1,6 @@
 import React from 'react';
 import { withFormik } from 'formik';
 import { withFormikContextProvider } from './FormikContext';
-import Yup from 'yup';
 import { Persist } from './Persistence/Presistence';
 // import { Persist } from 'formik-persist'
 
@@ -45,7 +44,7 @@ const EnhancedUIButtonViewForm = withFormik({
       textColor: props.formData.title.properties.textColor,
       // Title Font
       font: {
-        familyName: transformFontFamily(props.systemMetadata.fonts.systemFont, props.formData.title.properties.font.familyName),
+        familyName: transformFontFamily(props.systemContext.fonts.systemFont, props.formData.title.properties.font.familyName),
         fontStyle: transformFontName(props.formData.title.properties.font.fontName),
         pointSize: props.formData.title.properties.font.pointSize,
       },

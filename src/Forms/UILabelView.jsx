@@ -48,7 +48,7 @@ const EnhancedUILabelViewForm = withFormik({
     textColor: props.formData.textColor,
     // Font
     font: {
-      familyName: props.formData.font ? transformFontFamily(props.systemMetadata.fonts.systemFont, props.formData.font.familyName) : null,
+      familyName: props.formData.font ? transformFontFamily(props.systemContext.fonts.systemFont, props.formData.font.familyName) : null,
       fontStyle: props.formData.font ? transformFontName(props.formData.font.fontName) : null,
       pointSize: props.formData.font ? props.formData.font.pointSize : null,
     },
