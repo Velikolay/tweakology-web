@@ -91,12 +91,14 @@ const updateTHREEMesh = (group, viewProps, nextViewProps) => {
   const {
     x, y, z, width, height, selected, onFocus, imgUrl,
   } = nextViewProps;
+
   const widthScale = width / viewProps.width;
   const heightScale = height / viewProps.height;
+
   for (const el of group.children) {
     el.position.set(x, y, z * 5);
-    el.scale.x = widthScale;
-    el.scale.y = heightScale;
+    el.scale.x *= widthScale;
+    el.scale.y *= heightScale;
   }
 
   if (imgUrl !== viewProps.imgUrl) {
