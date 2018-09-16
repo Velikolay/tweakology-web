@@ -79,10 +79,8 @@ class App extends Component {
         });
         const updatedState = {
           tree,
+          activeNode: (activeNode && this.findNode(tree, activeNode.id)) || tree,
         };
-        if (!activeNode) {
-          updatedState.activeNode = tree;
-        }
         this.setState(updatedState);
       });
   }
@@ -139,6 +137,22 @@ class App extends Component {
 
   onNodeMouseUp = (node, event) => {
     this.dragging = false;
+  }
+
+  findNode = (tree, id) => {
+    if (id) {
+      const { id: nodeId, children } = tree;
+      if (nodeId && nodeId === id) {
+        return tree;
+      }
+      if (children) {
+        for (const subtree of children) {
+          const node = this.findNode(subtree, id);
+          if (node) return node;
+        }
+      }
+    }
+    return null;
   }
 
   transformPayloadToTree = (uiElement, { threeD: { baseX, baseY, depth } }) => {

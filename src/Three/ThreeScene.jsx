@@ -188,25 +188,23 @@ class SceneManager {
   }
 
   updateConstraintIndicators(indicators) {
-    for (const nextIndicatorProps of indicators) {
-      if (!(nextIndicatorProps.id in this.constraintIndicatorsMap)) {
-        const lineGroup = createConstraintIndicator(nextIndicatorProps.lineGroup);
-        this.constraintIndicatorsMap[nextIndicatorProps.id] = {
-          lineGroup,
-          indicatorProps: nextIndicatorProps,
-        };
-        this.scene.add(lineGroup);
+    console.log(this.constraintIndicatorsMap);
+    console.log(indicators);
+    for (const id in this.constraintIndicatorsMap) {
+      if (Object.prototype.hasOwnProperty.call(this.constraintIndicatorsMap, id)) {
+        const { lineGroup } = this.constraintIndicatorsMap[id];
+        this.scene.remove(lineGroup);
+        delete this.constraintIndicatorsMap[id];
       }
     }
 
-    const indicatorIds = indicators.map(i => i.id);
-    const remIds = Object.keys(this.constraintIndicatorsMap).filter(
-      id => indicatorIds.indexOf(id) === -1,
-    );
-    for (const remId of remIds) {
-      const { lineGroup } = this.constraintIndicatorsMap[remId];
-      this.scene.remove(lineGroup);
-      delete this.constraintIndicatorsMap[remId];
+    for (const nextIndicatorProps of indicators) {
+      const lineGroup = createConstraintIndicator(nextIndicatorProps.lineGroup);
+      this.constraintIndicatorsMap[nextIndicatorProps.id] = {
+        lineGroup,
+        indicatorProps: nextIndicatorProps,
+      };
+      this.scene.add(lineGroup);
     }
   }
 }
