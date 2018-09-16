@@ -198,6 +198,7 @@ class SceneManager {
         this.scene.add(lineGroup);
       }
     }
+
     const indicatorIds = indicators.map(i => i.id);
     const remIds = Object.keys(this.constraintIndicatorsMap).filter(
       id => indicatorIds.indexOf(id) === -1,
@@ -205,6 +206,7 @@ class SceneManager {
     for (const remId of remIds) {
       const { lineGroup } = this.constraintIndicatorsMap[remId];
       this.scene.remove(lineGroup);
+      delete this.constraintIndicatorsMap[remId];
     }
   }
 }

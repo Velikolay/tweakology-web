@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconContext } from "react-icons";
+import { IconContext } from 'react-icons';
 import { FaSync } from 'react-icons/fa';
 
 const MainToolbar = (props) => {
@@ -12,7 +12,6 @@ const MainToolbar = (props) => {
           <IconContext.Provider value={{ className: 'submit-button-icon' }}>
             <FaSync />
           </IconContext.Provider>
-          {/* Sync */}
         </button>
       </div>
     </div>
