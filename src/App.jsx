@@ -96,9 +96,7 @@ class App extends Component {
       const { activeNode } = this.state;
       activeNode.updatedProperties = { constraint: values };
       activeNode.module = updatedConstraintNodeName(activeNode);
-      this.setState({
-        activeNode,
-      });
+      this.setState({ activeNode });
     }
   }
 

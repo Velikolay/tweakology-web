@@ -182,8 +182,12 @@
   border: 1px solid rgba(200, 150, 55, 0.5);
 }
 
+.submit-button:hover {
+  background: #282841;
+}
+
 .submit-button-icon {
-  color: rgb(180, 180, 180);
+  color: rgba(200, 150, 55);
   height: 12px;
   width: 12px;
   display: block;

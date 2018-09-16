@@ -188,8 +188,6 @@ class SceneManager {
   }
 
   updateConstraintIndicators(indicators) {
-    console.log(this.constraintIndicatorsMap);
-    console.log(indicators);
     for (const id in this.constraintIndicatorsMap) {
       if (Object.prototype.hasOwnProperty.call(this.constraintIndicatorsMap, id)) {
         const { lineGroup } = this.constraintIndicatorsMap[id];

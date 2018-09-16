@@ -98,8 +98,13 @@ const anchorPoint = (attr, {
 };
 
 const toThreeConstraintIndicatorLineGroup = (node) => {
-  const { properties: { constraint }, superview } = node;
-  const { first, second } = constraint;
+  const {
+    properties,
+    updatedProperties,
+    superview,
+  } = node;
+
+  const { constraint: { first, second } } = updatedProperties || properties;
   const firstItem3D = getThreeD(first.item.value, superview);
   if (firstItem3D && first.attribute.value) {
     const firstAttr = parseInt(first.attribute.value, 10);
