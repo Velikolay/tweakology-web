@@ -74,7 +74,8 @@ class App extends Component {
       .then(response => response.json())
       .then((data) => {
         const { activeNode } = this.state;
-        const tree = this.transformPayloadToTree(data, {
+        const revision = Date.now();
+        const tree = this.transformPayloadToTree(data, revision, {
           threeD: { baseX: 0, baseY: 0, depth: 0 },
         });
         const updatedState = {
@@ -153,7 +154,7 @@ class App extends Component {
     return null;
   }
 
-  transformPayloadToTree = (uiElement, { threeD: { baseX, baseY, depth } }) => {
+  transformPayloadToTree = (uiElement, revision, { threeD: { baseX, baseY, depth } }) => {
     const {
       uid,
       type,
@@ -174,6 +175,7 @@ class App extends Component {
       module: type,
       id: uid,
       type,
+      revision,
       hierarchyMetadata,
       properties,
       threeD: {
@@ -199,7 +201,7 @@ class App extends Component {
             depth: depthCounter,
           },
         };
-        treeNode.children.push(this.transformPayloadToTree(subview, threeD));
+        treeNode.children.push(this.transformPayloadToTree(subview, revision, threeD));
       }
     }
 

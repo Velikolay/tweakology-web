@@ -89,7 +89,7 @@ const createTHREEMesh = (viewProps) => {
 
 const updateTHREEMesh = (group, viewProps, nextViewProps) => {
   const {
-    x, y, z, width, height, selected, onFocus, imgUrl,
+    x, y, z, width, height, selected, onFocus, imgUrl, revision,
   } = nextViewProps;
 
   const widthScale = width / viewProps.width;
@@ -101,7 +101,8 @@ const updateTHREEMesh = (group, viewProps, nextViewProps) => {
     el.scale.y *= heightScale;
   }
 
-  if (imgUrl !== viewProps.imgUrl) {
+  if (imgUrl !== viewProps.imgUrl || revision !== viewProps.revision) {
+    // eslint-disable-next-line no-param-reassign
     group.children[0].material.map = new THREE.TextureLoader().load(imgUrl);
   }
 

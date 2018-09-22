@@ -20,14 +20,17 @@ const toThreeViews = ({ tree, activeNode, onFocusNode }) => {
     return [];
   }
 
-  const { children, threeD } = treeNode;
+  const {
+    id, revision, children, threeD,
+  } = treeNode;
 
   const meshProps = [{
-    ...threeD,
-    id: treeNode.id,
+    id,
+    revision,
     imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
     selected: isSelected(treeNode, activeNode),
-    onFocus: onFocusNode !== null && onFocusNode.id === treeNode.id,
+    onFocus: onFocusNode !== null && onFocusNode.id === id,
+    ...threeD,
   }];
   if (children) {
     for (const childNode of children) {

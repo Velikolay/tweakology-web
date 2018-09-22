@@ -1,5 +1,24 @@
 import { attributeToModifiers } from '../Static/Constraints';
 
+const toItem = (payloadItem, placeholder) => {
+  const attrVal = payloadItem.attribute.toString();
+  const item = {
+    attribute: {
+      value: attrVal,
+    },
+    item: {
+      value: payloadItem.item,
+      placeholder,
+    },
+  };
+  if (attrVal) {
+    const [relativeToMargin, respectLanguageDirection] = attributeToModifiers[attrVal];
+    item.attribute.relativeToMargin = relativeToMargin;
+    item.attribute.respectLanguageDirection = respectLanguageDirection;
+  }
+  return item;
+};
+
 const ConstraintTransformer = {
 
   fromPayload: (payload) => {
@@ -59,25 +78,6 @@ const ConstraintTransformer = {
     }
     return payload;
   },
-};
-
-const toItem = (payloadItem, placeholder) => {
-  const attrVal = payloadItem.attribute.toString();
-  const item = {
-    attribute: {
-      value: attrVal,
-    },
-    item: {
-      value: payloadItem.item,
-      placeholder,
-    },
-  };
-  if (attrVal) {
-    const mods = attributeToModifiers[attrVal];
-    item.attribute.relativeToMargin = mods[0];
-    item.attribute.respectLanguageDirection = mods[1];
-  }
-  return item;
 };
 
 export default ConstraintTransformer;

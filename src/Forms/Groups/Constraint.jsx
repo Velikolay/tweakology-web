@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Field } from 'formik';
 import ConstraintItemSelector from './Inputs/ConstraintItemSelector';
 import { nameWithPrefix, formikValueWithPrefix } from './Utils';
@@ -40,18 +41,16 @@ const getItems2 = (itemOptions, item1) => itemOptions.filter(item => item.value 
 
 const Constraint = (props) => {
   const {
-    formik,
+    formik: {
+      values,
+      formData,
+      errors,
+      touched,
+      setFieldValue,
+      handleChange,
+    },
     itemOptions,
   } = props;
-
-  const {
-    values,
-    formData,
-    errors,
-    touched,
-    setFieldValue,
-    handleChange,
-  } = formik;
 
   const attribute1 = formikValueWithPrefix(props, 'first.attribute');
   const attribute2 = formikValueWithPrefix(props, 'second.attribute');
@@ -73,6 +72,11 @@ const Constraint = (props) => {
 
   const priorityDisabled = formData.constraint.meta.synced && values.priority === 1000;
   const priorityMax = formData.constraint.meta.synced && values.priority < 1000 ? 999 : 1000;
+
+  const multiplier = nameWithPrefix(props, 'multiplier');
+  const constant = nameWithPrefix(props, 'constant');
+  const priority = nameWithPrefix(props, 'priority');
+  const isActive = nameWithPrefix(props, 'isActive');
 
   return (
     <div className="form-group">
@@ -101,31 +105,36 @@ const Constraint = (props) => {
           : null
       }
       <div className="form-row">
-        <label className="input-title">
+        <label className="input-title" htmlFor={multiplier}>
           Multiplier
         </label>
-        <Field name={nameWithPrefix(props, 'multiplier')} type="number" min={0} step={0.1} disabled={disabled} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} />
+        <Field name={multiplier} type="number" min={0} step={0.1} disabled={disabled} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} />
       </div>
       <div className="form-row">
-        <label className="input-title">
+        <label className="input-title" htmlFor={constant}>
           Constant
         </label>
-        <Field name={nameWithPrefix(props, 'constant')} type="number" className={errors.constant && touched.constant ? 'full-width-input error' : 'full-width-input'} />
+        <Field name={constant} type="number" className={errors.constant && touched.constant ? 'full-width-input error' : 'full-width-input'} />
       </div>
       <div className="form-row">
-        <label className="input-title">
+        <label className="input-title" htmlFor={priority}>
           Priority
         </label>
-        <Field name={nameWithPrefix(props, 'priority')} type="number" min={0} max={priorityMax} disabled={priorityDisabled} className={errors.priority && touched.priority ? 'full-width-input error' : 'full-width-input'} />
+        <Field name={priority} type="number" min={0} max={priorityMax} disabled={priorityDisabled} className={errors.priority && touched.priority ? 'full-width-input error' : 'full-width-input'} />
       </div>
       <div className="form-row">
-        <label className="input-title">
+        <label className="input-title" htmlFor={isActive}>
           Installed
         </label>
-        <Field name={nameWithPrefix(props, 'isActive')} type="checkbox" checked={formikValueWithPrefix(props, 'isActive')} className={errors.isActive && touched.isActive ? 'full-width-input error' : 'full-width-input'} />
+        <Field name={isActive} type="checkbox" checked={formikValueWithPrefix(props, 'isActive')} className={errors.isActive && touched.isActive ? 'full-width-input error' : 'full-width-input'} />
       </div>
     </div>
   );
+};
+
+Constraint.propTypes = {
+  formik: PropTypes.object.isRequired,
+  itemOptions: PropTypes.object.isRequired,
 };
 
 export default withFormikContext(Constraint);

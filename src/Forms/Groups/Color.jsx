@@ -8,7 +8,7 @@ import './Groups.css';
 import './Color.css';
 
 const ColorGroup = (props) => {
-  const { setFieldValue } = props.formik;
+  const { formik: { setFieldValue } } = props;
   const alpha = nameWithPrefix(props, 'alpha');
   const color = nameWithPrefix(props, 'hexValue');
   return (
@@ -36,7 +36,7 @@ const ColorGroup = (props) => {
 };
 
 ColorGroup.propTypes = {
-  setFieldValue: PropTypes.func.isRequired,
+  formik: PropTypes.object.isRequired,
 };
 
 export default withFormikContext(ColorGroup);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { withFormikContext } from '../../FormikContext';
 import ToggleButtonMenu from './ToggleButtonMenu';
@@ -6,6 +7,70 @@ import { nameWithPrefix, formikValueWithPrefix } from '../Utils';
 import { attributeToModifiers, valueSwitch } from '../../../Static/Constraints';
 
 import './ConstraintItemSelector.css';
+
+const buildItemsDOM = (item, props) => {
+  const itemsDOM = props.items.map(option => <option value={option.value}>{option.label}</option>);
+  if (!item.value && item.placeholder) {
+    itemsDOM.unshift(
+      <option value="" disabled selected>{item.placeholder}</option>,
+    );
+  }
+  return itemsDOM;
+};
+
+const variantFilter = (variant, attribute) => {
+  if (attribute.value) {
+    if (variant.relativeToMargin !== undefined
+      && attribute.relativeToMargin !== undefined
+      && variant.relativeToMargin !== attribute.relativeToMargin) {
+      return false;
+    }
+    if (variant.respectLanguageDirection !== undefined
+      && attribute.respectLanguageDirection !== undefined
+      && variant.respectLanguageDirection !== attribute.respectLanguageDirection) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const buildAttributeGroupsDOM = (attribute, props) => {
+  const attributeGroupsDOM = [];
+
+  if (!attribute.value) {
+    attributeGroupsDOM.push(
+      <option value="" disabled selected>Attribute</option>,
+    );
+  }
+
+  for (const group of props.attributes) {
+    const variants = group.variants.filter(variant => variantFilter(variant, attribute));
+    if (variants.length > 0) {
+      const attributeDOM = variants[0].options.map(
+        option => <option value={option.value}>{option.label}</option>,
+      );
+      attributeGroupsDOM.push(
+        <optgroup label={group.label}>
+          {attributeDOM}
+        </optgroup>,
+      );
+    }
+  }
+  return attributeGroupsDOM;
+};
+
+const getModifiers = (attribute, attributeGroups) => {
+  for (const group of attributeGroups) {
+    for (const variant of group.variants) {
+      for (const option of variant.options) {
+        if (attribute.value === option.value) {
+          return group.modifiers;
+        }
+      }
+    }
+  }
+  return false;
+};
 
 const ConstraintItemSelector = (props) => {
   const {
@@ -20,9 +85,9 @@ const ConstraintItemSelector = (props) => {
   const handleAttributeChange = (e) => {
     const attrVal = e.target.value;
     if (attrVal) {
-      const modifiers = attributeToModifiers[attrVal];
-      setFieldValue(nameWithPrefix(props, 'attribute.relativeToMargin'), modifiers[0]);
-      setFieldValue(nameWithPrefix(props, 'attribute.respectLanguageDirection'), modifiers[1]);
+      const [relativeToMargin, respectLanguageDirection] = attributeToModifiers[attrVal];
+      setFieldValue(nameWithPrefix(props, 'attribute.relativeToMargin'), relativeToMargin);
+      setFieldValue(nameWithPrefix(props, 'attribute.respectLanguageDirection'), respectLanguageDirection);
     }
     handleChange(e);
   };
@@ -91,68 +156,11 @@ const ConstraintItemSelector = (props) => {
   );
 };
 
-const buildItemsDOM = (item, props) => {
-  const itemsDOM = [];
-  if (!item.value && item.placeholder) {
-    itemsDOM.push(
-      <option value="" disabled selected>{item.placeholder}</option>,
-    );
-  }
-  const _itemsDOM = props.items.map(option => <option value={option.value}>{option.label}</option>);
-  itemsDOM.push(..._itemsDOM);
-  return itemsDOM;
-};
-
-const buildAttributeGroupsDOM = (attribute, props) => {
-  const attributeGroupsDOM = [];
-
-  if (!attribute.value) {
-    attributeGroupsDOM.push(
-      <option value="" disabled selected>Attribute</option>,
-    );
-  }
-
-  for (const group of props.attributes) {
-    const variants = group.variants.filter(variant => variantFilter(variant, attribute));
-    if (variants.length > 0) {
-      const attributeDOM = variants[0].options.map(option => <option value={option.value}>{option.label}</option>);
-      attributeGroupsDOM.push(
-        <optgroup label={group.label}>
-          {attributeDOM}
-        </optgroup>,
-      );
-    }
-  }
-  return attributeGroupsDOM;
-};
-
-const getModifiers = (attribute, attributeGroups) => {
-  for (const group of attributeGroups) {
-    for (const variant of group.variants) {
-      for (const option of variant.options) {
-        if (attribute.value === option.value) {
-          return group.modifiers;
-        }
-      }
-    }
-  }
-  return false;
-};
-
-const variantFilter = (variant, attribute) => {
-  if (attribute.value) {
-    if (variant.relativeToMargin !== undefined
-      && attribute.relativeToMargin !== undefined
-      && variant.relativeToMargin !== attribute.relativeToMargin) {
-      return false;
-    }
-    if (variant.respectLanguageDirection !== undefined
-      && attribute.respectLanguageDirection !== undefined
-      && variant.respectLanguageDirection !== attribute.respectLanguageDirection) {
-      return false;
-    }
-  }
-  return true;
+ConstraintItemSelector.propTypes = {
+  prefix: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  attributes: PropTypes.array.isRequired,
+  formik: PropTypes.object.isRequired,
 };
 
 export default withFormikContext(ConstraintItemSelector);

@@ -9,10 +9,8 @@ import './Groups.css';
 
 const FontGroup = (props) => {
   const {
-    touched,
-    errors,
-    handleChange,
-  } = props.formik;
+    formik: { touched, errors, handleChange },
+  } = props;
 
   const familyNameId = nameWithPrefix(props, 'familyName');
   const fontStyleId = nameWithPrefix(props, 'fontStyle');
@@ -86,9 +84,7 @@ const FontGroup = (props) => {
 };
 
 FontGroup.propTypes = {
-  handleChange: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  touched: PropTypes.object.isRequired,
+  formik: PropTypes.object.isRequired,
 };
 
 export default withFormikContext(FontGroup);

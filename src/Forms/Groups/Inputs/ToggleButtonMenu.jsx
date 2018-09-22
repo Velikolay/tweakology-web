@@ -35,12 +35,6 @@ const ToggleButtonMenu = (props) => {
   return null;
 };
 
-ToggleButtonMenu.propTypes = {
-  options: PropTypes.array.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  onSwitch: PropTypes.func.isRequired,
-};
-
 const ToggleButton = (props) => {
   const {
     image,
@@ -69,6 +63,12 @@ const ToggleButton = (props) => {
       {text}
     </button>
   );
+};
+
+ToggleButtonMenu.propTypes = {
+  options: PropTypes.array.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  onSwitch: PropTypes.func.isRequired,
 };
 
 ToggleButton.propTypes = {
