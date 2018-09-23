@@ -8,7 +8,6 @@ import { withFormikContextProvider } from './FormikContext';
 
 import Constraint from './Groups/Constraint';
 
-// Our inner form component. Will be wrapped with Formik({..})
 const InnerNSLayoutConstraint = (props) => {
   const {
     id,
@@ -43,7 +42,7 @@ const EnhancedNSLayoutConstraint = withFormik({
       setSubmitting(false);
     }, 1000);
   },
-  displayName: 'NSLayoutConstraint', // helps with React DevTools
+  displayName: 'NSLayoutConstraint',
 })(withFormikContextProvider(InnerNSLayoutConstraint));
 
 const NSLayoutConstraint = props => <EnhancedNSLayoutConstraint {...props} />;

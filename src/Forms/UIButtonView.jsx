@@ -10,7 +10,6 @@ import TextGroup from './Groups/Text';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
-// Our inner form component. Will be wrapped with Formik({..})
 const InnerUIButtonViewForm = props => (
   <form onSubmit={props.handleSubmit}>
     <FrameGroup prefix="frame" />
@@ -61,7 +60,7 @@ const EnhancedUIButtonViewForm = withFormik({
       setSubmitting(false);
     }, 1000);
   },
-  displayName: 'UIButtonViewForm', // helps with React DevTools
+  displayName: 'UIButtonViewForm',
 })(withFormikContextProvider(InnerUIButtonViewForm));
 
 const UIButtonViewForm = props => <EnhancedUIButtonViewForm {...props} />;

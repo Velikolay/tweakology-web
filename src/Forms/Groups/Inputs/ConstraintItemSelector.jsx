@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import Field from './Field';
 import { withFormikContext } from '../../FormikContext';
 import ToggleButtonMenu from './ToggleButtonMenu';
 import { nameWithPrefix, formikValueWithPrefix } from '../Utils';
@@ -117,14 +118,15 @@ const ConstraintItemSelector = (props) => {
         'with-modifiers': hasModifiers,
       })}
       >
-        <select
-          id={nameWithPrefix(props, 'item.value')}
+        <Field
+          component="select"
+          name={nameWithPrefix(props, 'item.value')}
           value={item.value}
           onChange={handleChange}
           disabled={disabled}
         >
           {itemsDOM}
-        </select>
+        </Field>
       </div>
       {/* <label>{'\u2024'}</label> */}
       <label>.</label>
@@ -132,14 +134,15 @@ const ConstraintItemSelector = (props) => {
         'with-modifiers': hasModifiers,
       })}
       >
-        <select
-          id={nameWithPrefix(props, 'attribute.value')}
+        <Field
+          component="select"
+          name={nameWithPrefix(props, 'attribute.value')}
           value={attribute.value}
           onChange={handleAttributeChange}
           disabled={disabled}
         >
           {attributeGroupsDOM}
-        </select>
+        </Field>
       </div>
       {
         hasModifiers

@@ -3,12 +3,10 @@ import { withFormik } from 'formik';
 import { withFormikContextProvider } from './FormikContext';
 import Yup from 'yup';
 import { Persist } from './Persistence/Presistence';
-// import { Persist } from 'formik-persist'
 
 import FrameGroup from './Groups/Frame';
 import ColorGroup from './Groups/Color';
 
-// Our inner form component. Will be wrapped with Formik({..})
 const InnerUIViewForm = props => (
   <form onSubmit={props.handleSubmit}>
     <FrameGroup prefix="frame" />
@@ -47,7 +45,7 @@ const EnhancedUIViewForm = withFormik({
       setSubmitting(false);
     }, 1000);
   },
-  displayName: 'UIViewForm', // helps with React DevTools
+  displayName: 'UIViewForm',
 })(withFormikContextProvider(InnerUIViewForm));
 
 const UIViewForm = props => <EnhancedUIViewForm {...props} />;

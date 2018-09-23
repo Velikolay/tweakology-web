@@ -3,7 +3,6 @@ import { withFormik } from 'formik';
 import { withFormikContextProvider } from './FormikContext';
 import Yup from 'yup';
 import { Persist } from './Persistence/Presistence';
-// import { Persist } from 'formik-persist'
 
 import { transformFontName, transformFontFamily } from '../Utils/Font';
 import FrameGroup from './Groups/Frame';
@@ -11,7 +10,6 @@ import TextGroup from './Groups/Text';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
-// Our inner form component. Will be wrapped with Formik({..})
 const InnerUILabelViewForm = props => (
   <form onSubmit={props.handleSubmit}>
     <FrameGroup prefix="frame" />
@@ -64,7 +62,7 @@ const EnhancedUILabelViewForm = withFormik({
       setSubmitting(false);
     }, 1000);
   },
-  displayName: 'UILabelViewForm', // helps with React DevTools
+  displayName: 'UILabelViewForm',
 })(withFormikContextProvider(InnerUILabelViewForm));
 
 const UILabelViewForm = props => <EnhancedUILabelViewForm {...props} />;

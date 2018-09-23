@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'formik';
+import Field from './Inputs/Field';
 import ConstraintItemSelector from './Inputs/ConstraintItemSelector';
 import { nameWithPrefix, formikValueWithPrefix } from './Utils';
 import { constraintAttributes } from '../../Static/Constraints';
@@ -93,8 +93,9 @@ const Constraint = (props) => {
         />
       </div>
       <div className="form-row">
-        <select
-          id={nameWithPrefix(props, 'relation')}
+        <Field
+          component="select"
+          name={nameWithPrefix(props, 'relation')}
           value={formikValueWithPrefix(props, 'relation')}
           onChange={handleChange}
           disabled={disabled}
@@ -102,7 +103,7 @@ const Constraint = (props) => {
           <option value="-1">Less Than or Equal</option>
           <option value="0">Equal</option>
           <option value="1">Greater Than or Equal</option>
-        </select>
+        </Field>
       </div>
       {
         items2.length > 0 && attributes2.length > 0

@@ -13,15 +13,20 @@ const deepValue = (obj, path) => {
   return res;
 };
 
-const valueWithPrefix = (props, name) => deepValue(
-  props.values,
-  nameWithPrefix(props, name),
-);
-
 const formikValueWithPrefix = (props, name) => deepValue(
   props.formik.values,
   nameWithPrefix(props, name),
 );
+
+const formikInitialValueWithPrefix = (props, name) => deepValue(
+  props.formik.initialValues,
+  nameWithPrefix(props, name),
+);
+
+const isValueDirty = (
+  props,
+  name,
+) => formikInitialValueWithPrefix(props, name) !== formikValueWithPrefix(props, name);
 
 const titleForField = (props, fieldName, defaultTitle) => {
   if (props.titles && fieldName in props.titles) {
@@ -31,5 +36,9 @@ const titleForField = (props, fieldName, defaultTitle) => {
 };
 
 export {
-  nameWithPrefix, valueWithPrefix, formikValueWithPrefix, titleForField,
+  nameWithPrefix,
+  formikValueWithPrefix,
+  formikInitialValueWithPrefix,
+  isValueDirty,
+  titleForField,
 };

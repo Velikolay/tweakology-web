@@ -8,6 +8,20 @@ class Persist extends Component {
     excludeSystemContext: true,
   };
 
+  saveForm = debounce((name, data) => {
+    if (this.props.excludeSystemContext) {
+      const { systemContext, ...other } = data;
+      window.localStorage.setItem(name, JSON.stringify(other));
+    } else {
+      window.localStorage.setItem(name, JSON.stringify(data));
+    }
+    console.log('Form saved');
+  }, this.props.debounce);
+
+  componentDidMount() {
+    this.setForm(this.props);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.name !== this.props.name) {
       this.setForm(nextProps);
@@ -18,20 +32,6 @@ class Persist extends Component {
       // console.log('Form wont save');
     }
   }
-
-  componentDidMount() {
-    this.setForm(this.props);
-  }
-
-  saveForm = debounce((name, data) => {
-    if (this.props.excludeSystemContext) {
-      const { systemContext, ...other } = data;
-      window.localStorage.setItem(name, JSON.stringify(other));
-    } else {
-      window.localStorage.setItem(name, JSON.stringify(data));
-    }
-    console.log('Form saved');
-  }, this.props.debounce);
 
   setForm = (props) => {
     // console.log('Form loading..');

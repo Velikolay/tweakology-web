@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'formik';
+import Field from './Inputs/Field';
 import { withFormikContext } from '../FormikContext';
 import SystemContext from '../../System/SystemContext';
 import { nameWithPrefix, titleForField, formikValueWithPrefix } from './Utils';
@@ -23,8 +23,9 @@ const FontGroup = (props) => {
             <label className="input-title" htmlFor={familyNameId}>
               {titleForField(props, 'family', 'Font Family')}
             </label>
-            <select
-              id={familyNameId}
+            <Field
+              component="select"
+              name={familyNameId}
               className="full-width-input"
               onChange={handleChange}
             >
@@ -43,14 +44,15 @@ const FontGroup = (props) => {
                   </option>
                 )))
               }
-            </select>
+            </Field>
           </div>
           <div className="form-row">
             <label className="input-title" htmlFor={fontStyleId}>
               {titleForField(props, 'style', 'Font Style')}
             </label>
-            <select
-              id={fontStyleId}
+            <Field
+              component="select"
+              name={fontStyleId}
               className="full-width-input"
               onChange={handleChange}
             >
@@ -69,7 +71,7 @@ const FontGroup = (props) => {
                   </option>
                 )))
               }
-            </select>
+            </Field>
           </div>
           <div className="form-row">
             <label className="input-title" htmlFor={pointSizeId}>

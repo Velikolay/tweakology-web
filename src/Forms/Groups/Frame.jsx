@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field } from 'formik';
+import Field from './Inputs/Field';
 import { withFormikContext } from '../FormikContext';
 
 import './Groups.css';

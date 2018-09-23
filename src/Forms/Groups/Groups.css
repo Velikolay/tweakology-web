@@ -82,6 +82,10 @@ input:disabled, select:disabled {
   color: rgb(160, 160, 160);
 }
 
+input.is-dirty, select.is-dirty {
+  color: rgba(240, 225, 85);
+}
+
 input[type=number] {
   text-align: right;
 }
