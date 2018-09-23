@@ -75,12 +75,14 @@ const getModifiers = (attribute, attributeGroups) => {
 const ConstraintItemSelector = (props) => {
   const {
     prefix,
-    attributes,
     disabled,
-    formik,
+    attributes,
+    onAttributeChange,
+    formik: {
+      setFieldValue,
+      handleChange,
+    },
   } = props;
-
-  const { setFieldValue, handleChange } = formik;
 
   const handleAttributeChange = (e) => {
     const attrVal = e.target.value;
@@ -90,6 +92,7 @@ const ConstraintItemSelector = (props) => {
       setFieldValue(nameWithPrefix(props, 'attribute.respectLanguageDirection'), respectLanguageDirection);
     }
     handleChange(e);
+    onAttributeChange(attrVal);
   };
 
   const item = formikValueWithPrefix(props, 'item');
@@ -156,11 +159,17 @@ const ConstraintItemSelector = (props) => {
   );
 };
 
+ConstraintItemSelector.defaultProps = {
+  disabled: false,
+  onAttributeChange: () => {},
+};
+
 ConstraintItemSelector.propTypes = {
   prefix: PropTypes.string.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  attributes: PropTypes.array.isRequired,
+  disabled: PropTypes.bool,
   formik: PropTypes.object.isRequired,
+  attributes: PropTypes.array.isRequired,
+  onAttributeChange: PropTypes.func,
 };
 
 export default withFormikContext(ConstraintItemSelector);

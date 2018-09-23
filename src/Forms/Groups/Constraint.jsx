@@ -12,7 +12,7 @@ const getAttributeGroup = (attribute) => {
   for (const group of constraintAttributes) {
     for (const variant of group.variants) {
       for (const option of variant.options) {
-        if (attribute.value === option.value) {
+        if (attribute === option.value) {
           return group;
         }
       }
@@ -30,7 +30,7 @@ const getAttributes1 = (itemOptions) => {
 };
 
 const getAttributes2 = (attribute1) => {
-  const group = getAttributeGroup(attribute1);
+  const group = getAttributeGroup(attribute1.value);
   if (group && group.label !== 'Size') {
     return [group];
   }
@@ -52,18 +52,21 @@ const Constraint = (props) => {
     itemOptions,
   } = props;
 
-  const attribute1 = formikValueWithPrefix(props, 'first.attribute');
-  const attribute2 = formikValueWithPrefix(props, 'second.attribute');
-  const item1 = formikValueWithPrefix(props, 'first.item');
 
-  if (attribute2 && attribute2.value) {
-    const group1 = getAttributeGroup(attribute1);
-    const group2 = getAttributeGroup(attribute2);
-    if (group1 && group2 && group1.label !== group2.label) {
-      // reset second attribute if the group is invalid
-      setFieldValue(nameWithPrefix(props, 'second.attribute.value'), '');
+  const onAttribute1Change = (attribute1) => {
+    const attribute2 = formikValueWithPrefix(props, 'second.attribute.value');
+    if (attribute2) {
+      const group1 = getAttributeGroup(attribute1);
+      const group2 = getAttributeGroup(attribute2);
+      if (group1 && group2 && group1.label !== group2.label) {
+        // reset second attribute if the first and second attribute groups don't match
+        setFieldValue(nameWithPrefix(props, 'second.attribute.value'), '');
+      }
     }
-  }
+  };
+
+  const attribute1 = formikValueWithPrefix(props, 'first.attribute');
+  const item1 = formikValueWithPrefix(props, 'first.item');
 
   const attributes1 = getAttributes1(itemOptions);
   const attributes2 = getAttributes2(attribute1);
@@ -81,7 +84,13 @@ const Constraint = (props) => {
   return (
     <div className="form-group">
       <div className="form-row">
-        <ConstraintItemSelector prefix={nameWithPrefix(props, 'first')} items={itemOptions} attributes={attributes1} disabled={disabled} />
+        <ConstraintItemSelector
+          prefix={nameWithPrefix(props, 'first')}
+          disabled={disabled}
+          items={itemOptions}
+          attributes={attributes1}
+          onAttributeChange={onAttribute1Change}
+        />
       </div>
       <div className="form-row">
         <select
@@ -99,7 +108,12 @@ const Constraint = (props) => {
         items2.length > 0 && attributes2.length > 0
           ? (
             <div className="form-row">
-              <ConstraintItemSelector prefix={nameWithPrefix(props, 'second')} items={items2} attributes={attributes2} disabled={disabled} />
+              <ConstraintItemSelector
+                prefix={nameWithPrefix(props, 'second')}
+                disabled={disabled}
+                items={items2}
+                attributes={attributes2}
+              />
             </div>
           )
           : null
