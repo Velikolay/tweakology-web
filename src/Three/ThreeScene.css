@@ -1,3 +1,10 @@
 .three-scene-container {
   height: 100%;
 }
+
+.three-scene-slider {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  width: 80px;
+}
