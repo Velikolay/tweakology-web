@@ -70,8 +70,8 @@ input[type="checkbox"] {
 input, select {
   height: 18px;
   width: 100%;
-  background-color: rgb(60, 60, 60);
-  color: rgb(180, 180, 180);
+  background-color: #3c3c3c;
+  color: #b4b4b4;
   border-radius: 2px;
   border: 1px solid rgba(200, 150, 55, 0.5);
   /* border: 0; */
@@ -83,7 +83,7 @@ input:disabled, select:disabled {
 }
 
 input.is-dirty, select.is-dirty {
-  color: rgba(240, 225, 85);
+  color: #f0e155;
 }
 
 input[type=number] {
