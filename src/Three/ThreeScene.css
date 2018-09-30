@@ -2,9 +2,32 @@
   height: 100%;
 }
 
-.three-scene-slider {
+.plane-offset-slider {
   position: absolute;
   top: 32px;
   right: 32px;
   width: 80px;
+}
+
+.texture-visibility-button {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  height: 32px;
+  width: 32px;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 1px solid #666666;
+}
+
+.texture-visibility-button:hover {
+  border: 1px solid #cccccc;
+}
+
+.texture-visibility-icon {
+  color: #c89637;
+  height: 16px;
+  width: 16px;
+  display: block;
+  margin: 0 auto;
 }

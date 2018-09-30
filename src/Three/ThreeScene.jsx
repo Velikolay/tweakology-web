@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
+import { IconContext } from 'react-icons';
+import { FaClone } from 'react-icons/fa';
 import Slider from 'rc-slider';
 
 import 'rc-slider/assets/index.css';
@@ -36,6 +38,13 @@ class SceneManager {
         })
       ),
     );
+  }
+
+  changeTexturesVisibility() {
+    Object.values(this.viewsMap).forEach(({ meshGroup: { children: [textureMesh] } }) => {
+      // eslint-disable-next-line no-param-reassign
+      textureMesh.visible = !textureMesh.visible;
+    });
   }
 
   updateViews(views) {
@@ -319,7 +328,7 @@ class ThreeScene extends Component {
         <Slider
           min={1}
           max={40}
-          className="three-scene-slider"
+          className="plane-offset-slider"
           defaultValue={DEFAULT_PLANE_OFFSET}
           trackStyle={{ backgroundColor: '#c89637', height: 5 }}
           handleStyle={{
@@ -333,6 +342,15 @@ class ThreeScene extends Component {
           railStyle={{ backgroundColor: '#e0e0e0', height: 5 }}
           onChange={planeOffset => this.sceneManager.updatePlaneOffset(planeOffset)}
         />
+        <button
+          className="texture-visibility-button"
+          type="button"
+          onClick={() => this.sceneManager.changeTexturesVisibility()}
+        >
+          <IconContext.Provider value={{ className: 'texture-visibility-icon' }}>
+            <FaClone />
+          </IconContext.Provider>
+        </button>
       </React.Fragment>
     );
   }
