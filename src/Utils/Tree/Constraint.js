@@ -107,7 +107,7 @@ const newConstraint = () => ({
     },
   },
   isActive: true,
-  relation: 0,
+  relation: '0',
   multiplier: 1,
   constant: 0,
   priority: 1000,

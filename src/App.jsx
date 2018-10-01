@@ -10,13 +10,12 @@ import { submitChanges } from './Forms/Submit';
 import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
 
-import toThreeConstraintIndicator from './Three/Constraint';
 import toThreeViews from './Three/View';
-import ThreeScene from './Three/ThreeScene';
+import toThreeConstraintIndicator from './Three/Constraint';
+import UIHierarchyScene from './Three/UIHierarchyScene';
+import UIHierarchyTree from './Tree/UIHierarchyTree';
+
 import MainToolbar from './MainToolbar';
-
-import UIHierarchyTree from './UIHierarchyTree';
-
 
 import './App.css';
 
@@ -245,7 +244,7 @@ class App extends Component {
             ref={(el) => { this.middleSectionRef = el; }}
             className="middle-section"
           >
-            <ThreeScene
+            <UIHierarchyScene
               views={toThreeViews({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
             />

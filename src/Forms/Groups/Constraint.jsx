@@ -96,8 +96,6 @@ const Constraint = (props) => {
         <Field
           component="select"
           name={nameWithPrefix(props, 'relation')}
-          value={formikValueWithPrefix(props, 'relation')}
-          onChange={handleChange}
           disabled={disabled}
         >
           <option value="-1">Less Than or Equal</option>

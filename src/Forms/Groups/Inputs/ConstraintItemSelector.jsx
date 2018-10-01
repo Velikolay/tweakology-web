@@ -10,10 +10,12 @@ import { attributeToModifiers, valueSwitch } from '../../../Static/Constraints';
 import './ConstraintItemSelector.css';
 
 const buildItemsDOM = (item, props) => {
-  const itemsDOM = props.items.map(option => <option value={option.value}>{option.label}</option>);
+  const itemsDOM = props.items.map(option => (
+    <option key={option.value} value={option.value}>{option.label}</option>
+  ));
   if (!item.value && item.placeholder) {
     itemsDOM.unshift(
-      <option value="" disabled selected>{item.placeholder}</option>,
+      <option key="" value="" disabled>{item.placeholder}</option>,
     );
   }
   return itemsDOM;
@@ -40,7 +42,7 @@ const buildAttributeGroupsDOM = (attribute, props) => {
 
   if (!attribute.value) {
     attributeGroupsDOM.push(
-      <option value="" disabled selected>Attribute</option>,
+      <option key="" value="" disabled>Attribute</option>,
     );
   }
 
@@ -48,10 +50,10 @@ const buildAttributeGroupsDOM = (attribute, props) => {
     const variants = group.variants.filter(variant => variantFilter(variant, attribute));
     if (variants.length > 0) {
       const attributeDOM = variants[0].options.map(
-        option => <option value={option.value}>{option.label}</option>,
+        option => <option key={option.value} value={option.value}>{option.label}</option>,
       );
       attributeGroupsDOM.push(
-        <optgroup label={group.label}>
+        <optgroup key={group.label} label={group.label}>
           {attributeDOM}
         </optgroup>,
       );
@@ -121,8 +123,6 @@ const ConstraintItemSelector = (props) => {
         <Field
           component="select"
           name={nameWithPrefix(props, 'item.value')}
-          value={item.value}
-          onChange={handleChange}
           disabled={disabled}
         >
           {itemsDOM}
@@ -137,7 +137,6 @@ const ConstraintItemSelector = (props) => {
         <Field
           component="select"
           name={nameWithPrefix(props, 'attribute.value')}
-          value={attribute.value}
           onChange={handleAttributeChange}
           disabled={disabled}
         >

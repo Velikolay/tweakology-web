@@ -27,22 +27,13 @@ const FontGroup = (props) => {
               component="select"
               name={familyNameId}
               className="full-width-input"
-              onChange={handleChange}
             >
               {
-                systemContext.fonts.families.map(familyName => (familyName === formikValueWithPrefix(props, 'familyName') ? (
-                  <option selected>
-                    {' '}
+                systemContext.fonts.families.map(familyName => (
+                  <option key={familyName}>
                     {familyName}
-                    {' '}
                   </option>
-                ) : (
-                  <option>
-                    {' '}
-                    {familyName}
-                    {' '}
-                  </option>
-                )))
+                ))
               }
             </Field>
           </div>
@@ -54,22 +45,13 @@ const FontGroup = (props) => {
               component="select"
               name={fontStyleId}
               className="full-width-input"
-              onChange={handleChange}
             >
               {
-                systemContext.fonts.styles[formikValueWithPrefix(props, 'familyName')].map(fontStyle => (fontStyle === formikValueWithPrefix(props, 'fontStyle') ? (
-                  <option selected>
-                    {' '}
+                systemContext.fonts.styles[formikValueWithPrefix(props, 'familyName')].map(fontStyle => (
+                  <option key={fontStyle}>
                     {fontStyle}
-                    {' '}
                   </option>
-                ) : (
-                  <option>
-                    {' '}
-                    {fontStyle}
-                    {' '}
-                  </option>
-                )))
+                ))
               }
             </Field>
           </div>

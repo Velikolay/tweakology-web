@@ -29,7 +29,7 @@ const ConstraintTransformer = {
         ...payload.meta,
       },
       first: toItem(payload.first, 'Item1'),
-      relation: payload.relation,
+      relation: payload.relation.toString(),
       multiplier: payload.multiplier,
       constant: payload.constant,
       isActive: payload.isActive,

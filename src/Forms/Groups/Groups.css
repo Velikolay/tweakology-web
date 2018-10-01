@@ -60,7 +60,7 @@ select:not([multiple]) {
 }
 
 input[type=text], select {
-  padding-left: 6px;
+  padding-left: 4px;
 }
 
 input[type="checkbox"] {

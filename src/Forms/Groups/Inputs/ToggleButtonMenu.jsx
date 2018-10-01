@@ -15,14 +15,15 @@ const ToggleButtonMenu = (props) => {
   if (options.length) {
     const width = 100 / options.length;
     const buttons = options.map((option) => {
-      const optionValue = formikValueWithPrefix(props, option.name);
+      const isOn = formikValueWithPrefix(props, option.name);
       return (
         <ToggleButton
+          key={option.name}
           width={`${width}%`}
-          isOn={optionValue}
+          isOn={isOn}
           disabled={disabled}
           {...option}
-          onSwitch={() => onSwitch(option.name, !optionValue)}
+          onSwitch={() => onSwitch(option.name, !isOn)}
         />
       );
     });

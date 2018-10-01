@@ -26,9 +26,11 @@ const attributeNames = [
   'centerXWithinMargins', 'centerYWithinMargins',
 ];
 
-const relationSymbols = [
-  '=', '≥', '≤',
-];
+const relationSymbols = {
+  '-1': '≤',
+  '0': '=',
+  '1': '≥',
+};
 
 const valueSwitch = {
   respectLanguageDirection: {
