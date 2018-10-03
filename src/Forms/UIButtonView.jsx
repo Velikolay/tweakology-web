@@ -7,6 +7,7 @@ import { Persist } from './Persistence/Presistence';
 import { transformFontName, transformFontFamily } from '../Utils/Font';
 import FrameGroup from './Groups/Frame';
 import TextGroup from './Groups/Text';
+import TextAlignmentGroup from './Groups/TextAlignment';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
@@ -17,6 +18,7 @@ const InnerUIButtonViewForm = props => (
     <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
     <hr />
     <TextGroup prefix="title" titles={{ text: 'Title' }} />
+    <TextAlignmentGroup prefix="title" />
     <FontGroup prefix="title.font" />
     <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
     <Persist name={props.id} formik={props} />
@@ -39,6 +41,8 @@ const EnhancedUIButtonViewForm = withFormik({
     title: {
       // Title Text
       text: props.formData.title.properties.text,
+      // Title Text Alignment
+      textAlignment: props.formData.title.properties.textAlignment,
       // Title Color
       textColor: props.formData.title.properties.textColor,
       // Title Font

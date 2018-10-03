@@ -47,7 +47,6 @@ const Constraint = (props) => {
       errors,
       touched,
       setFieldValue,
-      handleChange,
     },
     itemOptions,
   } = props;

@@ -8,27 +8,43 @@ import './ToggleButtonMenu.css';
 
 const ToggleButtonMenu = (props) => {
   const {
-    options,
+    className,
+    name: globalName,
+    exclusiveMode,
     disabled,
     onSwitch,
+    children,
   } = props;
-  if (options.length) {
-    const width = 100 / options.length;
-    const buttons = options.map((option) => {
-      const isOn = formikValueWithPrefix(props, option.name);
+  if (children.length) {
+    const exclusiveValue = exclusiveMode ? formikValueWithPrefix(props, globalName) : null;
+    const width = 100 / children.length;
+    const buttons = children.map(({
+      props: {
+        name: optionName,
+        value: optionValue,
+        children: optionChildren,
+      },
+    }) => {
+      const isOn = exclusiveMode
+        ? exclusiveValue === optionValue
+        : formikValueWithPrefix(props, optionName);
+      const name = exclusiveMode ? globalName : optionName;
+      const value = exclusiveMode ? optionValue : !isOn;
+      const key = exclusiveMode ? `${globalName}-${optionValue}` : optionName;
       return (
         <ToggleButton
-          key={option.name}
-          width={`${width}%`}
+          key={key}
+          width={width}
           isOn={isOn}
           disabled={disabled}
-          {...option}
-          onSwitch={() => onSwitch(option.name, !isOn)}
-        />
+          onSwitch={() => onSwitch(name, value)}
+        >
+          {optionChildren}
+        </ToggleButton>
       );
     });
     return (
-      <div className="toggle-buttons-menu">
+      <div className={className}>
         {buttons}
       </div>
     );
@@ -38,18 +54,14 @@ const ToggleButtonMenu = (props) => {
 
 const ToggleButton = (props) => {
   const {
-    image,
-    text,
     width,
     disabled,
     isOn,
+    children,
     onSwitch,
   } = props;
 
-  const style = { width };
-  if (image) {
-    style.background = `url(${image})`;
-  }
+  const style = { width: `${width}%` };
 
   return (
     <button
@@ -61,24 +73,35 @@ const ToggleButton = (props) => {
       disabled={disabled}
       onClick={onSwitch}
     >
-      {text}
+      {children}
     </button>
   );
 };
 
 ToggleButtonMenu.propTypes = {
-  options: PropTypes.array.isRequired,
-  disabled: PropTypes.bool.isRequired,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  name: PropTypes.string,
+  exclusiveMode: PropTypes.bool,
   onSwitch: PropTypes.func.isRequired,
 };
 
+ToggleButtonMenu.defaultProps = {
+  className: '',
+  name: '',
+  exclusiveMode: false,
+  disabled: false,
+};
+
 ToggleButton.propTypes = {
-  text: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   width: PropTypes.number.isRequired,
-  disabled: PropTypes.bool.isRequired,
   isOn: PropTypes.bool.isRequired,
   onSwitch: PropTypes.func.isRequired,
+};
+
+ToggleButton.defaultProps = {
+  disabled: false,
 };
 
 export default withFormikContext(ToggleButtonMenu);

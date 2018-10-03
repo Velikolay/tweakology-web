@@ -7,6 +7,7 @@ import { Persist } from './Persistence/Presistence';
 import { transformFontName, transformFontFamily } from '../Utils/Font';
 import FrameGroup from './Groups/Frame';
 import TextGroup from './Groups/Text';
+import TextAlignmentGroup from './Groups/TextAlignment';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
@@ -15,6 +16,7 @@ const InnerUILabelViewForm = props => (
     <FrameGroup prefix="frame" />
     <hr />
     <TextGroup />
+    <TextAlignmentGroup />
     <FontGroup prefix="font" />
     <ColorGroup prefix="textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
     { props.values.backgroundColor ? (
@@ -42,6 +44,8 @@ const EnhancedUILabelViewForm = withFormik({
     backgroundColor: props.formData.backgroundColor,
     // Text
     text: props.formData.text,
+    // Test Alignment
+    textAlignment: props.formData.textAlignment,
     // Text color
     textColor: props.formData.textColor,
     // Font

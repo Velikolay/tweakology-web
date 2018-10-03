@@ -116,44 +116,40 @@ const ConstraintItemSelector = (props) => {
 
   return (
     <div className="cis-container">
-      <div className={cx('cis-item', {
-        'with-modifiers': hasModifiers,
-      })}
+      <Field
+        className={cx('cis-item', {
+          'with-modifiers': hasModifiers,
+        })}
+        component="select"
+        name={nameWithPrefix(props, 'item.value')}
+        disabled={disabled}
       >
-        <Field
-          component="select"
-          name={nameWithPrefix(props, 'item.value')}
-          disabled={disabled}
-        >
-          {itemsDOM}
-        </Field>
-      </div>
+        {itemsDOM}
+      </Field>
       {/* <label>{'\u2024'}</label> */}
       <label>.</label>
-      <div className={cx('cis-attribute', {
-        'with-modifiers': hasModifiers,
-      })}
+      <Field
+        className={cx('cis-attribute', {
+          'with-modifiers': hasModifiers,
+        })}
+        component="select"
+        name={nameWithPrefix(props, 'attribute.value')}
+        onChange={handleAttributeChange}
+        disabled={disabled}
       >
-        <Field
-          component="select"
-          name={nameWithPrefix(props, 'attribute.value')}
-          onChange={handleAttributeChange}
-          disabled={disabled}
-        >
-          {attributeGroupsDOM}
-        </Field>
-      </div>
+        {attributeGroupsDOM}
+      </Field>
       {
         hasModifiers
           ? (
-            <div className="cis-options">
-              <ToggleButtonMenu
-                prefix={`${prefix}.attribute`}
-                options={modifiers}
-                onSwitch={handleSwitchModifier}
-                disabled={disabled}
-              />
-            </div>
+            <ToggleButtonMenu
+              className="cis-options"
+              prefix={`${prefix}.attribute`}
+              onSwitch={handleSwitchModifier}
+              disabled={disabled}
+            >
+              { modifiers.map(({ name, text }) => <div name={name}>{text}</div>)}
+            </ToggleButtonMenu>
           )
           : null
       }
