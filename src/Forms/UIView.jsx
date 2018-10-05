@@ -1,38 +1,43 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import { withFormikContextProvider } from './FormikContext';
-import Yup from 'yup';
-import { Persist } from './Persistence/Presistence';
+// import Yup from 'yup';
+import Persist from './Persistence/Presistence';
 
 import FrameGroup from './Groups/Frame';
 import ColorGroup from './Groups/Color';
 
-const InnerUIViewForm = props => (
-  <form onSubmit={props.handleSubmit}>
+const InnerUIViewForm = ({
+  id,
+  values,
+  handleSubmit,
+}) => (
+  <form onSubmit={handleSubmit}>
     <FrameGroup prefix="frame" />
-    { props.values.backgroundColor ? (
+    { values.backgroundColor ? (
       <React.Fragment>
         <hr />
         <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
       </React.Fragment>
     ) : null
       }
-    <Persist name={props.id} formik={props} />
+    <Persist name={id} />
   </form>
 );
 
 const EnhancedUIViewForm = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ({
+  mapPropsToValues: ({ formData: { frame, backgroundColor } }) => ({
     // Frame
     frame: {
-      x: props.formData.frame.minX,
-      y: props.formData.frame.minY,
-      width: props.formData.frame.maxX - props.formData.frame.minX,
-      height: props.formData.frame.maxY - props.formData.frame.minY,
+      x: frame.minX,
+      y: frame.minY,
+      width: frame.maxX - frame.minX,
+      height: frame.maxY - frame.minY,
     },
     // Background color
-    backgroundColor: props.formData.backgroundColor,
+    backgroundColor,
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
@@ -49,5 +54,11 @@ const EnhancedUIViewForm = withFormik({
 })(withFormikContextProvider(InnerUIViewForm));
 
 const UIViewForm = props => <EnhancedUIViewForm {...props} />;
+
+InnerUIViewForm.propTypes = {
+  id: PropTypes.string.isRequired,
+  values: PropTypes.any.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
 
 export default UIViewForm;

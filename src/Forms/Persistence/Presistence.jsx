@@ -2,6 +2,8 @@ import { Component } from 'react';
 import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
+import { withFormikContext } from '../FormikContext';
+
 class Persist extends Component {
   static defaultProps = {
     debounce: 300,
@@ -78,14 +80,14 @@ class Persist extends Component {
   }
 }
 
-const readPersistedValues = (item) => {
+export const readPersistedValues = (item) => {
   const maybeState = window.localStorage.getItem(item);
   return maybeState ? JSON.parse(maybeState).values : null;
 };
 
-const readPersistedConstraints = () => {
+export const readPersistedConstraints = () => {
   const constraints = {};
-  for (let i = 0; i < window.localStorage.length; i++) {
+  for (let i = 0; i < window.localStorage.length; i += 1) {
     const id = window.localStorage.key(i);
     const formState = window.localStorage.getItem(id);
     if (formState) {
@@ -107,4 +109,4 @@ const readPersistedConstraints = () => {
   return constraints;
 };
 
-export { Persist, readPersistedValues, readPersistedConstraints };
+export default withFormikContext(Persist);

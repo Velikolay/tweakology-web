@@ -1,57 +1,47 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import { withFormikContextProvider } from './FormikContext';
-import { Persist } from './Persistence/Presistence';
-// import { Persist } from 'formik-persist'
+import Persist from './Persistence/Presistence';
 
-import { transformFontName, transformFontFamily } from '../Utils/Font';
+import UIButtonTransformer from '../Transformers/UIButton';
 import FrameGroup from './Groups/Frame';
-import TextGroup from './Groups/Text';
-import TextAlignmentGroup from './Groups/TextAlignment';
+import InputField from './Groups/InputField';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
-const InnerUIButtonViewForm = props => (
-  <form onSubmit={props.handleSubmit}>
+const InnerUIButtonViewForm = ({
+  id,
+  handleSubmit,
+}) => (
+  <form onSubmit={handleSubmit}>
     <FrameGroup prefix="frame" />
     <hr />
     <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
     <hr />
-    <TextGroup prefix="title" titles={{ text: 'Title' }} />
-    <TextAlignmentGroup prefix="title" />
+    <InputField name="title.text" type="text" title="Title" />
     <FontGroup prefix="title.font" />
     <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
-    <Persist name={props.id} formik={props} />
+    <Persist name={id} />
   </form>
 );
 
 const EnhancedUIButtonViewForm = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ({
-    // Frame
+  mapPropsToValues: ({
+    systemContext,
+    formData: {
+      frame,
+      ...rest
+    },
+  }) => ({
     frame: {
-      x: props.formData.frame.minX,
-      y: props.formData.frame.minY,
-      width: props.formData.frame.maxX - props.formData.frame.minX,
-      height: props.formData.frame.maxY - props.formData.frame.minY,
+      x: frame.minX,
+      y: frame.minY,
+      width: frame.maxX - frame.minX,
+      height: frame.maxY - frame.minY,
     },
-    // Background color
-    backgroundColor: props.formData.backgroundColor,
-    // Title
-    title: {
-      // Title Text
-      text: props.formData.title.properties.text,
-      // Title Text Alignment
-      textAlignment: props.formData.title.properties.textAlignment,
-      // Title Color
-      textColor: props.formData.title.properties.textColor,
-      // Title Font
-      font: {
-        familyName: transformFontFamily(props.systemContext.fonts.systemFont, props.formData.title.properties.font.familyName),
-        fontStyle: transformFontName(props.formData.title.properties.font.fontName),
-        pointSize: props.formData.title.properties.font.pointSize,
-      },
-    },
+    ...UIButtonTransformer.fromPayload(rest, systemContext),
   }),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
@@ -68,5 +58,10 @@ const EnhancedUIButtonViewForm = withFormik({
 })(withFormikContextProvider(InnerUIButtonViewForm));
 
 const UIButtonViewForm = props => <EnhancedUIButtonViewForm {...props} />;
+
+InnerUIButtonViewForm.propTypes = {
+  id: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
 
 export default UIButtonViewForm;

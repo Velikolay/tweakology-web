@@ -1,3 +1,15 @@
+const restoreFontName = (fontFamily, fontStyle, styles) => {
+  if (fontFamily in styles) {
+    const fontNames = styles[fontFamily].filter(fontName => fontName.includes(`-${fontStyle.replace(/\s/g, '')}`));
+    if (fontNames.length > 0) {
+      return fontNames.reduce((a, b) => (a.length <= b.length ? a : b));
+    } if (fontStyle === 'Regular') {
+      return styles[fontFamily].reduce((a, b) => (a.length <= b.length ? a : b));
+    }
+  }
+  return '';
+};
+
 const mergeEnchancers = (styles) => {
   const enchancers = new Set(['Extra', 'Ultra', 'Semi', 'Demi']);
   const enchancedStyles = [];
@@ -25,18 +37,6 @@ const transformFontName = (fontName) => {
 
 const transformFontFamily = (systemFont, fontFamily) => (systemFont === fontFamily ? 'System' : fontFamily);
 
-const getFontName = (fontFamily, fontStyle, styles) => {
-  if (fontFamily in styles) {
-    const fontNames = styles[fontFamily].filter(fontName => fontName.includes(`-${fontStyle.replace(/\s/g, '')}`));
-    if (fontNames.length > 0) {
-      return fontNames.reduce((a, b) => (a.length <= b.length ? a : b));
-    } if (fontStyle === 'Regular') {
-      return styles[fontFamily].reduce((a, b) => (a.length <= b.length ? a : b));
-    }
-  }
-  return '';
-};
-
 const enrichFontsData = (fontsData) => {
   const styles = Object.keys(fontsData.names).reduce((map, obj) => {
     map[obj] = fontsData.names[obj].map(transformFontName); // eslint-disable-line no-param-reassign
@@ -46,5 +46,5 @@ const enrichFontsData = (fontsData) => {
 };
 
 export {
-  transformFontName, transformFontFamily, enrichFontsData, getFontName,
+  transformFontName, transformFontFamily, restoreFontName, enrichFontsData,
 };

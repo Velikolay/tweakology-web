@@ -23,7 +23,7 @@ const alignmentOptions = [
 ];
 
 const TextAlignmentGroup = (props) => {
-  const { formik: { setFieldValue }} = props;
+  const { formik: { setFieldValue } } = props;
   return (
     <div className="form-group">
       <div className="form-row">

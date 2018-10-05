@@ -1,6 +1,6 @@
-import { getFontName } from '../Utils/Font';
 import { readPersistedConstraints } from './Persistence/Presistence';
-import ConstraintTransformer from '../Transformers/Constraints';
+import ConstraintTransformer from '../Transformers/Constraint';
+import getTransformer from '../Transformers';
 
 const treeToFormIds = (uiElement) => {
   const treeNode = [uiElement.id];
@@ -27,19 +27,19 @@ const submitChanges = (tree, systemContext) => {
   const changeSet = [];
 
   const constraints = readPersistedConstraints();
-  console.log(constraints);
-  for (const id of ids) {
+  ids.forEach((id) => {
     const formState = window.localStorage.getItem(id);
     if (formState) {
       const state = JSON.parse(formState);
       if (state.type !== 'NSLayoutConstraint' && state.dirty) {
-        enrichValues(state.values, systemContext);
+        const transformer = getTransformer(state.type);
+        const { frame, ...rest } = state.values;
         const change = {
           operation: 'modify',
           view: {
             id,
-            properties: state.values,
-            frame: state.values.frame,
+            properties: transformer.toPayload(rest, systemContext),
+            frame,
           },
         };
         if (id in constraints) {
@@ -49,17 +49,17 @@ const submitChanges = (tree, systemContext) => {
         changeSet.push(change);
       }
     }
-  }
+  });
 
-  for (const id in constraints) {
+  Object.entries(constraints).forEach(({ id, viewConstraints }) => {
     changeSet.push({
       operation: 'modify',
       view: {
         id,
-        constraints: constraints[id].map(constraintToPayload),
+        constraints: viewConstraints.map(constraintToPayload),
       },
     });
-  }
+  });
 
   console.log(changeSet);
   return fetch('http://nikoivan01m.local:8080/tweaks/test', {
@@ -69,23 +69,6 @@ const submitChanges = (tree, systemContext) => {
   }).then((res) => {
     localStorage.clear();
     return res;
-  });
-};
-
-const isDict = v => typeof v === 'object' && v !== null && !(v instanceof Array) && !(v instanceof Date);
-
-const enrichValues = (values, systemContext) => {
-  Object.keys(values).forEach((key) => {
-    const valueObject = values[key];
-    if (isDict(valueObject)) {
-      if (key === 'font') {
-        valueObject.fontName = getFontName(
-          valueObject.familyName, valueObject.fontStyle, systemContext.fonts.names,
-        );
-      } else {
-        enrichValues(valueObject, systemContext);
-      }
-    }
   });
 };
 

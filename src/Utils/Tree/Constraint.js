@@ -1,6 +1,6 @@
 import { attributeNames, relationSymbols } from '../../Static/Constraints';
 import { readPersistedValues, readPersistedConstraints } from '../../Forms/Persistence/Presistence';
-import ConstraintTransformer from '../../Transformers/Constraints';
+import ConstraintTransformer from '../../Transformers/Constraint';
 
 const numToFixed = (num) => {
   if (num % 1 !== 0) {

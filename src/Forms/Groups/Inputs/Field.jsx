@@ -11,13 +11,6 @@ const Field = (props) => {
     'is-dirty': isValueDirty(props, name),
   });
 
-  // if (isValueDirty(props, name)) {
-  //   if ('className' in rest) {
-  //     rest.className = cx(rest.className, 'is-dirty');
-  //   } else {
-  //     rest.className = 'is-dirty';
-  //   }
-  // }
   return <FormikField name={name} className={newClassName} {...rest} />;
 };
 

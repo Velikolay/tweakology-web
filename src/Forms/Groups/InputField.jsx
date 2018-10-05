@@ -3,17 +3,16 @@ import Field from './Inputs/Field';
 import { withFormikContext } from '../FormikContext';
 
 import './Groups.css';
-import { nameWithPrefix, titleForField } from './Utils';
 
-const TextGroup = props => (
+const InputField = ({ title, ...rest }) => (
   <div className="form-group">
     <div className="form-row">
       <label className="input-title">
-        {titleForField(props, 'text', 'Text')}
+        {title}
       </label>
-      <Field name={nameWithPrefix(props, 'text')} type="text" className="full-width-input" />
+      <Field {...rest} className="full-width-input" />
     </div>
   </div>
 );
 
-export default withFormikContext(TextGroup);
+export default withFormikContext(InputField);
