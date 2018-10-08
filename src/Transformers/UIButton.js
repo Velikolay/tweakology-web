@@ -1,4 +1,4 @@
-import FontTransformer from './Font';
+import FontTransformer from './UIFont';
 
 const UIButtonLabelTransformer = {
 

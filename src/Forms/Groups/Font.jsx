@@ -9,7 +9,7 @@ import './Groups.css';
 
 const FontGroup = (props) => {
   const {
-    formik: { touched, errors, handleChange },
+    formik: { touched, errors },
   } = props;
 
   const familyNameId = nameWithPrefix(props, 'familyName');

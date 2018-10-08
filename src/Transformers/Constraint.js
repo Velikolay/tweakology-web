@@ -21,23 +21,24 @@ const toItem = (payloadItem, placeholder) => {
 
 const ConstraintTransformer = {
 
-  fromPayload: (payload) => {
-    // console.log(payload);
+  fromPayload: ({
+    first, second, relation, multiplier, constant, priority, isActive, meta,
+  }) => {
     const formikProps = {
       meta: {
         synced: true,
-        ...payload.meta,
+        ...meta,
       },
-      first: toItem(payload.first, 'Item1'),
-      relation: payload.relation.toString(),
-      multiplier: payload.multiplier,
-      constant: payload.constant,
-      isActive: payload.isActive,
-      priority: payload.priority,
+      first: toItem(first, 'Item1'),
+      relation: relation.toString(),
+      multiplier,
+      constant,
+      isActive,
+      priority,
     };
 
-    if (payload.second) {
-      formikProps.second = toItem(payload.second, 'Item2');
+    if (second) {
+      formikProps.second = toItem(second, 'Item2');
     } else {
       formikProps.second = {
         attribute: {
@@ -52,29 +53,27 @@ const ConstraintTransformer = {
     return formikProps;
   },
 
-  toPayload: (props) => {
+  toPayload: ({
+    first, second, relation, multiplier, constant, priority, isActive, meta,
+  }) => {
     const payload = {
-      meta: props.meta,
+      meta,
       first: {
-        item: props.first.item.value,
-        attribute: parseInt(props.first.attribute.value, 10),
+        item: first.item.value,
+        attribute: parseInt(first.attribute.value, 10),
       },
-      relation: parseInt(props.relation, 10),
-      multiplier: props.multiplier,
-      constant: props.constant,
-      isActive: props.isActive,
-      priority: props.priority,
+      relation: parseInt(relation, 10),
+      multiplier,
+      constant,
+      isActive,
+      priority,
     };
 
-    if (props.second) {
-      if (props.second.attribute.value && props.second.item.value) {
-        payload.second = {
-          item: props.second.item.value,
-          attribute: parseInt(props.second.attribute.value, 10),
-        };
-      } else {
-        console.log('Incomplete constraint definition');
-      }
+    if (second && second.attribute.value && second.item.value) {
+      payload.second = {
+        item: second.item.value,
+        attribute: parseInt(second.attribute.value, 10),
+      };
     }
     return payload;
   },

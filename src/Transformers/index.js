@@ -1,11 +1,7 @@
+import IdentityTransformer from './Identity';
 import UIButtonTransformer from './UIButton';
 import UILabelTransformer from './UILabel';
 import ConstraintTransformer from './Constraint';
-
-const DefaultTransformer = {
-  fromPayload: props => props,
-  toPayload: props => props,
-};
 
 const TRANSFORMERS = {
   UILabel: UILabelTransformer,
@@ -13,6 +9,6 @@ const TRANSFORMERS = {
   NSLayoutConstraint: ConstraintTransformer,
 };
 
-const getTransformer = name => (name in TRANSFORMERS ? TRANSFORMERS[name] : DefaultTransformer);
+const getTransformer = name => (name in TRANSFORMERS ? TRANSFORMERS[name] : IdentityTransformer);
 
 export default getTransformer;

@@ -51,7 +51,7 @@ const submitChanges = (tree, systemContext) => {
     }
   });
 
-  Object.entries(constraints).forEach(({ id, viewConstraints }) => {
+  Object.entries(constraints).forEach(([id, viewConstraints]) => {
     changeSet.push({
       operation: 'modify',
       view: {
