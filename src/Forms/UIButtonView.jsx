@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
+
 import { withFormikContextProvider } from './FormikContext';
 import Persist from './Persistence/Presistence';
-
+import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
 import UIButtonTransformer from '../Transformers/UIButton';
 import FrameGroup from './Groups/Frame';
 import InputField from './Groups/InputField';
+import SelectField from './Groups/SelectField';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
@@ -17,32 +19,22 @@ const InnerUIButtonViewForm = ({
   <form onSubmit={handleSubmit}>
     <FrameGroup prefix="frame" />
     <hr />
+    <SelectField name="contentMode" options={ContentModeOptions} title="Content Mode" />
+    <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
+    <hr />
     <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
     <hr />
     <InputField name="title.text" type="text" title="Title" />
     <FontGroup prefix="title.font" />
     <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
+
     <Persist name={id} />
   </form>
 );
 
 const EnhancedUIButtonViewForm = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: ({
-    systemContext,
-    formData: {
-      frame,
-      ...rest
-    },
-  }) => ({
-    frame: {
-      x: frame.minX,
-      y: frame.minY,
-      width: frame.maxX - frame.minX,
-      height: frame.maxY - frame.minY,
-    },
-    ...UIButtonTransformer.fromPayload(rest, systemContext),
-  }),
+  mapPropsToValues: props => UIButtonTransformer.fromPayload(props.formData, props.systemContext),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
   //     .email('Invalid email address')

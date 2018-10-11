@@ -1,14 +1,19 @@
+import UIViewTransformer from './UIView';
 import UIImageTransformer from './UIImage';
 
 const UIImageViewTransformer = {
 
-  fromPayload: ({ image, highlightedImage, ...rest }) => ({
-    image: UIImageTransformer.fromPayload(image || {}),
-    highlightedImage: UIImageTransformer.fromPayload(highlightedImage || {}),
-    ...rest,
+  fromPayload: props => ({
+    ...UIViewTransformer.fromPayload(props),
+    image: UIImageTransformer.fromPayload(props.image || {}),
+    highlightedImage: UIImageTransformer.fromPayload(props.highlightedImage || {}),
   }),
 
-  toPayload: props => props,
+  toPayload: props => ({
+    ...UIViewTransformer.toPayload(props),
+    image: UIImageTransformer.toPayload(props.image),
+    highlightedImage: UIImageTransformer.toPayload(props.highlightedImage),
+  }),
 };
 
 export default UIImageViewTransformer;

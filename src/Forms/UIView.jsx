@@ -1,44 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
-import { withFormikContextProvider } from './FormikContext';
 // import Yup from 'yup';
-import Persist from './Persistence/Presistence';
 
+import { withFormikContextProvider } from './FormikContext';
+import Persist from './Persistence/Presistence';
+import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
+import UIViewTransformer from '../Transformers/UIView';
+import SelectField from './Groups/SelectField';
 import FrameGroup from './Groups/Frame';
 import ColorGroup from './Groups/Color';
 
 const InnerUIViewForm = ({
   id,
-  values,
   handleSubmit,
 }) => (
   <form onSubmit={handleSubmit}>
     <FrameGroup prefix="frame" />
-    { values.backgroundColor ? (
-      <React.Fragment>
-        <hr />
-        <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
-      </React.Fragment>
-    ) : null
-      }
+    <hr />
+    <SelectField name="contentMode" options={ContentModeOptions} title="Content Mode" />
+    <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
+    <hr />
+    <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
+
     <Persist name={id} />
   </form>
 );
 
 const EnhancedUIViewForm = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: ({ formData: { frame, backgroundColor } }) => ({
-    // Frame
-    frame: {
-      x: frame.minX,
-      y: frame.minY,
-      width: frame.maxX - frame.minX,
-      height: frame.maxY - frame.minY,
-    },
-    // Background color
-    backgroundColor,
-  }),
+  mapPropsToValues: props => UIViewTransformer.fromPayload(props.formData),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
   //     .email('Invalid email address')
@@ -57,7 +48,6 @@ const UIViewForm = props => <EnhancedUIViewForm {...props} />;
 
 InnerUIViewForm.propTypes = {
   id: PropTypes.string.isRequired,
-  values: PropTypes.any.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 

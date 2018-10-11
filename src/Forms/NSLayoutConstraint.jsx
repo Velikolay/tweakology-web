@@ -5,7 +5,6 @@ import FormikObserver from 'formik-observer';
 
 import Persist from './Persistence/Presistence';
 import { withFormikContextProvider } from './FormikContext';
-
 import Constraint from './Groups/Constraint';
 
 const InnerNSLayoutConstraint = ({
@@ -20,6 +19,7 @@ const InnerNSLayoutConstraint = ({
     <FormikObserver
       onChange={({ values }) => onFormChange(id, type, values)}
     />
+
     <Persist name={id} />
   </form>
 );
