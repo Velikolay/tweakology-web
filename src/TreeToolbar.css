@@ -1,0 +1,30 @@
+.tree-toolbar {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 28px;
+  background-color: #1e202ee6;
+  border-top: 2px solid rgb(58, 58, 58);
+}
+
+/* .tree-toolbar-section {
+  display: table-cell;
+  vertical-align: middle;
+} */
+
+.tree-toolbar-button {
+  flex: 50%;
+  width: 24px;
+  background: #1e202ee6;
+  /* background: #282841; */
+  border: none;
+}
+
+.tree-toolbar-button-icon {
+  color: #c8c8c8;
+  height: 12px;
+  width: 12px;
+  display: block;
+  margin: 0 auto;
+}

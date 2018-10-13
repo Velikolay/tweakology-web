@@ -1,6 +1,7 @@
 import 'isomorphic-fetch';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { CSSTransitionGroup } from 'react-transition-group';
 import Split from 'split.js';
 
 import SystemContext from './System/SystemContext';
@@ -16,6 +17,8 @@ import UIHierarchyScene from './Three/UIHierarchyScene';
 import UIHierarchyTree from './Tree/UIHierarchyTree';
 
 import MainToolbar from './MainToolbar';
+import TreeToolbar from './TreeToolbar';
+import NewViewMenu from './NewViewMenu';
 
 import './App.css';
 
@@ -33,11 +36,13 @@ class App extends Component {
       },
       activeNode: null,
       onFocusNode: null,
+      showNewViewMenu: false,
     };
 
     this.dragging = false;
 
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
+    this.onAddViewPress = this.onAddViewPress.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onNodeFocus = this.onNodeFocus.bind(this);
@@ -83,6 +88,11 @@ class App extends Component {
         };
         this.setState(updatedState);
       });
+  }
+
+  onAddViewPress = () => {
+    const { showNewViewMenu } = this.state;
+    this.setState({ showNewViewMenu: !showNewViewMenu });
   }
 
   onSubmitChanges = () => {
@@ -216,7 +226,9 @@ class App extends Component {
   }
 
   render() {
-    const { tree, activeNode, onFocusNode } = this.state;
+    const {
+      tree, activeNode, onFocusNode, showNewViewMenu,
+    } = this.state;
 
     const constraintIndicators = [];
     if (activeNode && activeNode.type === 'NSLayoutConstraint') {
@@ -229,17 +241,29 @@ class App extends Component {
     return (
       <div className="App">
         <SystemContext.Provider value={this.systemContext}>
-          <UIHierarchyTree
+          <div
             ref={(el) => { this.treeRef = el; }}
-            tree={tree}
-            activeNode={activeNode}
-            onClickAdd={this.onClickAdd}
-            onNodeClick={this.onNodeClick}
-            onNodeFocus={this.onNodeFocus}
-            onNodeFocusOut={this.onNodeFocusOut}
-            onNodeMouseDown={this.onNodeMouseDown}
-            onNodeMouseUp={this.onNodeMouseUp}
-          />
+            className="tree-section"
+          >
+            <UIHierarchyTree
+              tree={tree}
+              activeNode={activeNode}
+              onClickAdd={this.onClickAdd}
+              onNodeClick={this.onNodeClick}
+              onNodeFocus={this.onNodeFocus}
+              onNodeFocusOut={this.onNodeFocusOut}
+              onNodeMouseDown={this.onNodeMouseDown}
+              onNodeMouseUp={this.onNodeMouseUp}
+            />
+            <CSSTransitionGroup
+              transitionName="sliding"
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={300}
+            >
+              { showNewViewMenu ? <NewViewMenu /> : null }
+            </CSSTransitionGroup>
+            <TreeToolbar onAddViewPress={this.onAddViewPress} />
+          </div>
           <div
             ref={(el) => { this.middleSectionRef = el; }}
             className="middle-section"
@@ -252,7 +276,7 @@ class App extends Component {
           </div>
           <div
             ref={(el) => { this.configRef = el; }}
-            className="config-pane"
+            className="config-section"
           >
             { activeNode !== null ? (
               <Form
