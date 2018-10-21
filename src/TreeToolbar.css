@@ -8,16 +8,10 @@
   border-top: 2px solid rgb(58, 58, 58);
 }
 
-/* .tree-toolbar-section {
-  display: table-cell;
-  vertical-align: middle;
-} */
-
 .tree-toolbar-button {
   flex: 50%;
   width: 24px;
   background: #1e202ee6;
-  /* background: #282841; */
   border: none;
 }
 

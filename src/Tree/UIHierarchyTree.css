@@ -28,15 +28,15 @@
 }
 
 .m-node .container.is-active {
-  background-color: rgba(0, 113, 184, 0.6);
+  background-color: #0071b899;
 }
 
 .m-node .container.is-active:hover {
-  background-color: rgba(0, 113, 184, 0.6);
+  background-color: #0071b899;
 }
 
 .m-node .container:hover {
-  background-color: rgba(52, 52, 52, 0.6);
+  background-color: #34343499;
 }
 
 .m-node .text {
