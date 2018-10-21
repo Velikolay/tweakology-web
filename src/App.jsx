@@ -36,14 +36,15 @@ class App extends Component {
       },
       activeNode: null,
       onFocusNode: null,
-      showNewViewMenu: false,
+      showNewNodeMenu: false,
     };
 
     this.dragging = false;
 
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
-    this.onAddViewPress = this.onAddViewPress.bind(this);
+    this.onAddNodeClick = this.onAddNodeClick.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
+    this.onNodeAdded = this.onNodeAdded.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onNodeFocus = this.onNodeFocus.bind(this);
     this.onNodeFocusOut = this.onNodeFocus.bind(this);
@@ -90,11 +91,6 @@ class App extends Component {
       });
   }
 
-  onAddViewPress = () => {
-    const { showNewViewMenu } = this.state;
-    this.setState({ showNewViewMenu: !showNewViewMenu });
-  }
-
   onSubmitChanges = () => {
     const { tree } = this.state;
     submitChanges(tree, this.systemContext).then(() => this.updateTree());
@@ -113,6 +109,32 @@ class App extends Component {
   onClickAdd = (node) => {
     addNewConstraintToTreeNode(node);
     this.setState({ activeNode: node });
+  }
+
+  onAddNodeClick = () => {
+    const { showNewNodeMenu } = this.state;
+    this.setState({ showNewNodeMenu: !showNewNodeMenu });
+  }
+
+  onNodeAdded = ({ id, type }) => {
+    const { tree, activeNode } = this.state;
+    const { children, id: superview } = ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1 ? activeNode : activeNode.superview;
+    const index = children && children[children.length - 1].module === 'Constraints' ? children.length - 1 : children.length;
+
+    const insertNewViewConfig = [{
+      operation: 'insert',
+      view: {
+        id,
+        superview,
+        index,
+        type,
+      },
+    }];
+    fetch('http://nikoivan01m.local:8080/tweaks/test', {
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(insertNewViewConfig),
+    }).then(() => this.updateTree());
   }
 
   onNodeClick = (node) => {
@@ -227,7 +249,7 @@ class App extends Component {
 
   render() {
     const {
-      tree, activeNode, onFocusNode, showNewViewMenu,
+      tree, activeNode, onFocusNode, showNewNodeMenu,
     } = this.state;
 
     const constraintIndicators = [];
@@ -260,9 +282,9 @@ class App extends Component {
               transitionEnterTimeout={500}
               transitionLeaveTimeout={300}
             >
-              { showNewViewMenu ? <NewViewMenu /> : null }
+              { showNewNodeMenu ? <NewViewMenu onNodeAdded={this.onNodeAdded} /> : null }
             </CSSTransitionGroup>
-            <TreeToolbar onAddViewPress={this.onAddViewPress} />
+            <TreeToolbar onAddNodeClick={this.onAddNodeClick} />
           </div>
           <div
             ref={(el) => { this.middleSectionRef = el; }}

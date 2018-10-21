@@ -25,21 +25,16 @@ const listItems = [{
   description: ' - Represents a rectangular region in which it draws and receives events',
 }];
 
-const NewViewMenu = props => (
+const NewViewMenu = ({ onNodeAdded }) => (
   <Formik
-    initialValues={{ identifier: '', viewType: '' }}
-    onSubmit={(values, { setSubmitting }) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        setSubmitting(false);
-      }, 400);
-    }}
+    initialValues={{ id: '', type: '' }}
+    onSubmit={values => onNodeAdded(values)}
   >
-    {({ values: { identifier }, isSubmitting, setFieldValue }) => (
+    {({ values: { id }, isSubmitting, setFieldValue }) => (
       <Form className="new-view-menu">
         <div className="view-id">
-          <Field className="view-id__input" type="text" name="identifier" placeholder="Identifier" />
-          <IconContext.Provider value={{ className: cx('view-id__icon', { 'is-disabled': !identifier }) }}>
+          <Field className="view-id__input" type="text" name="id" placeholder="Identifier" />
+          <IconContext.Provider value={{ className: cx('view-id__icon', { 'is-disabled': !id }) }}>
             <FaPlusCircle />
           </IconContext.Provider>
         </div>
@@ -48,8 +43,8 @@ const NewViewMenu = props => (
             <button
               className="view-item"
               type="submit"
-              disabled={!identifier || isSubmitting}
-              onClick={() => setFieldValue('viewType', viewInfo.type)}
+              disabled={!id || isSubmitting}
+              onClick={() => setFieldValue('type', viewInfo.type)}
             >
               <span className="view-item__name">{viewInfo.name}</span>
               <span className="view-item__description">{viewInfo.description}</span>
@@ -60,5 +55,9 @@ const NewViewMenu = props => (
     )}
   </Formik>
 );
+
+NewViewMenu.propTypes = {
+  onNodeAdded: PropTypes.func.isRequired,
+};
 
 export default NewViewMenu;
