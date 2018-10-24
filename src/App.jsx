@@ -187,7 +187,10 @@ class App extends Component {
 
   transformPayloadToTree = (uiElement, revision, { threeD: { baseX, baseY, depth } }) => {
     const {
-      uid,
+      uid: {
+        value: id,
+        kind,
+      },
       type,
       hierarchyMetadata,
       properties,
@@ -203,8 +206,8 @@ class App extends Component {
     const height = maxY - minY;
 
     const treeNode = {
-      module: type,
-      id: uid,
+      module: kind === 0 ? type : id,
+      id,
       type,
       revision,
       hierarchyMetadata,
