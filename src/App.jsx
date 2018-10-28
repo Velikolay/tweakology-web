@@ -117,7 +117,7 @@ class App extends Component {
   }
 
   onNodeAdded = ({ id, type }) => {
-    const { tree, activeNode } = this.state;
+    const { activeNode } = this.state;
     const { children, id: superview } = ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1 ? activeNode : activeNode.superview;
     const index = children && children[children.length - 1].module === 'Constraints' ? children.length - 1 : children.length;
 
@@ -235,7 +235,9 @@ class App extends Component {
             depth: depthCounter,
           },
         };
-        treeNode.children.push(this.transformPayloadToTree(subview, revision, threeD));
+        const subtree = this.transformPayloadToTree(subview, revision, threeD);
+        subtree.superview = treeNode;
+        treeNode.children.push(subtree);
       }
     }
 

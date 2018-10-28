@@ -26,6 +26,7 @@ const TreeViewNodeShape = PropTypes.shape({
   }),
   collapsed: PropTypes.bool,
   leaf: PropTypes.bool,
+  superview: lazyPropType(() => TreeViewNodeShape),
   children: PropTypes.arrayOf(lazyPropType(() => PropTypes.oneOfType([
     TreeViewNodeShape, TreeConstraintParentNodeShape,
   ]))),

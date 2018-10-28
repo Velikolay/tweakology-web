@@ -7,6 +7,7 @@ class SceneManager {
     this.planeOffset = planeOffset;
     this.viewsMap = {};
     this.constraintIndicatorsMap = {};
+    this.showTexture = true;
   }
 
   updatePlaneOffset(planeOffset) {
@@ -26,10 +27,11 @@ class SceneManager {
     );
   }
 
-  changeTexturesVisibility() {
+  flipTextureVisibility() {
+    this.showTexture = !this.showTexture;
     Object.values(this.viewsMap).forEach(({ meshGroup: { children: [textureMesh] } }) => {
       // eslint-disable-next-line no-param-reassign
-      textureMesh.visible = !textureMesh.visible;
+      textureMesh.visible = this.showTexture;
     });
   }
 
@@ -43,6 +45,8 @@ class SceneManager {
         }
       } else {
         const meshGroup = this.createView(nextViewProps);
+        const { children: [textureMesh] } = meshGroup;
+        textureMesh.visible = this.showTexture;
         this.viewsMap[nextViewProps.id] = { meshGroup, viewProps: nextViewProps };
         this.scene.add(meshGroup);
       }
@@ -89,13 +93,19 @@ class SceneManager {
       x, y, z, width, height, selected, onFocus, imgUrl, revision,
     } = nextViewProps;
 
-    const widthScale = width / viewProps.width;
-    const heightScale = height / viewProps.height;
-
     for (const el of group.children) {
       el.position.set(x, y, z * this.planeOffset);
-      el.scale.x *= widthScale;
-      el.scale.y *= heightScale;
+      if (viewProps.width) {
+        el.scale.x *= width / viewProps.width;
+      } else {
+        el.scale.x += width;
+      }
+
+      if (viewProps.height) {
+        el.scale.y *= height / viewProps.height;
+      } else {
+        el.scale.y += height;
+      }
     }
 
     if (imgUrl !== viewProps.imgUrl || revision !== viewProps.revision) {

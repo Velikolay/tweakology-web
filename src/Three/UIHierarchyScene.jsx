@@ -137,7 +137,7 @@ class UIHierarchyScene extends Component {
         <button
           className="texture-visibility-button"
           type="button"
-          onClick={() => this.sceneManager.changeTexturesVisibility()}
+          onClick={() => this.sceneManager.flipTextureVisibility()}
         >
           <IconContext.Provider value={{ className: 'texture-visibility-icon' }}>
             <FaClone />
