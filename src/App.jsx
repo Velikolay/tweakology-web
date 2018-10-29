@@ -6,11 +6,11 @@ import Split from 'split.js';
 
 import SystemContext from './System/SystemContext';
 import Form from './Forms/Form';
+
 import { submitChanges } from './Forms/Submit';
 
 import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
-
 import toThreeViews from './Three/View';
 import toThreeConstraintIndicator from './Three/Constraint';
 import UIHierarchyScene from './Three/UIHierarchyScene';
@@ -116,7 +116,7 @@ class App extends Component {
     this.setState({ showNewNodeMenu: !showNewNodeMenu });
   }
 
-  onNodeAdded = ({ id, type }) => {
+  onNodeAdded = ({ id, type, ...rest }) => {
     const { activeNode } = this.state;
     const { children, id: superview } = ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1 ? activeNode : activeNode.superview;
     const index = children && children[children.length - 1].module === 'Constraints' ? children.length - 1 : children.length;
@@ -128,8 +128,10 @@ class App extends Component {
         superview,
         index,
         type,
+        ...rest,
       },
     }];
+    console.log(insertNewViewConfig);
     fetch('http://nikoivan01m.local:8080/tweaks/test', {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
