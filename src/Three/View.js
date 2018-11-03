@@ -27,7 +27,7 @@ const toThreeViews = ({ tree, activeNode, onFocusNode }) => {
   const meshProps = [{
     id,
     revision,
-    imgUrl: `http://nikoivan01m.local:8080/images?path=${treeNode.hierarchyMetadata}`,
+    imgUrl: `http://NIKOIVAN02M.local:8080/images?path=${treeNode.hierarchyMetadata}`,
     selected: isSelected(treeNode, activeNode),
     onFocus: onFocusNode !== null && onFocusNode.id === id,
     ...threeD,

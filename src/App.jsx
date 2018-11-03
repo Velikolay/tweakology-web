@@ -24,7 +24,7 @@ import './App.css';
 
 require('react-ui-tree/dist/react-ui-tree.css');
 
-const APP_INSPECTOR_EP = 'http://nikoivan01m.local:8080/';
+const APP_INSPECTOR_EP = 'http://NIKOIVAN02M.local:8080/';
 
 class App extends Component {
   constructor(props) {
@@ -132,7 +132,7 @@ class App extends Component {
       },
     }];
     console.log(insertNewViewConfig);
-    fetch('http://nikoivan01m.local:8080/tweaks/test', {
+    fetch('http://NIKOIVAN02M.local:8080/tweaks/test', {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(insertNewViewConfig),

@@ -62,7 +62,7 @@ const submitChanges = (tree, systemContext) => {
   });
 
   console.log(changeSet);
-  return fetch('http://nikoivan01m.local:8080/tweaks/test', {
+  return fetch('http://NIKOIVAN02M.local:8080/tweaks/test', {
     method: 'put',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(changeSet),

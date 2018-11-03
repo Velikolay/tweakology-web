@@ -9,6 +9,7 @@ import SceneManager from './SceneManager';
 
 import 'rc-slider/assets/index.css';
 import './UIHierarchyScene.css';
+import DragControls from './Controls/DragControls';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -26,6 +27,7 @@ const initOrbitControls = (camera, constainer) => {
   controls.minDistance = 20;
   controls.maxDistance = 1200;
 
+  controls.enableKeys = false;
   // controls.enablePan = false;
   return controls;
 };
@@ -33,10 +35,13 @@ const initOrbitControls = (camera, constainer) => {
 class UIHierarchyScene extends Component {
   constructor(props) {
     super(props);
+    this.cameraPosition = new THREE.Vector3();
 
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
     this.animate = this.animate.bind(this);
+    this.dragStart = this.dragStart.bind(this);
+    this.dragEnd = this.dragEnd.bind(this);
   }
 
   componentDidMount() {
@@ -61,7 +66,18 @@ class UIHierarchyScene extends Component {
     this.scene = scene;
     this.camera = camera;
     this.renderer = renderer;
-    this.controls = initOrbitControls(camera, this.renderer.domElement);
+    this.orbitControls = initOrbitControls(camera, this.renderer.domElement);
+    this.dragControls = new DragControls(camera, this.renderer.domElement);
+    this.dragControls.addEventListener('dragstart', this.dragStart);
+    this.dragControls.addEventListener('dragend', this.dragEnd);
+    this.dragControls.addEventListener('drag', (event) => {
+      const {
+        position,
+        userData: { id, drag: { displacement, prevPosition } },
+      } = event.object;
+      displacement.subVectors(position, prevPosition);
+      console.log(displacement);
+    });
 
     this.sceneManager = new SceneManager(this.scene, DEFAULT_PLANE_OFFSET);
     this.sceneManager.updateViews(views);
@@ -75,11 +91,18 @@ class UIHierarchyScene extends Component {
     const { views, constraintIndicators } = nextProps;
     this.sceneManager.updateViews(views);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
+    if (this.dragControls) {
+      this.dragControls.setDraggableObjects(
+        this.sceneManager.getSelectedMeshGroups(),
+      );
+    }
   }
 
   componentWillUnmount() {
-    this.controls.dispose();
-    delete this.controls;
+    this.orbitControls.dispose();
+    delete this.orbitControls;
+    this.dragControls.dispose();
+    delete this.dragControls;
     this.sceneResizeSensor.detach();
     this.stop();
     this.container.removeChild(this.renderer.domElement);
@@ -95,6 +118,18 @@ class UIHierarchyScene extends Component {
       this.renderer.render(this.scene, this.camera);
     } else {
       console.log('No container for scene view');
+    }
+  }
+
+  dragStart() {
+    if (this.orbitControls) {
+      this.orbitControls.enabled = false;
+    }
+  }
+
+  dragEnd() {
+    if (this.orbitControls) {
+      this.orbitControls.enabled = true;
     }
   }
 

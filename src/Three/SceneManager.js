@@ -1,6 +1,14 @@
 import _ from 'lodash';
 import * as THREE from 'three';
 
+const createUserData = (id, object) => ({
+  id,
+  drag: {
+    displacement: new THREE.Vector3(0, 0, 0),
+    prevPosition: new THREE.Vector3().copy(object.position),
+  },
+});
+
 class SceneManager {
   constructor(scene, planeOffset) {
     this.scene = scene;
@@ -8,6 +16,12 @@ class SceneManager {
     this.viewsMap = {};
     this.constraintIndicatorsMap = {};
     this.showTexture = true;
+  }
+
+  getSelectedMeshGroups() {
+    return Object.entries(this.viewsMap)
+      .filter(([id, { viewProps: { selected } }]) => selected)
+      .map(([id, { meshGroup }]) => meshGroup);
   }
 
   updatePlaneOffset(planeOffset) {
@@ -141,7 +155,7 @@ class SceneManager {
 
   createMesh(props) {
     const {
-      x, y, z, width, height, imgUrl,
+      id, x, y, z, width, height, imgUrl,
     } = props;
     const img = new THREE.MeshBasicMaterial({
       map: new THREE.TextureLoader().load(imgUrl),
@@ -158,12 +172,13 @@ class SceneManager {
     const material = img;
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z * this.planeOffset);
+    mesh.userData = createUserData(id, mesh);
     return mesh;
   }
 
   createOverLayMesh(props) {
     const {
-      x, y, z, width, height,
+      id, x, y, z, width, height,
     } = props;
     const geometry = new THREE.PlaneGeometry(width, height);
     const material = new THREE.MeshBasicMaterial({
@@ -174,12 +189,13 @@ class SceneManager {
     });
     const overlayMesh = new THREE.Mesh(geometry, material);
     overlayMesh.position.set(x, y, z * this.planeOffset);
+    overlayMesh.userData = createUserData(id, overlayMesh);
     return overlayMesh;
   }
 
   createLineSegments(props) {
     const {
-      x, y, z, width, height, selected, onFocus,
+      id, x, y, z, width, height, selected, onFocus,
     } = props;
 
     let wireframeColor = 0x666666;
@@ -198,6 +214,7 @@ class SceneManager {
 
     const lineSegments = new THREE.LineSegments(wGeometry, wMaterial);
     lineSegments.position.set(x, y, z * this.planeOffset);
+    lineSegments.userData = createUserData(id, lineSegments);
     return lineSegments;
   }
 
