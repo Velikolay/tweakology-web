@@ -9,6 +9,68 @@ const createUserData = (id, object) => ({
   },
 });
 
+const createMesh = (props) => {
+  const {
+    id, width, height, imgUrl,
+  } = props;
+  const img = new THREE.MeshBasicMaterial({
+    map: new THREE.TextureLoader().load(imgUrl),
+    side: THREE.DoubleSide,
+    transparent: true,
+    polygonOffset: true,
+    polygonOffsetFactor: 1, // positive value pushes polygon further away
+    polygonOffsetUnits: 1,
+  });
+  // img.map.needsUpdate = true;
+  img.map.minFilter = THREE.LinearFilter;
+
+  const geometry = new THREE.PlaneGeometry(width, height);
+  const material = img;
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.userData = createUserData(id, mesh);
+  return mesh;
+};
+
+const createOverLayMesh = (props) => {
+  const {
+    id, width, height,
+  } = props;
+  const geometry = new THREE.PlaneGeometry(width, height);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x00bfff,
+    side: THREE.DoubleSide,
+    opacity: 0.35,
+    transparent: true,
+  });
+  const overlayMesh = new THREE.Mesh(geometry, material);
+  overlayMesh.userData = createUserData(id, overlayMesh);
+  return overlayMesh;
+};
+
+const createLineSegments = (props) => {
+  const {
+    id, width, height, selected, onFocus,
+  } = props;
+
+  let wireframeColor = 0x666666;
+  if (selected) {
+    wireframeColor = 0x2566c6;
+  } else if (onFocus) {
+    wireframeColor = 0xcccccc;
+  }
+
+  const geometry = new THREE.PlaneGeometry(width, height);
+  const wGeometry = new THREE.EdgesGeometry(geometry);
+  const wMaterial = new THREE.LineBasicMaterial({
+    color: wireframeColor,
+    linewidth: 1,
+  });
+
+  const lineSegments = new THREE.LineSegments(wGeometry, wMaterial);
+  lineSegments.userData = createUserData(id, lineSegments);
+  return lineSegments;
+};
+
 class SceneManager {
   constructor(scene, planeOffset) {
     this.scene = scene;
@@ -87,18 +149,22 @@ class SceneManager {
   }
 
   createView(viewProps) {
-    const { selected } = viewProps;
-    const mesh = this.createMesh(viewProps);
-    const lineSegments = this.createLineSegments(viewProps);
+    const {
+      id, x, y, z, selected,
+    } = viewProps;
+    const mesh = createMesh(viewProps);
+    const lineSegments = createLineSegments(viewProps);
 
     const meshGroup = new THREE.Group();
     meshGroup.add(mesh);
     meshGroup.add(lineSegments);
 
     if (selected) {
-      const overlayMesh = this.createOverLayMesh(viewProps);
+      const overlayMesh = createOverLayMesh(viewProps);
       meshGroup.add(overlayMesh);
     }
+    meshGroup.userData = createUserData(id, mesh);
+    meshGroup.position.set(x, y, z * this.planeOffset);
     return meshGroup;
   }
 
@@ -107,8 +173,8 @@ class SceneManager {
       x, y, z, width, height, selected, onFocus, imgUrl, revision,
     } = nextViewProps;
 
+    group.position.set(x, y, z * this.planeOffset);
     for (const el of group.children) {
-      el.position.set(x, y, z * this.planeOffset);
       if (viewProps.width) {
         el.scale.x *= width / viewProps.width;
       } else {
@@ -137,7 +203,7 @@ class SceneManager {
 
     if (selected) {
       if (group.children.length < 3) {
-        const overlayMesh = this.createOverLayMesh(nextViewProps);
+        const overlayMesh = createOverLayMesh(nextViewProps);
         group.add(overlayMesh);
       }
     } else if (group.children.length === 3) {
@@ -151,71 +217,6 @@ class SceneManager {
       lineGroup.add(this.createLine(indicator));
     }
     return lineGroup;
-  }
-
-  createMesh(props) {
-    const {
-      id, x, y, z, width, height, imgUrl,
-    } = props;
-    const img = new THREE.MeshBasicMaterial({
-      map: new THREE.TextureLoader().load(imgUrl),
-      side: THREE.DoubleSide,
-      transparent: true,
-      polygonOffset: true,
-      polygonOffsetFactor: 1, // positive value pushes polygon further away
-      polygonOffsetUnits: 1,
-    });
-    // img.map.needsUpdate = true;
-    img.map.minFilter = THREE.LinearFilter;
-
-    const geometry = new THREE.PlaneGeometry(width, height);
-    const material = img;
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(x, y, z * this.planeOffset);
-    mesh.userData = createUserData(id, mesh);
-    return mesh;
-  }
-
-  createOverLayMesh(props) {
-    const {
-      id, x, y, z, width, height,
-    } = props;
-    const geometry = new THREE.PlaneGeometry(width, height);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x00bfff,
-      side: THREE.DoubleSide,
-      opacity: 0.35,
-      transparent: true,
-    });
-    const overlayMesh = new THREE.Mesh(geometry, material);
-    overlayMesh.position.set(x, y, z * this.planeOffset);
-    overlayMesh.userData = createUserData(id, overlayMesh);
-    return overlayMesh;
-  }
-
-  createLineSegments(props) {
-    const {
-      id, x, y, z, width, height, selected, onFocus,
-    } = props;
-
-    let wireframeColor = 0x666666;
-    if (selected) {
-      wireframeColor = 0x2566c6;
-    } else if (onFocus) {
-      wireframeColor = 0xcccccc;
-    }
-
-    const geometry = new THREE.PlaneGeometry(width, height);
-    const wGeometry = new THREE.EdgesGeometry(geometry);
-    const wMaterial = new THREE.LineBasicMaterial({
-      color: wireframeColor,
-      linewidth: 1,
-    });
-
-    const lineSegments = new THREE.LineSegments(wGeometry, wMaterial);
-    lineSegments.position.set(x, y, z * this.planeOffset);
-    lineSegments.userData = createUserData(id, lineSegments);
-    return lineSegments;
   }
 
   createLine(props) {

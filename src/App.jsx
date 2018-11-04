@@ -171,6 +171,15 @@ class App extends Component {
     this.dragging = false;
   }
 
+  on3DObjectDrag = (id, displacement) => {
+    const { activeNode } = this.state;
+    activeNode.properties.frame.minX += displacement.x;
+    activeNode.properties.frame.minY -= displacement.y;
+    activeNode.properties.frame.maxX += displacement.x;
+    activeNode.properties.frame.maxY -= displacement.y;
+    this.setState({ activeNode });
+  }
+
   findNode = (tree, id) => {
     if (id) {
       const { id: nodeId, children } = tree;
@@ -300,6 +309,7 @@ class App extends Component {
             <UIHierarchyScene
               views={toThreeViews({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
+              onDragHandler={this.on3DObjectDrag}
             />
             <MainToolbar onSubmitChanges={this.onSubmitChanges} />
           </div>

@@ -67,15 +67,10 @@ class DragControls extends THREE.EventDispatcher {
 
     if (this.selected && this.enabled) {
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
-        const pos = this.intersection.sub(this.offset);
-        this.selected.elements.forEach(el => (
-          el.position.copy(pos)
-        ));
+        this.selected.position.copy(this.intersection.sub(this.offset));
       }
 
-      this.selected.elements.forEach(el => (
-        this.dispatchEvent({ type: 'drag', object: el })
-      ));
+      this.dispatchEvent({ type: 'drag', object: this.selected });
       return;
     }
 
@@ -102,28 +97,19 @@ class DragControls extends THREE.EventDispatcher {
     const intersects = this.raycaster.intersectObjects(this.objects, true);
 
     if (intersects.length > 0) {
-      const obj = intersects[0].object;
-      this.selected = {
-        position: obj.position,
-        elements: obj.parent.children,
-      };
-
+      this.selected = intersects[0].object.parent;
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
       }
       this.domElement.style.cursor = 'move';
-      this.selected.elements.forEach(el => (
-        this.dispatchEvent({ type: 'dragstart', object: el })
-      ));
+      this.dispatchEvent({ type: 'dragstart', object: this.selected });
     }
   }
 
   onDocumentMouseCancel(event) {
     event.preventDefault();
     if (this.selected) {
-      this.selected.elements.forEach(el => (
-        this.dispatchEvent({ type: 'dragend', object: el })
-      ));
+      this.dispatchEvent({ type: 'dragend', object: this.selected });
       this.selected = null;
     }
     this.domElement.style.cursor = this.hovered ? 'pointer' : 'auto';
@@ -142,14 +128,9 @@ class DragControls extends THREE.EventDispatcher {
 
     if (this.selected && this.enabled) {
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
-        const pos = this.intersection.sub(this.offset);
-        this.selected.elements.forEach(el => (
-          el.position.copy(pos)
-        ));
+        this.selected.position.copy(this.intersection.sub(this.offset));
       }
-      this.selected.elements.forEach(el => (
-        this.dispatchEvent({ type: 'drag', object: el })
-      ));
+      this.dispatchEvent({ type: 'drag', object: this.selected });
     }
   }
 
@@ -167,27 +148,19 @@ class DragControls extends THREE.EventDispatcher {
     const intersects = this.raycaster.intersectObjects(this.objects);
 
     if (intersects.length > 0) {
-      const obj = this.intersects[0].object;
-      this.selected = {
-        position: obj.position,
-        elements: obj.parent.children,
-      };
+      this.selected = this.intersects[0].object.parent;
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
       }
       this.domElement.style.cursor = 'move';
-      this.selected.elements.forEach(el => (
-        this.dispatchEvent({ type: 'dragstart', object: el })
-      ));
+      this.dispatchEvent({ type: 'dragstart', object: this.selected });
     }
   }
 
   onDocumentTouchEnd(event) {
     event.preventDefault();
     if (this.selected) {
-      this.selected.elements.forEach(el => (
-        this.dispatchEvent({ type: 'dragend', object: el })
-      ));
+      this.dispatchEvent({ type: 'dragend', object: this.selected });
       this.selected = null;
     }
     this.domElement.style.cursor = 'auto';

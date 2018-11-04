@@ -16,7 +16,6 @@ import ColorGroup from './Groups/Color';
 
 const InnerUILabelViewForm = ({
   id,
-  values,
   handleSubmit,
 }) => (
   <form onSubmit={handleSubmit}>
@@ -61,7 +60,6 @@ const UILabelViewForm = props => <EnhancedUILabelViewForm {...props} />;
 
 InnerUILabelViewForm.propTypes = {
   id: PropTypes.string.isRequired,
-  values: PropTypes.any.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 

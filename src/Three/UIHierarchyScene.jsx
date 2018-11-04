@@ -50,7 +50,7 @@ class UIHierarchyScene extends Component {
       self.updateCanvasDimensions();
     }));
 
-    const { views, constraintIndicators } = this.props;
+    const { views, constraintIndicators, onDragHandler } = this.props;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     const fov = 75;
@@ -76,7 +76,8 @@ class UIHierarchyScene extends Component {
         userData: { id, drag: { displacement, prevPosition } },
       } = event.object;
       displacement.subVectors(position, prevPosition);
-      console.log(displacement);
+      prevPosition.copy(position);
+      onDragHandler(id, displacement);
     });
 
     this.sceneManager = new SceneManager(this.scene, DEFAULT_PLANE_OFFSET);
@@ -205,6 +206,7 @@ UIHierarchyScene.propTypes = {
       z2: PropTypes.number.isRequired,
     })).isRequired,
   })).isRequired,
+  onDragHandler: PropTypes.func,
 };
 
 export default UIHierarchyScene;
