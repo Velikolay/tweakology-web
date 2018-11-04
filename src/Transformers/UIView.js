@@ -6,12 +6,7 @@ const UIViewTransformer = {
     contentMode,
     semanticContentAttribute,
   }, systemContext) => ({
-    frame: {
-      x: frame.minX,
-      y: frame.minY,
-      width: frame.maxX - frame.minX,
-      height: frame.maxY - frame.minY,
-    },
+    frame,
     backgroundColor,
     contentMode: contentMode.toString(),
     semanticContentAttribute: semanticContentAttribute.toString(),

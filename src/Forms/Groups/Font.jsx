@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Field from './Inputs/Field';
 import { withFormikContext } from '../FormikContext';
-import SystemContext from '../../System/SystemContext';
+import SystemContext from '../../Context/SystemContext';
 import { nameWithPrefix, titleForField, formikValueWithPrefix } from './Utils';
 
 import './Groups.css';

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { CSSTransitionGroup } from 'react-transition-group';
 import Split from 'split.js';
 
-import SystemContext from './System/SystemContext';
+import SystemContext from './Context/SystemContext';
 import Form from './Forms/Form';
 
 import { submitChanges } from './Forms/Submit';
@@ -29,6 +29,7 @@ const APP_INSPECTOR_EP = 'http://NIKOIVAN02M.local:8080/';
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       tree: {
         module: 'Loading...',
@@ -39,11 +40,13 @@ class App extends Component {
       showNewNodeMenu: false,
     };
 
-    this.dragging = false;
+    this.formikBag = null;
+    this.nodeDragging = false;
 
+    this.onFormUpdate = this.onFormUpdate.bind(this);
+    this.onFormSelect = this.onFormSelect.bind(this);
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
     this.onAddNodeClick = this.onAddNodeClick.bind(this);
-    this.onFormChange = this.onFormChange.bind(this);
     this.onNodeAdded = this.onNodeAdded.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onNodeFocus = this.onNodeFocus.bind(this);
@@ -80,9 +83,7 @@ class App extends Component {
       .then((data) => {
         const { activeNode } = this.state;
         const revision = Date.now();
-        const tree = this.transformPayloadToTree(data, revision, {
-          threeD: { baseX: 0, baseY: 0, depth: 0 },
-        });
+        const tree = this.transformPayloadToTree(data, revision);
         const updatedState = {
           tree,
           activeNode: (activeNode && this.findNode(tree, activeNode.id)) || tree,
@@ -97,13 +98,19 @@ class App extends Component {
     // window.localStorage.clear();
   }
 
-  onFormChange = (id, type, values) => {
+  onFormUpdate = (id, type, values) => {
+    const { activeNode } = this.state;
     if (type === 'NSLayoutConstraint') {
-      const { activeNode } = this.state;
       activeNode.updatedProperties = { constraint: values };
       activeNode.module = updatedConstraintNodeName(activeNode);
-      this.setState({ activeNode });
+    } else {
+      activeNode.updatedProperties = values;
     }
+    this.setState({ activeNode });
+  }
+
+  onFormSelect = (formik) => {
+    this.formikBag = formik;
   }
 
   onClickAdd = (node) => {
@@ -131,7 +138,7 @@ class App extends Component {
         ...rest,
       },
     }];
-    console.log(insertNewViewConfig);
+
     fetch('http://NIKOIVAN02M.local:8080/tweaks/test', {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
@@ -146,7 +153,7 @@ class App extends Component {
   }
 
   onNodeFocus = (node, event) => {
-    if (!this.dragging) {
+    if (!this.nodeDragging) {
       const { activeNode } = this.state;
       if (node.id && (!activeNode || node.id !== activeNode.id)) {
         this.setState({ onFocusNode: node });
@@ -158,26 +165,31 @@ class App extends Component {
 
   onNodeFocusOut = (node, event) => {
     const { onFocusNode } = this.state;
-    if (!this.dragging && onFocusNode && node.id === onFocusNode.id) {
+    if (!this.nodeDragging && onFocusNode && node.id === onFocusNode.id) {
       this.setState({ onFocusNode: null });
     }
   }
 
   onNodeMouseDown = (node, event) => {
-    this.dragging = true;
+    this.nodeDragging = true;
   }
 
   onNodeMouseUp = (node, event) => {
-    this.dragging = false;
+    this.nodeDragging = false;
   }
 
-  on3DObjectDrag = (id, displacement) => {
-    const { activeNode } = this.state;
-    activeNode.properties.frame.minX += displacement.x;
-    activeNode.properties.frame.minY -= displacement.y;
-    activeNode.properties.frame.maxX += displacement.x;
-    activeNode.properties.frame.maxY -= displacement.y;
-    this.setState({ activeNode });
+  on3DObjectDrag = (state, obj) => {
+    const { activeNode: { id } } = this.state;
+    if (this.formikBag) {
+      const { setFieldValue } = this.formikBag;
+      if (state === 'drag') {
+        const { id: objId, position: { x, y } } = obj;
+        if (id === objId) {
+          setFieldValue('frame.x', Math.trunc(x));
+          setFieldValue('frame.y', Math.trunc(y));
+        }
+      }
+    }
   }
 
   findNode = (tree, id) => {
@@ -196,7 +208,7 @@ class App extends Component {
     return null;
   }
 
-  transformPayloadToTree = (uiElement, revision, { threeD: { baseX, baseY, depth } }) => {
+  transformPayloadToTree = (uiElement, revision) => {
     const {
       uid: {
         value: id,
@@ -209,13 +221,6 @@ class App extends Component {
       subviews,
     } = uiElement;
 
-    const {
-      maxX, minX, maxY, minY,
-    } = properties.frame;
-
-    const width = maxX - minX;
-    const height = maxY - minY;
-
     const treeNode = {
       module: kind === 0 ? type : id,
       id,
@@ -223,30 +228,12 @@ class App extends Component {
       revision,
       hierarchyMetadata,
       properties,
-      threeD: {
-        x: depth === 0 ? 0 : baseX + minX + width / 2,
-        y: depth === 0 ? 0 : baseY - minY - height / 2,
-        z: depth,
-        width,
-        height,
-      },
     };
 
     treeNode.children = [];
     if (subviews) {
-      const nextBaseX = baseX + minX - (depth === 0 ? width / 2 : 0);
-      const nextBaseY = baseY - minY + (depth === 0 ? height / 2 : 0);
-      let depthCounter = depth;
       for (const subview of subviews) {
-        depthCounter += 1;
-        const threeD = {
-          threeD: {
-            baseX: nextBaseX,
-            baseY: nextBaseY,
-            depth: depthCounter,
-          },
-        };
-        const subtree = this.transformPayloadToTree(subview, revision, threeD);
+        const subtree = this.transformPayloadToTree(subview, revision);
         subtree.superview = treeNode;
         treeNode.children.push(subtree);
       }
@@ -322,7 +309,8 @@ class App extends Component {
                 id={activeNode.id}
                 type={activeNode.type}
                 formData={activeNode.properties}
-                onFormChange={this.onFormChange}
+                onFormUpdate={this.onFormUpdate}
+                onFormSelect={this.onFormSelect}
               />
             ) : null
             }

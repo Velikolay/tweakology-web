@@ -97,7 +97,9 @@ class DragControls extends THREE.EventDispatcher {
     const intersects = this.raycaster.intersectObjects(this.objects, true);
 
     if (intersects.length > 0) {
-      this.selected = intersects[0].object.parent;
+      const { parent: meshGroup } = intersects[0].object;
+      const { parent: nodeGroup } = meshGroup;
+      this.selected = nodeGroup;
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
       }
@@ -148,7 +150,9 @@ class DragControls extends THREE.EventDispatcher {
     const intersects = this.raycaster.intersectObjects(this.objects);
 
     if (intersects.length > 0) {
-      this.selected = this.intersects[0].object.parent;
+      const { parent: meshGroup } = intersects[0].object;
+      const { parent: nodeGroup } = meshGroup;
+      this.selected = nodeGroup;
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
       }

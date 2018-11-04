@@ -148,7 +148,7 @@ const ConstraintItemSelector = (props) => {
               onSwitch={handleSwitchModifier}
               disabled={disabled}
             >
-              { modifiers.map(({ name, text }) => <div name={name}>{text}</div>)}
+              { modifiers.map(({ name, text }) => <div key={name} name={name}>{text}</div>)}
             </ToggleButtonMenu>
           )
           : null

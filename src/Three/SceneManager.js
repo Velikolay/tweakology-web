@@ -1,17 +1,10 @@
+/* eslint no-underscore-dangle: 0 */
 import _ from 'lodash';
 import * as THREE from 'three';
 
-const createUserData = (id, object) => ({
-  id,
-  drag: {
-    displacement: new THREE.Vector3(0, 0, 0),
-    prevPosition: new THREE.Vector3().copy(object.position),
-  },
-});
-
-const createMesh = (props) => {
+const _createMesh = (props) => {
   const {
-    id, width, height, imgUrl,
+    width, height, imgUrl,
   } = props;
   const img = new THREE.MeshBasicMaterial({
     map: new THREE.TextureLoader().load(imgUrl),
@@ -27,13 +20,12 @@ const createMesh = (props) => {
   const geometry = new THREE.PlaneGeometry(width, height);
   const material = img;
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.userData = createUserData(id, mesh);
   return mesh;
 };
 
-const createOverLayMesh = (props) => {
+const _createOverLayMesh = (props) => {
   const {
-    id, width, height,
+    width, height,
   } = props;
   const geometry = new THREE.PlaneGeometry(width, height);
   const material = new THREE.MeshBasicMaterial({
@@ -43,13 +35,12 @@ const createOverLayMesh = (props) => {
     transparent: true,
   });
   const overlayMesh = new THREE.Mesh(geometry, material);
-  overlayMesh.userData = createUserData(id, overlayMesh);
   return overlayMesh;
 };
 
-const createLineSegments = (props) => {
+const _createLineSegments = (props) => {
   const {
-    id, width, height, selected, onFocus,
+    width, height, selected, onFocus,
   } = props;
 
   let wireframeColor = 0x666666;
@@ -67,13 +58,55 @@ const createLineSegments = (props) => {
   });
 
   const lineSegments = new THREE.LineSegments(wGeometry, wMaterial);
-  lineSegments.userData = createUserData(id, lineSegments);
   return lineSegments;
 };
 
+const _updateView = (group, viewProps, nextViewProps) => {
+  const {
+    width, height, selected, onFocus, imgUrl, revision,
+  } = nextViewProps;
+
+  for (const el of group.children) {
+    if (viewProps.width) {
+      el.scale.x *= width / viewProps.width;
+    } else {
+      el.scale.x += width;
+    }
+
+    if (viewProps.height) {
+      el.scale.y *= height / viewProps.height;
+    } else {
+      el.scale.y += height;
+    }
+  }
+
+  if (imgUrl !== viewProps.imgUrl || revision !== viewProps.revision) {
+    // eslint-disable-next-line no-param-reassign
+    group.children[0].material.map = new THREE.TextureLoader().load(imgUrl);
+  }
+
+  let wireframeColor = 0x666666;
+  if (selected) {
+    wireframeColor = 0x2566c6;
+  } else if (onFocus) {
+    wireframeColor = 0xcccccc;
+  }
+  group.children[1].material.color.setHex(wireframeColor);
+
+  if (selected) {
+    if (group.children.length < 3) {
+      const overlayMesh = _createOverLayMesh(nextViewProps);
+      group.add(overlayMesh);
+    }
+  } else if (group.children.length === 3) {
+    group.remove(group.children[2]);
+  }
+};
+
 class SceneManager {
-  constructor(scene, planeOffset) {
+  constructor(scene, coordTranslator, planeOffset) {
     this.scene = scene;
+    this.coordTranslator = coordTranslator;
     this.planeOffset = planeOffset;
     this.viewsMap = {};
     this.constraintIndicatorsMap = {};
@@ -81,16 +114,27 @@ class SceneManager {
   }
 
   getSelectedMeshGroups() {
-    return Object.entries(this.viewsMap)
-      .filter(([id, { viewProps: { selected } }]) => selected)
-      .map(([id, { meshGroup }]) => meshGroup);
+    return Object.values(this.viewsMap)
+      .filter(({ userData: { selected } }) => selected)
+      .map(({ children: [meshGroup] }) => meshGroup);
+  }
+
+  flipTextureVisibility() {
+    this.showTexture = !this.showTexture;
+    Object.values(this.viewsMap).forEach((nodeGroup) => {
+      const [meshGroup] = nodeGroup.children;
+      const [textureMesh] = meshGroup.children;
+      // eslint-disable-next-line no-param-reassign
+      textureMesh.visible = this.showTexture;
+    });
   }
 
   updatePlaneOffset(planeOffset) {
     this.planeOffset = planeOffset;
-    Object.values(this.viewsMap).forEach(({ meshGroup: { children }, viewProps: { x, y, z } }) => (
-      children.forEach(el => el.position.set(x, y, z * this.planeOffset))
-    ));
+    Object.values(this.viewsMap).forEach((meshGroup) => {
+      const { userData: { z } } = meshGroup;
+      meshGroup.position.setZ(z * this.planeOffset);
+    });
     Object.values(this.constraintIndicatorsMap).forEach(
       ({ lineGroup: { children }, indicatorProps }) => (
         indicatorProps.lineGroup.forEach(({ z1, z2 }, idx) => {
@@ -103,32 +147,6 @@ class SceneManager {
     );
   }
 
-  flipTextureVisibility() {
-    this.showTexture = !this.showTexture;
-    Object.values(this.viewsMap).forEach(({ meshGroup: { children: [textureMesh] } }) => {
-      // eslint-disable-next-line no-param-reassign
-      textureMesh.visible = this.showTexture;
-    });
-  }
-
-  updateViews(views) {
-    for (const nextViewProps of views) {
-      if (nextViewProps.id in this.viewsMap) {
-        const { meshGroup, viewProps } = this.viewsMap[nextViewProps.id];
-        if (!_.isEqual(viewProps, nextViewProps)) {
-          this.updateView(meshGroup, viewProps, nextViewProps);
-          this.viewsMap[nextViewProps.id].viewProps = nextViewProps;
-        }
-      } else {
-        const meshGroup = this.createView(nextViewProps);
-        const { children: [textureMesh] } = meshGroup;
-        textureMesh.visible = this.showTexture;
-        this.viewsMap[nextViewProps.id] = { meshGroup, viewProps: nextViewProps };
-        this.scene.add(meshGroup);
-      }
-    }
-  }
-
   updateConstraintIndicators(indicators) {
     for (const id in this.constraintIndicatorsMap) {
       if (Object.prototype.hasOwnProperty.call(this.constraintIndicatorsMap, id)) {
@@ -139,7 +157,7 @@ class SceneManager {
     }
 
     for (const nextIndicatorProps of indicators) {
-      const lineGroup = this.createConstraintIndicator(nextIndicatorProps.lineGroup);
+      const lineGroup = this._createConstraintIndicator(nextIndicatorProps.lineGroup);
       this.constraintIndicatorsMap[nextIndicatorProps.id] = {
         lineGroup,
         indicatorProps: nextIndicatorProps,
@@ -148,78 +166,89 @@ class SceneManager {
     }
   }
 
-  createView(viewProps) {
-    const {
-      id, x, y, z, selected,
-    } = viewProps;
-    const mesh = createMesh(viewProps);
-    const lineSegments = createLineSegments(viewProps);
+  updateViews(treeNode) {
+    this._updateViews(treeNode, this.scene);
+  }
 
+  _updateViews(treeNode, parent3DObject) {
+    if (treeNode) {
+      const { children: subtrees, ...nextViewProps } = treeNode;
+      if (treeNode.id in this.viewsMap) {
+        const nodeGroup = this.viewsMap[treeNode.id];
+        const { userData: viewProps } = nodeGroup;
+        if (!_.isEqual(viewProps, nextViewProps)) {
+          this._updateViewNode(nodeGroup, viewProps, nextViewProps);
+          this._translate3DObject(nodeGroup);
+          this.viewsMap[nextViewProps.id].viewProps = nextViewProps;
+        }
+        subtrees.forEach(childTreeNode => this._updateViews(childTreeNode, nodeGroup));
+      } else {
+        const nodeGroup = this._createViewNode(nextViewProps);
+        parent3DObject.add(nodeGroup);
+        this._translate3DObject(nodeGroup);
+        this.viewsMap[nextViewProps.id] = nodeGroup;
+        subtrees.forEach(childTreeNode => this._updateViews(childTreeNode, nodeGroup));
+      }
+    }
+  }
+
+  _translate3DObject(obj) {
+    const {
+      x: translateX, y: translateY,
+    } = this.coordTranslator.calc3DCoord(obj);
+    obj.translateX(translateX);
+    obj.translateY(translateY);
+  }
+
+  _createViewNode(viewProps) {
+    const { x, y, z } = viewProps;
+    const nodeGroup = new THREE.Group();
+    nodeGroup.userData = viewProps;
+
+    const meshGroup = this._createView(viewProps);
+    nodeGroup.add(meshGroup);
+
+    nodeGroup.position.set(x, y, z * this.planeOffset);
+    return nodeGroup;
+  }
+
+  _createView(viewProps) {
+    const { selected } = viewProps;
     const meshGroup = new THREE.Group();
+
+    const mesh = _createMesh(viewProps);
+    mesh.visible = this.showTexture;
     meshGroup.add(mesh);
+
+    const lineSegments = _createLineSegments(viewProps);
     meshGroup.add(lineSegments);
 
     if (selected) {
-      const overlayMesh = createOverLayMesh(viewProps);
+      const overlayMesh = _createOverLayMesh(viewProps);
       meshGroup.add(overlayMesh);
     }
-    meshGroup.userData = createUserData(id, mesh);
-    meshGroup.position.set(x, y, z * this.planeOffset);
+
     return meshGroup;
   }
 
-  updateView(group, viewProps, nextViewProps) {
-    const {
-      x, y, z, width, height, selected, onFocus, imgUrl, revision,
-    } = nextViewProps;
-
-    group.position.set(x, y, z * this.planeOffset);
-    for (const el of group.children) {
-      if (viewProps.width) {
-        el.scale.x *= width / viewProps.width;
-      } else {
-        el.scale.x += width;
-      }
-
-      if (viewProps.height) {
-        el.scale.y *= height / viewProps.height;
-      } else {
-        el.scale.y += height;
-      }
-    }
-
-    if (imgUrl !== viewProps.imgUrl || revision !== viewProps.revision) {
-      // eslint-disable-next-line no-param-reassign
-      group.children[0].material.map = new THREE.TextureLoader().load(imgUrl);
-    }
-
-    let wireframeColor = 0x666666;
-    if (selected) {
-      wireframeColor = 0x2566c6;
-    } else if (onFocus) {
-      wireframeColor = 0xcccccc;
-    }
-    group.children[1].material.color.setHex(wireframeColor);
-
-    if (selected) {
-      if (group.children.length < 3) {
-        const overlayMesh = createOverLayMesh(nextViewProps);
-        group.add(overlayMesh);
-      }
-    } else if (group.children.length === 3) {
-      group.remove(group.children[2]);
-    }
+  _updateViewNode(nodeGroup, viewProps, nextViewProps) {
+    const { x, y, z } = nextViewProps;
+    nodeGroup.position.set(x, y, z * this.planeOffset);
+    const [meshGroup] = nodeGroup.children;
+    _updateView(meshGroup, viewProps, nextViewProps);
+    // eslint-disable-next-line no-param-reassign
+    nodeGroup.userData = nextViewProps;
   }
 
-  createConstraintIndicator(constraintIndicatorProps) {
+  _createConstraintIndicator(constraintIndicatorProps) {
     const lineGroup = new THREE.Group();
     for (const indicator of constraintIndicatorProps) {
-      lineGroup.add(this.createLine(indicator));
+      lineGroup.add(this._createLine(indicator));
     }
     return lineGroup;
   }
 
-  createLine(props) {
+  _createLine(props) {
     const {
       x1, y1, z1,
       x2, y2, z2,

@@ -1,15 +1,13 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
 import { withFormikContext } from '../FormikContext';
 
-class Persist extends Component {
-  static defaultProps = {
-    debounce: 300,
-    excludeSystemContext: true,
-  };
+const dispatchFormikBag = ({ formik }) => formik.onFormSelect(formik);
 
+class Persist extends Component {
   saveForm = debounce((name, data) => {
     if (this.props.excludeSystemContext) {
       const { systemContext, ...other } = data;
@@ -22,17 +20,20 @@ class Persist extends Component {
 
   componentDidMount() {
     this.setForm(this.props);
+    dispatchFormikBag(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.name !== this.props.name) {
+    const { name, formik } = this.props;
+    if (nextProps.name !== name) {
       this.setForm(nextProps);
-    } else if (!isEqual(nextProps.formik, this.props.formik)) {
+    } else if (!isEqual(nextProps.formik, formik)) {
       // console.log('Form saving..');
       this.saveForm(nextProps.name, nextProps.formik);
     } else {
       // console.log('Form wont save');
     }
+    dispatchFormikBag(nextProps);
   }
 
   setForm = (props) => {
@@ -71,7 +72,7 @@ class Persist extends Component {
       if (status) {
         formik.setStatus(status);
       }
-      console.log('Form Loaded');
+      // console.log('Form Loaded');
     }
   }
 
@@ -102,11 +103,23 @@ export const readPersistedConstraints = () => {
     }
   }
 
-  for (const viewId in constraints) {
-    constraints[viewId].sort((a, b) => parseInt(a.id.split(':')[1], 10) > parseInt(b.id.split(':')[1], 10));
-  }
+  Object.values(constraints).forEach(constraint => (
+    constraint.sort((a, b) => parseInt(a.id.split(':')[1], 10) > parseInt(b.id.split(':')[1], 10))
+  ));
 
   return constraints;
+};
+
+Persist.defaultProps = {
+  debounce: 300,
+  excludeSystemContext: true,
+};
+
+Persist.propTypes = {
+  name: PropTypes.string.isRequired,
+  formik: PropTypes.object.isRequired,
+  debounce: PropTypes.number,
+  excludeSystemContext: PropTypes.bool,
 };
 
 export default withFormikContext(Persist);

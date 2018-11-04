@@ -14,33 +14,37 @@ const isSelected = (node, activeNode) => {
   return selected;
 };
 
-const toThreeViews = ({ tree, activeNode, onFocusNode }) => {
+const toThreeViews = ({ tree, activeNode, onFocusNode }, depth = 0) => {
   const treeNode = tree;
   if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
-    return [];
+    return null;
   }
 
   const {
-    id, revision, children, threeD,
+    id, revision, children, properties, updatedProperties,
   } = treeNode;
-
-  const meshProps = [{
+  const { frame } = updatedProperties || properties;
+  const meshTree = {
     id,
     revision,
     imgUrl: `http://NIKOIVAN02M.local:8080/images?path=${treeNode.hierarchyMetadata}`,
     selected: isSelected(treeNode, activeNode),
     onFocus: onFocusNode !== null && onFocusNode.id === id,
-    ...threeD,
-  }];
+    ...frame,
+    z: depth,
+    children: [],
+  };
   if (children) {
-    for (const childNode of children) {
+    let depthCnt = depth;
+    children.forEach((childNode) => {
       if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
-        const childrenMeshProps = toThreeViews({ tree: childNode, activeNode, onFocusNode });
-        meshProps.push(...childrenMeshProps);
+        depthCnt += 1;
+        const childMeshTree = toThreeViews({ tree: childNode, activeNode, onFocusNode }, depthCnt);
+        meshTree.children.push(childMeshTree);
       }
-    }
+    });
   }
-  return meshProps;
+  return meshTree;
 };
 
 export default toThreeViews;

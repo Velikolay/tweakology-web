@@ -5,6 +5,7 @@ import { IconContext } from 'react-icons';
 import { FaClone } from 'react-icons/fa';
 import Slider from 'rc-slider';
 
+import CoordinateTranslator from './CoordinateTranslator';
 import SceneManager from './SceneManager';
 
 import 'rc-slider/assets/index.css';
@@ -66,21 +67,22 @@ class UIHierarchyScene extends Component {
     this.scene = scene;
     this.camera = camera;
     this.renderer = renderer;
+
+    this.coordTranslator = new CoordinateTranslator(scene);
+
     this.orbitControls = initOrbitControls(camera, this.renderer.domElement);
     this.dragControls = new DragControls(camera, this.renderer.domElement);
     this.dragControls.addEventListener('dragstart', this.dragStart);
     this.dragControls.addEventListener('dragend', this.dragEnd);
     this.dragControls.addEventListener('drag', (event) => {
-      const {
-        position,
-        userData: { id, drag: { displacement, prevPosition } },
-      } = event.object;
-      displacement.subVectors(position, prevPosition);
-      prevPosition.copy(position);
-      onDragHandler(id, displacement);
+      const { userData: { id }, position: coord3D } = event.object;
+      const v = this.coordTranslator.calcDeviceCoord(event.object);
+      const position = new THREE.Vector3();
+      position.addVectors(coord3D, v);
+      onDragHandler('drag', { id, position });
     });
 
-    this.sceneManager = new SceneManager(this.scene, DEFAULT_PLANE_OFFSET);
+    this.sceneManager = new SceneManager(this.scene, this.coordTranslator, DEFAULT_PLANE_OFFSET);
     this.sceneManager.updateViews(views);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
 
@@ -126,12 +128,16 @@ class UIHierarchyScene extends Component {
     if (this.orbitControls) {
       this.orbitControls.enabled = false;
     }
+    const { onDragHandler } = this.props;
+    onDragHandler('dragstart');
   }
 
   dragEnd() {
     if (this.orbitControls) {
       this.orbitControls.enabled = true;
     }
+    const { onDragHandler } = this.props;
+    onDragHandler('dragend');
   }
 
   start() {
@@ -196,7 +202,7 @@ UIHierarchyScene.propTypes = {
     imgUrl: PropTypes.string.isRequired,
   })).isRequired,
   constraintIndicators: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     lineGroup: PropTypes.arrayOf(PropTypes.shape({
       x1: PropTypes.number.isRequired,
       y1: PropTypes.number.isRequired,

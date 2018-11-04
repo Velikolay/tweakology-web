@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { withSystemContext } from '../System/SystemContext';
+import { withSystemContext } from '../Context/SystemContext';
 
 import UIButtonView from './UIButtonView';
 import UILabelView from './UILabelView';

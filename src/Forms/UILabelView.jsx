@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 
+import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
-import Persist from './Persistence/Presistence';
+
 import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
 import { LineBreakModeOptions, BaselineOptions } from '../Static/UILabel';
 import UILabelTransformer from '../Transformers/UILabel';
@@ -14,11 +14,8 @@ import TextAlignmentGroup from './Groups/TextAlignment';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
-const InnerUILabelViewForm = ({
-  id,
-  handleSubmit,
-}) => (
-  <form onSubmit={handleSubmit}>
+const InnerUILabelViewForm = () => (
+  <React.Fragment>
     <FrameGroup prefix="frame" />
     <hr />
     <InputField name="text" type="text" title="Text" />
@@ -34,9 +31,7 @@ const InnerUILabelViewForm = ({
     <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
     <hr />
     <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
-
-    <Persist name={id} />
-  </form>
+  </React.Fragment>
 );
 
 const EnhancedUILabelViewForm = withFormik({
@@ -54,13 +49,10 @@ const EnhancedUILabelViewForm = withFormik({
     }, 1000);
   },
   displayName: 'UILabelViewForm',
-})(withFormikContextProvider(InnerUILabelViewForm));
+})(withFormikContextProvider(withFormikShell(InnerUILabelViewForm)));
 
 const UILabelViewForm = props => <EnhancedUILabelViewForm {...props} />;
 
-InnerUILabelViewForm.propTypes = {
-  id: PropTypes.string.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-};
+InnerUILabelViewForm.propTypes = {};
 
 export default UILabelViewForm;

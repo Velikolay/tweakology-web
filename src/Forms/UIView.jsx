@@ -1,30 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 // import Yup from 'yup';
 
+import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
-import Persist from './Persistence/Presistence';
+
 import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
 import UIViewTransformer from '../Transformers/UIView';
 import SelectField from './Groups/SelectField';
 import FrameGroup from './Groups/Frame';
 import ColorGroup from './Groups/Color';
 
-const InnerUIViewForm = ({
-  id,
-  handleSubmit,
-}) => (
-  <form onSubmit={handleSubmit}>
+const InnerUIViewForm = () => (
+  <React.Fragment>
     <FrameGroup prefix="frame" />
     <hr />
     <SelectField name="contentMode" options={ContentModeOptions} title="Content Mode" />
     <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
     <hr />
     <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
-
-    <Persist name={id} />
-  </form>
+  </React.Fragment>
 );
 
 const EnhancedUIViewForm = withFormik({
@@ -42,13 +37,10 @@ const EnhancedUIViewForm = withFormik({
     }, 1000);
   },
   displayName: 'UIViewForm',
-})(withFormikContextProvider(InnerUIViewForm));
+})(withFormikContextProvider(withFormikShell(InnerUIViewForm)));
 
 const UIViewForm = props => <EnhancedUIViewForm {...props} />;
 
-InnerUIViewForm.propTypes = {
-  id: PropTypes.string.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-};
+InnerUIViewForm.propTypes = {};
 
 export default UIViewForm;

@@ -146,7 +146,7 @@ const Constraint = (props) => {
 
 Constraint.propTypes = {
   formik: PropTypes.object.isRequired,
-  itemOptions: PropTypes.object.isRequired,
+  itemOptions: PropTypes.array.isRequired,
 };
 
 export default withFormikContext(Constraint);

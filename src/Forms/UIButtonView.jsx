@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 
+import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
-import Persist from './Persistence/Presistence';
+
 import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
 import UIButtonTransformer from '../Transformers/UIButton';
 import FrameGroup from './Groups/Frame';
@@ -12,11 +12,8 @@ import SelectField from './Groups/SelectField';
 import FontGroup from './Groups/Font';
 import ColorGroup from './Groups/Color';
 
-const InnerUIButtonViewForm = ({
-  id,
-  handleSubmit,
-}) => (
-  <form onSubmit={handleSubmit}>
+const InnerUIButtonViewForm = () => (
+  <React.Fragment>
     <FrameGroup prefix="frame" />
     <hr />
     <SelectField name="contentMode" options={ContentModeOptions} title="Content Mode" />
@@ -27,9 +24,7 @@ const InnerUIButtonViewForm = ({
     <InputField name="title.text" type="text" title="Title" />
     <FontGroup prefix="title.font" />
     <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
-
-    <Persist name={id} />
-  </form>
+  </React.Fragment>
 );
 
 const EnhancedUIButtonViewForm = withFormik({
@@ -47,13 +42,10 @@ const EnhancedUIButtonViewForm = withFormik({
     }, 1000);
   },
   displayName: 'UIButtonViewForm',
-})(withFormikContextProvider(InnerUIButtonViewForm));
+})(withFormikContextProvider(withFormikShell(InnerUIButtonViewForm)));
 
 const UIButtonViewForm = props => <EnhancedUIButtonViewForm {...props} />;
 
-InnerUIButtonViewForm.propTypes = {
-  id: PropTypes.string.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-};
+InnerUIButtonViewForm.propTypes = {};
 
 export default UIButtonViewForm;

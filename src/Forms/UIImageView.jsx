@@ -1,21 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 
+import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
+
 import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
 import UIImageViewTransformer from '../Transformers/UIImageView';
-import Persist from './Persistence/Presistence';
 import FrameGroup from './Groups/Frame';
 import InputField from './Groups/InputField';
 import SelectField from './Groups/SelectField';
 import ColorGroup from './Groups/Color';
 
-const InnerUIImageViewForm = ({
-  id,
-  handleSubmit,
-}) => (
-  <form onSubmit={handleSubmit}>
+const InnerUIImageViewForm = () => (
+  <React.Fragment>
     <FrameGroup prefix="frame" />
     <hr />
     <InputField name="image.src" type="text" title="Image" placeholder="Image name or url" />
@@ -25,9 +22,7 @@ const InnerUIImageViewForm = ({
     <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
     <hr />
     <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
-
-    <Persist name={id} />
-  </form>
+  </React.Fragment>
 );
 
 const EnhancedUIImageViewForm = withFormik({
@@ -45,13 +40,10 @@ const EnhancedUIImageViewForm = withFormik({
     }, 1000);
   },
   displayName: 'UIImageViewForm',
-})(withFormikContextProvider(InnerUIImageViewForm));
+})(withFormikContextProvider(withFormikShell(InnerUIImageViewForm)));
 
 const UIImageViewForm = props => <EnhancedUIImageViewForm {...props} />;
 
-InnerUIImageViewForm.propTypes = {
-  id: PropTypes.string.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-};
+InnerUIImageViewForm.propTypes = {};
 
 export default UIImageViewForm;
