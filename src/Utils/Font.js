@@ -1,4 +1,4 @@
-const restoreFontName = (fontFamily, fontStyle, styles) => {
+const toFontName = (fontFamily, fontStyle, styles) => {
   if (fontFamily in styles) {
     const fontNames = styles[fontFamily].filter(fontName => fontName.includes(`-${fontStyle.replace(/\s/g, '')}`));
     if (fontNames.length > 0) {
@@ -26,25 +26,35 @@ const mergeEnchancers = (styles) => {
   return enchancedStyles;
 };
 
-const transformFontName = (fontName) => {
+const toFontStyles = (fontName) => {
   const familyStylePair = fontName.split('-');
   if (familyStylePair.length === 2) {
-    const styles = mergeEnchancers(familyStylePair[1].split(/(?=[A-Z])/).filter(style => style.length > 1));
+    const styles = mergeEnchancers(
+      familyStylePair[1].split(/(?=[A-Z])/).filter(style => style.length > 1),
+    );
     return styles.join(' ');
   }
   return 'Regular';
 };
 
-const transformFontFamily = (systemFont, fontFamily) => (systemFont === fontFamily ? 'System' : fontFamily);
-
 const enrichFontsData = (fontsData) => {
-  const styles = Object.keys(fontsData.names).reduce((map, obj) => {
-    map[obj] = fontsData.names[obj].map(transformFontName); // eslint-disable-line no-param-reassign
+  const { system, preffered, custom } = fontsData;
+  const families = [];
+  families.push(...Object.keys(system).sort((a, b) => a.localeCompare(b)));
+  families.push(...Object.keys(preffered).sort((a, b) => a.localeCompare(b)));
+  families.push(...Object.keys(custom).sort((a, b) => a.localeCompare(b)));
+  const prefferedFonts = Object.keys(preffered).reduce((map, key) => {
+    map[key] = Object.keys(preffered[key]); // eslint-disable-line no-param-reassign
     return map;
   }, {});
-  return Object.assign(fontsData, { styles });
+  const all = {
+    ...system,
+    ...prefferedFonts,
+    ...custom,
+  };
+  return Object.assign(fontsData, { families, all });
 };
 
 export {
-  transformFontName, transformFontFamily, restoreFontName, enrichFontsData,
+  toFontStyles, toFontName, enrichFontsData,
 };

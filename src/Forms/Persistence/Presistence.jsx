@@ -81,8 +81,8 @@ class Persist extends Component {
   }
 }
 
-export const readPersistedValues = (item) => {
-  const maybeState = window.localStorage.getItem(item);
+export const readPersistedValues = (id) => {
+  const maybeState = window.localStorage.getItem(id);
   return maybeState ? JSON.parse(maybeState).values : null;
 };
 

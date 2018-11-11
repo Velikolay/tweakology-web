@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Field from './Inputs/Field';
 import { withFormikContext } from '../FormikContext';
 import SystemContext from '../../Context/SystemContext';
+import { toFontStyles } from '../../Utils/Font';
 import { nameWithPrefix, titleForField, formikValueWithPrefix } from './Utils';
 
 import './Groups.css';
@@ -13,7 +14,7 @@ const FontGroup = (props) => {
   } = props;
 
   const familyNameId = nameWithPrefix(props, 'familyName');
-  const fontStyleId = nameWithPrefix(props, 'fontStyle');
+  const fontNameId = nameWithPrefix(props, 'fontName');
   const pointSizeId = nameWithPrefix(props, 'pointSize');
   return (
     <SystemContext.Consumer>
@@ -38,18 +39,18 @@ const FontGroup = (props) => {
             </Field>
           </div>
           <div className="form-row">
-            <label className="input-title" htmlFor={fontStyleId}>
+            <label className="input-title" htmlFor={fontNameId}>
               {titleForField(props, 'style', 'Font Style')}
             </label>
             <Field
               component="select"
-              name={fontStyleId}
+              name={fontNameId}
               className="full-width-input"
             >
               {
-                systemContext.fonts.styles[formikValueWithPrefix(props, 'familyName')].map(fontStyle => (
-                  <option key={fontStyle}>
-                    {fontStyle}
+                systemContext.fonts.all[formikValueWithPrefix(props, 'familyName')].map(fontName => (
+                  <option key={fontName} value={fontName}>
+                    {toFontStyles(fontName)}
                   </option>
                 ))
               }

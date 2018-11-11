@@ -8,7 +8,6 @@ import SystemContext from './Context/SystemContext';
 import Form from './Forms/Form';
 
 import { submitChanges } from './Forms/Submit';
-
 import { enrichFontsData } from './Utils/Font';
 import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
 import toThreeViews from './Three/View';
@@ -21,6 +20,7 @@ import TreeToolbar from './TreeToolbar';
 import NewViewMenu from './NewViewMenu';
 
 import './App.css';
+import { readPersistedValues } from './Forms/Persistence/Presistence';
 
 require('react-ui-tree/dist/react-ui-tree.css');
 
@@ -228,6 +228,7 @@ class App extends Component {
       revision,
       hierarchyMetadata,
       properties,
+      updatedProperties: readPersistedValues(id),
     };
 
     treeNode.children = [];

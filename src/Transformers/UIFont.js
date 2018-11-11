@@ -1,21 +1,32 @@
-import { transformFontFamily, transformFontName, restoreFontName } from '../Utils/Font';
+import { toFontStyles } from '../Utils/Font';
 
 const FontTransformer = {
+  fromPayload: (font, systemContext) => {
+    const { fontName, pointSize } = font;
+    const { system, preffered } = systemContext.fonts;
 
-  fromPayload: ({
-    familyName, fontName, pointSize,
-  }, systemContext) => ({
-    familyName: transformFontFamily(systemContext.fonts.systemFont, familyName),
-    fontStyle: transformFontName(fontName),
-    pointSize,
-  }),
+    let res = font;
+    Object.entries(system).forEach(([sysFamilyName, sysFontNames]) => {
+      if (sysFontNames.includes(fontName)) {
+        res = { familyName: sysFamilyName, fontName, pointSize };
+      }
+    });
+    Object.entries(preffered).forEach(([presetGroup, presetOptions]) => {
+      Object.entries(presetOptions).forEach(([presetName, { fontName: fn, pointSize: ps }]) => {
+        if (fontName === fn && pointSize === ps) {
+          res = { familyName: presetGroup, fontName: presetName, pointSize };
+        }
+      });
+    });
+    return res;
+  },
 
   toPayload: ({
-    familyName, fontStyle, pointSize,
-  }, systemContext) => ({
-    fontName: restoreFontName(familyName, fontStyle, systemContext.fonts.names),
+    familyName, fontName, pointSize,
+  }) => ({
     familyName,
-    fontStyle,
+    fontName,
+    fontStyle: toFontStyles(fontName),
     pointSize,
   }),
 };
