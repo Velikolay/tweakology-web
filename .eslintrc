@@ -1,7 +1,16 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+  "extends": [
+    "plugin:prettier/recommended",
+    "plugin:flowtype/recommended",
+    "airbnb"
+  ],
+  "plugins": [
+    "prettier",
+    "flowtype"
+  ],
   "rules": {
+    "prettier/prettier": "error",
     "quote-props": [1, "consistent-as-needed"],
     "no-cond-assign": [2, "except-parens"],
     "no-unused-vars": [1, {"vars": "local", "args": "none"}],
