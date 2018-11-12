@@ -33,23 +33,79 @@ class DragControls extends THREE.EventDispatcher {
   }
 
   activate() {
-    this.domElement.addEventListener('mousemove', this.onDocumentMouseMove, false);
-    this.domElement.addEventListener('mousedown', this.onDocumentMouseDown, false);
-    this.domElement.addEventListener('mouseup', this.onDocumentMouseCancel, false);
-    this.domElement.addEventListener('mouseleave', this.onDocumentMouseCancel, false);
-    this.domElement.addEventListener('touchmove', this.onDocumentTouchMove, false);
-    this.domElement.addEventListener('touchstart', this.onDocumentTouchStart, false);
-    this.domElement.addEventListener('touchend', this.onDocumentTouchEnd, false);
+    this.domElement.addEventListener(
+      'mousemove',
+      this.onDocumentMouseMove,
+      false,
+    );
+    this.domElement.addEventListener(
+      'mousedown',
+      this.onDocumentMouseDown,
+      false,
+    );
+    this.domElement.addEventListener(
+      'mouseup',
+      this.onDocumentMouseCancel,
+      false,
+    );
+    this.domElement.addEventListener(
+      'mouseleave',
+      this.onDocumentMouseCancel,
+      false,
+    );
+    this.domElement.addEventListener(
+      'touchmove',
+      this.onDocumentTouchMove,
+      false,
+    );
+    this.domElement.addEventListener(
+      'touchstart',
+      this.onDocumentTouchStart,
+      false,
+    );
+    this.domElement.addEventListener(
+      'touchend',
+      this.onDocumentTouchEnd,
+      false,
+    );
   }
 
   deactivate() {
-    this.domElement.removeEventListener('mousemove', this.onDocumentMouseMove, false);
-    this.domElement.removeEventListener('mousedown', this.onDocumentMouseDown, false);
-    this.domElement.removeEventListener('mouseup', this.onDocumentMouseCancel, false);
-    this.domElement.removeEventListener('mouseleave', this.onDocumentMouseCancel, false);
-    this.domElement.removeEventListener('touchmove', this.onDocumentTouchMove, false);
-    this.domElement.removeEventListener('touchstart', this.onDocumentTouchStart, false);
-    this.domElement.removeEventListener('touchend', this.onDocumentTouchEnd, false);
+    this.domElement.removeEventListener(
+      'mousemove',
+      this.onDocumentMouseMove,
+      false,
+    );
+    this.domElement.removeEventListener(
+      'mousedown',
+      this.onDocumentMouseDown,
+      false,
+    );
+    this.domElement.removeEventListener(
+      'mouseup',
+      this.onDocumentMouseCancel,
+      false,
+    );
+    this.domElement.removeEventListener(
+      'mouseleave',
+      this.onDocumentMouseCancel,
+      false,
+    );
+    this.domElement.removeEventListener(
+      'touchmove',
+      this.onDocumentTouchMove,
+      false,
+    );
+    this.domElement.removeEventListener(
+      'touchstart',
+      this.onDocumentTouchStart,
+      false,
+    );
+    this.domElement.removeEventListener(
+      'touchend',
+      this.onDocumentTouchEnd,
+      false,
+    );
   }
 
   dispose() {

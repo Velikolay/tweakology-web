@@ -1,7 +1,10 @@
 const isSelected = (node, activeNode) => {
   let selected = activeNode && activeNode.id === node.id;
   if (!selected && activeNode.type === 'NSLayoutConstraint') {
-    const constraint = 'updatedProperties' in activeNode ? activeNode.updatedProperties.constraint : activeNode.properties.constraint;
+    const constraint =
+      'updatedProperties' in activeNode
+        ? activeNode.updatedProperties.constraint
+        : activeNode.properties.constraint;
 
     if (constraint.first && constraint.first.item.value === node.id) {
       selected = true;
@@ -20,14 +23,14 @@ const toThreeViews = ({ tree, activeNode, onFocusNode }, depth = 0) => {
     return null;
   }
 
-  const {
-    id, revision, children, properties, updatedProperties,
-  } = treeNode;
+  const { id, revision, children, properties, updatedProperties } = treeNode;
   const { frame } = updatedProperties || properties;
   const meshTree = {
     id,
     revision,
-    imgUrl: `http://NIKOIVAN02M.local:8080/images?path=${treeNode.hierarchyMetadata}`,
+    imgUrl: `http://NIKOIVAN02M.local:8080/images?path=${
+      treeNode.hierarchyMetadata
+    }`,
     selected: isSelected(treeNode, activeNode),
     onFocus: onFocusNode !== null && onFocusNode.id === id,
     ...frame,
@@ -36,10 +39,13 @@ const toThreeViews = ({ tree, activeNode, onFocusNode }, depth = 0) => {
   };
   if (children) {
     let depthCnt = depth;
-    children.forEach((childNode) => {
+    children.forEach(childNode => {
       if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
         depthCnt += 1;
-        const childMeshTree = toThreeViews({ tree: childNode, activeNode, onFocusNode }, depthCnt);
+        const childMeshTree = toThreeViews(
+          { tree: childNode, activeNode, onFocusNode },
+          depthCnt,
+        );
         meshTree.children.push(childMeshTree);
       }
     });

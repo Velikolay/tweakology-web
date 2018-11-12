@@ -12,18 +12,18 @@ const FontTransformer = {
       }
     });
     Object.entries(preffered).forEach(([presetGroup, presetOptions]) => {
-      Object.entries(presetOptions).forEach(([presetName, { fontName: fn, pointSize: ps }]) => {
-        if (fontName === fn && pointSize === ps) {
-          res = { familyName: presetGroup, fontName: presetName, pointSize };
-        }
-      });
+      Object.entries(presetOptions).forEach(
+        ([presetName, { fontName: fn, pointSize: ps }]) => {
+          if (fontName === fn && pointSize === ps) {
+            res = { familyName: presetGroup, fontName: presetName, pointSize };
+          }
+        },
+      );
     });
     return res;
   },
 
-  toPayload: ({
-    familyName, fontName, pointSize,
-  }) => ({
+  toPayload: ({ familyName, fontName, pointSize }) => ({
     familyName,
     fontName,
     fontStyle: toFontStyles(fontName),

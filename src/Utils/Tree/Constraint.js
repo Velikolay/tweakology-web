@@ -1,15 +1,19 @@
 import { attributeNames, relationSymbols } from '../../Static/Constraints';
-import { readPersistedValues, readPersistedConstraints } from '../../Forms/Persistence/Presistence';
+import {
+  readPersistedValues,
+  readPersistedConstraints,
+} from '../../Forms/Persistence/Presistence';
 import ConstraintTransformer from '../../Transformers/Constraint';
 
-const numToFixed = (num) => {
+const numToFixed = num => {
   if (num % 1 !== 0) {
     return Number.parseFloat(num).toFixed(1);
   }
   return num;
 };
 
-const isLeaf = viewNode => viewNode.type === 'UILabel' || viewNode.type === 'UIButton';
+const isLeaf = viewNode =>
+  viewNode.type === 'UILabel' || viewNode.type === 'UIButton';
 
 const itemTypeById = (itemId, superview) => {
   if (superview) {
@@ -27,26 +31,33 @@ const itemTypeById = (itemId, superview) => {
 };
 
 const constraintNodeName = (constraint, superview) => {
-  const isFirstInit = constraint.first
-                    && constraint.first.item.value
-                    && constraint.first.attribute.value;
+  const isFirstInit =
+    constraint.first &&
+    constraint.first.item.value &&
+    constraint.first.attribute.value;
   if (isFirstInit) {
     const relation = relationSymbols[constraint.relation];
-    let name = `${attributeNames[constraint.first.attribute.value]} ${relation} `;
+    let name = `${
+      attributeNames[constraint.first.attribute.value]
+    } ${relation} `;
     if (constraint.first.item.value !== superview.id) {
       name = `${itemTypeById(constraint.first.item.value, superview)}.${name}`;
     }
 
-    const isSecondInit = constraint.second
-                      && constraint.second.item.value
-                      && constraint.second.attribute.value;
+    const isSecondInit =
+      constraint.second &&
+      constraint.second.item.value &&
+      constraint.second.attribute.value;
     if (isSecondInit) {
       if (constraint.multiplier !== 1) {
         name += `${numToFixed(constraint.multiplier)} * `;
       }
       let secondItem = `${attributeNames[constraint.second.attribute.value]}`;
       if (constraint.second.item.value !== superview.id) {
-        secondItem = `${itemTypeById(constraint.second.item.value, superview)}.${secondItem}`;
+        secondItem = `${itemTypeById(
+          constraint.second.item.value,
+          superview,
+        )}.${secondItem}`;
       }
       name += secondItem;
     }
@@ -68,7 +79,7 @@ const constraintNodeName = (constraint, superview) => {
   return 'New Constraint';
 };
 
-const constraintItemOptions = (viewNode) => {
+const constraintItemOptions = viewNode => {
   const itemOptions = [];
   if (isLeaf(viewNode)) {
     itemOptions.push({ label: viewNode.type, value: viewNode.id });
@@ -76,7 +87,10 @@ const constraintItemOptions = (viewNode) => {
     itemOptions.push({ label: 'Superview', value: viewNode.id });
     for (const childViewNode of viewNode.children) {
       if (childViewNode.type) {
-        itemOptions.push({ label: childViewNode.type, value: childViewNode.id });
+        itemOptions.push({
+          label: childViewNode.type,
+          value: childViewNode.id,
+        });
       }
     }
   }
@@ -113,12 +127,10 @@ const newConstraint = () => ({
   priority: 1000,
 });
 
-const updatedConstraintNodeName = node => constraintNodeName(
-  node.updatedProperties.constraint,
-  node.superview,
-);
+const updatedConstraintNodeName = node =>
+  constraintNodeName(node.updatedProperties.constraint, node.superview);
 
-const addNewConstraintToTreeNode = (node) => {
+const addNewConstraintToTreeNode = node => {
   const constraintsListNode = node.children[node.children.length - 1];
   if (constraintsListNode.module === 'Constraints') {
     const idx = constraintsListNode.children.length;
@@ -145,7 +157,9 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
   const constraintsByView = readPersistedConstraints();
   if (viewNode.id in constraintsByView) {
     const localOnly = constraintsByView[viewNode.id]
-      .filter(c => c.values.meta.added && parseInt(c.id.split(':')[1], 10) > lastIdx)
+      .filter(
+        c => c.values.meta.added && parseInt(c.id.split(':')[1], 10) > lastIdx,
+      )
       .map(c => c.values);
     constraintNodes.push(...localOnly);
   }
@@ -176,4 +190,8 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
   };
 };
 
-export { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName };
+export {
+  transformConstraintPayloadToTree,
+  addNewConstraintToTreeNode,
+  updatedConstraintNodeName,
+};

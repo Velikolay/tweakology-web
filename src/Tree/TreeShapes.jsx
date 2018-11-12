@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const lazyPropType = f => ((...args) => f().apply(this, args));
+const lazyPropType = f => (...args) => f().apply(this, args);
 
 let TreeConstraintParentNodeShape;
 let TreeConstraintNodeShape;
@@ -27,16 +27,19 @@ const TreeViewNodeShape = PropTypes.shape({
   collapsed: PropTypes.bool,
   leaf: PropTypes.bool,
   superview: lazyPropType(() => TreeViewNodeShape),
-  children: PropTypes.arrayOf(lazyPropType(() => PropTypes.oneOfType([
-    TreeViewNodeShape, TreeConstraintParentNodeShape,
-  ]))),
+  children: PropTypes.arrayOf(
+    lazyPropType(() =>
+      PropTypes.oneOfType([TreeViewNodeShape, TreeConstraintParentNodeShape]),
+    ),
+  ),
 });
 
 TreeConstraintParentNodeShape = PropTypes.shape({
   module: PropTypes.string.isRequired,
   collapsed: PropTypes.bool.isRequired,
   superview: lazyPropType(() => TreeViewNodeShape).isRequired,
-  children: PropTypes.arrayOf(lazyPropType(() => TreeConstraintNodeShape)).isRequired,
+  children: PropTypes.arrayOf(lazyPropType(() => TreeConstraintNodeShape))
+    .isRequired,
 });
 
 TreeConstraintNodeShape = PropTypes.shape({

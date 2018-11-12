@@ -4,7 +4,10 @@ import { withFormik } from 'formik';
 import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
 
-import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
+import {
+  ContentModeOptions,
+  SemanticContentAttributeOptions,
+} from '../Static/UIView';
 import UIButtonTransformer from '../Transformers/UIButton';
 import FrameGroup from './Groups/Frame';
 import InputField from './Groups/InputField';
@@ -16,20 +19,35 @@ const InnerUIButtonViewForm = () => (
   <React.Fragment>
     <FrameGroup prefix="frame" />
     <hr />
-    <SelectField name="contentMode" options={ContentModeOptions} title="Content Mode" />
-    <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
+    <SelectField
+      name="contentMode"
+      options={ContentModeOptions}
+      title="Content Mode"
+    />
+    <SelectField
+      name="semanticContentAttribute"
+      options={SemanticContentAttributeOptions}
+      title="Semantic"
+    />
     <hr />
-    <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
+    <ColorGroup
+      prefix="backgroundColor"
+      titles={{ alpha: 'Alpha', color: 'Background' }}
+    />
     <hr />
     <InputField name="title.text" type="text" title="Title" />
     <FontGroup prefix="title.font" />
-    <ColorGroup prefix="title.textColor" titles={{ alpha: 'Opacity', color: 'Text Color' }} />
+    <ColorGroup
+      prefix="title.textColor"
+      titles={{ alpha: 'Opacity', color: 'Text Color' }}
+    />
   </React.Fragment>
 );
 
 const EnhancedUIButtonViewForm = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => UIButtonTransformer.fromPayload(props.formData, props.systemContext),
+  mapPropsToValues: props =>
+    UIButtonTransformer.fromPayload(props.formData, props.systemContext),
   // validationSchema: Yup.object().shape({
   //   email: Yup.string()
   //     .email('Invalid email address')

@@ -9,6 +9,7 @@ const TRANSFORMERS = {
   NSLayoutConstraint: ConstraintTransformer,
 };
 
-const getTransformer = name => (name in TRANSFORMERS ? TRANSFORMERS[name] : IdentityTransformer);
+const getTransformer = name =>
+  name in TRANSFORMERS ? TRANSFORMERS[name] : IdentityTransformer;
 
 export default getTransformer;

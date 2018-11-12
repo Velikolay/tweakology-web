@@ -12,7 +12,9 @@ const toItem = (payloadItem, placeholder) => {
     },
   };
   if (attrVal) {
-    const [relativeToMargin, respectLanguageDirection] = attributeToModifiers[attrVal];
+    const [relativeToMargin, respectLanguageDirection] = attributeToModifiers[
+      attrVal
+    ];
     item.attribute.relativeToMargin = relativeToMargin;
     item.attribute.respectLanguageDirection = respectLanguageDirection;
   }
@@ -20,9 +22,15 @@ const toItem = (payloadItem, placeholder) => {
 };
 
 const ConstraintTransformer = {
-
   fromPayload: ({
-    first, second, relation, multiplier, constant, priority, isActive, meta,
+    first,
+    second,
+    relation,
+    multiplier,
+    constant,
+    priority,
+    isActive,
+    meta,
   }) => {
     const formikProps = {
       meta: {
@@ -54,7 +62,14 @@ const ConstraintTransformer = {
   },
 
   toPayload: ({
-    first, second, relation, multiplier, constant, priority, isActive, meta,
+    first,
+    second,
+    relation,
+    multiplier,
+    constant,
+    priority,
+    isActive,
+    meta,
   }) => {
     const payload = {
       meta,

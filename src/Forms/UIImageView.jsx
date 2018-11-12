@@ -4,7 +4,10 @@ import { withFormik } from 'formik';
 import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
 
-import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
+import {
+  ContentModeOptions,
+  SemanticContentAttributeOptions,
+} from '../Static/UIView';
 import UIImageViewTransformer from '../Transformers/UIImageView';
 import FrameGroup from './Groups/Frame';
 import InputField from './Groups/InputField';
@@ -15,13 +18,34 @@ const InnerUIImageViewForm = () => (
   <React.Fragment>
     <FrameGroup prefix="frame" />
     <hr />
-    <InputField name="image.src" type="text" title="Image" placeholder="Image name or url" />
-    <InputField name="highlightedImage.src" type="text" title="Highlighted" placeholder="Image name or url" />
+    <InputField
+      name="image.src"
+      type="text"
+      title="Image"
+      placeholder="Image name or url"
+    />
+    <InputField
+      name="highlightedImage.src"
+      type="text"
+      title="Highlighted"
+      placeholder="Image name or url"
+    />
     <hr />
-    <SelectField name="contentMode" options={ContentModeOptions} title="Content Mode" />
-    <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
+    <SelectField
+      name="contentMode"
+      options={ContentModeOptions}
+      title="Content Mode"
+    />
+    <SelectField
+      name="semanticContentAttribute"
+      options={SemanticContentAttributeOptions}
+      title="Semantic"
+    />
     <hr />
-    <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
+    <ColorGroup
+      prefix="backgroundColor"
+      titles={{ alpha: 'Alpha', color: 'Background' }}
+    />
   </React.Fragment>
 );
 

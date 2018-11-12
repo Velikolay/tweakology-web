@@ -7,9 +7,7 @@ import './Groups.css';
 const InputField = ({ title, ...rest }) => (
   <div className="form-group">
     <div className="form-row">
-      <label className="input-title">
-        {title}
-      </label>
+      <label className="input-title">{title}</label>
       <Field {...rest} className="full-width-input" />
     </div>
   </div>

@@ -2,10 +2,8 @@
 import _ from 'lodash';
 import * as THREE from 'three';
 
-const _createMesh = (props) => {
-  const {
-    width, height, imgUrl,
-  } = props;
+const _createMesh = props => {
+  const { width, height, imgUrl } = props;
   const img = new THREE.MeshBasicMaterial({
     map: new THREE.TextureLoader().load(imgUrl),
     side: THREE.DoubleSide,
@@ -23,10 +21,8 @@ const _createMesh = (props) => {
   return mesh;
 };
 
-const _createOverLayMesh = (props) => {
-  const {
-    width, height,
-  } = props;
+const _createOverLayMesh = props => {
+  const { width, height } = props;
   const geometry = new THREE.PlaneGeometry(width, height);
   const material = new THREE.MeshBasicMaterial({
     color: 0x00bfff,
@@ -38,10 +34,8 @@ const _createOverLayMesh = (props) => {
   return overlayMesh;
 };
 
-const _createLineSegments = (props) => {
-  const {
-    width, height, selected, onFocus,
-  } = props;
+const _createLineSegments = props => {
+  const { width, height, selected, onFocus } = props;
 
   let wireframeColor = 0x666666;
   if (selected) {
@@ -62,9 +56,7 @@ const _createLineSegments = (props) => {
 };
 
 const _updateView = (group, viewProps, nextViewProps) => {
-  const {
-    width, height, selected, onFocus, imgUrl, revision,
-  } = nextViewProps;
+  const { width, height, selected, onFocus, imgUrl, revision } = nextViewProps;
 
   for (const el of group.children) {
     if (viewProps.width) {
@@ -121,7 +113,7 @@ class SceneManager {
 
   flipTextureVisibility() {
     this.showTexture = !this.showTexture;
-    Object.values(this.viewsMap).forEach((nodeGroup) => {
+    Object.values(this.viewsMap).forEach(nodeGroup => {
       const [meshGroup] = nodeGroup.children;
       const [textureMesh] = meshGroup.children;
       // eslint-disable-next-line no-param-reassign
@@ -131,25 +123,28 @@ class SceneManager {
 
   updatePlaneOffset(planeOffset) {
     this.planeOffset = planeOffset;
-    Object.values(this.viewsMap).forEach((meshGroup) => {
-      const { userData: { z } } = meshGroup;
+    Object.values(this.viewsMap).forEach(meshGroup => {
+      const {
+        userData: { z },
+      } = meshGroup;
       meshGroup.position.setZ(z * this.planeOffset);
     });
     Object.values(this.constraintIndicatorsMap).forEach(
-      ({ lineGroup: { children }, indicatorProps }) => (
+      ({ lineGroup: { children }, indicatorProps }) =>
         indicatorProps.lineGroup.forEach(({ z1, z2 }, idx) => {
           const line = children[idx];
           line.geometry.vertices[0].z = z1 * this.planeOffset + 1;
           line.geometry.vertices[1].z = z2 * this.planeOffset + 1;
           line.geometry.verticesNeedUpdate = true;
-        })
-      ),
+        }),
     );
   }
 
   updateConstraintIndicators(indicators) {
     for (const id in this.constraintIndicatorsMap) {
-      if (Object.prototype.hasOwnProperty.call(this.constraintIndicatorsMap, id)) {
+      if (
+        Object.prototype.hasOwnProperty.call(this.constraintIndicatorsMap, id)
+      ) {
         const { lineGroup } = this.constraintIndicatorsMap[id];
         this.scene.remove(lineGroup);
         delete this.constraintIndicatorsMap[id];
@@ -157,7 +152,9 @@ class SceneManager {
     }
 
     for (const nextIndicatorProps of indicators) {
-      const lineGroup = this._createConstraintIndicator(nextIndicatorProps.lineGroup);
+      const lineGroup = this._createConstraintIndicator(
+        nextIndicatorProps.lineGroup,
+      );
       this.constraintIndicatorsMap[nextIndicatorProps.id] = {
         lineGroup,
         indicatorProps: nextIndicatorProps,
@@ -181,21 +178,25 @@ class SceneManager {
           this._translate3DObject(nodeGroup);
           this.viewsMap[nextViewProps.id].viewProps = nextViewProps;
         }
-        subtrees.forEach(childTreeNode => this._updateViews(childTreeNode, nodeGroup));
+        subtrees.forEach(childTreeNode =>
+          this._updateViews(childTreeNode, nodeGroup),
+        );
       } else {
         const nodeGroup = this._createViewNode(nextViewProps);
         parent3DObject.add(nodeGroup);
         this._translate3DObject(nodeGroup);
         this.viewsMap[nextViewProps.id] = nodeGroup;
-        subtrees.forEach(childTreeNode => this._updateViews(childTreeNode, nodeGroup));
+        subtrees.forEach(childTreeNode =>
+          this._updateViews(childTreeNode, nodeGroup),
+        );
       }
     }
   }
 
   _translate3DObject(obj) {
-    const {
-      x: translateX, y: translateY,
-    } = this.coordTranslator.calc3DCoord(obj);
+    const { x: translateX, y: translateY } = this.coordTranslator.calc3DCoord(
+      obj,
+    );
     obj.translateX(translateX);
     obj.translateY(translateY);
   }
@@ -249,15 +250,15 @@ class SceneManager {
   }
 
   _createLine(props) {
-    const {
-      x1, y1, z1,
-      x2, y2, z2,
-    } = props;
+    const { x1, y1, z1, x2, y2, z2 } = props;
 
     const p1 = new THREE.Vector3(x1, y1, z1 * this.planeOffset + 1);
     const p2 = new THREE.Vector3(x2, y2, z2 * this.planeOffset + 1);
 
-    const matertial = new THREE.LineBasicMaterial({ color: 0xc89637, linewidth: 2 });
+    const matertial = new THREE.LineBasicMaterial({
+      color: 0xc89637,
+      linewidth: 2,
+    });
     const geometry = new THREE.Geometry();
     geometry.vertices.push(p1);
     geometry.vertices.push(p2);

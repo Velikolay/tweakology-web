@@ -5,7 +5,10 @@ import { withFormik } from 'formik';
 import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
 
-import { ContentModeOptions, SemanticContentAttributeOptions } from '../Static/UIView';
+import {
+  ContentModeOptions,
+  SemanticContentAttributeOptions,
+} from '../Static/UIView';
 import UIViewTransformer from '../Transformers/UIView';
 import SelectField from './Groups/SelectField';
 import FrameGroup from './Groups/Frame';
@@ -15,10 +18,21 @@ const InnerUIViewForm = () => (
   <React.Fragment>
     <FrameGroup prefix="frame" />
     <hr />
-    <SelectField name="contentMode" options={ContentModeOptions} title="Content Mode" />
-    <SelectField name="semanticContentAttribute" options={SemanticContentAttributeOptions} title="Semantic" />
+    <SelectField
+      name="contentMode"
+      options={ContentModeOptions}
+      title="Content Mode"
+    />
+    <SelectField
+      name="semanticContentAttribute"
+      options={SemanticContentAttributeOptions}
+      title="Semantic"
+    />
     <hr />
-    <ColorGroup prefix="backgroundColor" titles={{ alpha: 'Alpha', color: 'Background' }} />
+    <ColorGroup
+      prefix="backgroundColor"
+      titles={{ alpha: 'Alpha', color: 'Background' }}
+    />
   </React.Fragment>
 );
 

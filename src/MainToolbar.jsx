@@ -5,12 +5,16 @@ import { FaSync } from 'react-icons/fa';
 
 import './MainToolbar.css';
 
-const MainToolbar = (props) => {
+const MainToolbar = props => {
   const { onSubmitChanges } = props;
   return (
     <div className="main-toolbar">
       <div className="submit-button-wrapper">
-        <button className="submit-button" type="button" onClick={onSubmitChanges}>
+        <button
+          className="submit-button"
+          type="button"
+          onClick={onSubmitChanges}
+        >
           <IconContext.Provider value={{ className: 'submit-button-icon' }}>
             <FaSync />
           </IconContext.Provider>

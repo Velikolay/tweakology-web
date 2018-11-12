@@ -1,5 +1,4 @@
 const UIImageTransformer = {
-
   fromPayload: ({ src }) => ({
     src: src || '',
   }),

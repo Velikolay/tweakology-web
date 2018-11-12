@@ -1,7 +1,8 @@
-const convert = options => Object.entries(options).map(([key, val]) => ({
-  value: key,
-  text: val,
-}));
+const convert = options =>
+  Object.entries(options).map(([key, val]) => ({
+    value: key,
+    text: val,
+  }));
 
 const LineBreakModeOptions = convert({
   0: 'Word Wrap',

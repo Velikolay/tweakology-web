@@ -1,7 +1,8 @@
-const convert = options => Object.entries(options).map(([key, val]) => ({
-  value: key,
-  text: val,
-}));
+const convert = options =>
+  Object.entries(options).map(([key, val]) => ({
+    value: key,
+    text: val,
+  }));
 
 const ContentModeOptions = convert({
   0: 'Scale To Fill',

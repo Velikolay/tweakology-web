@@ -5,7 +5,7 @@ import cx from 'classnames';
 import { withFormikContext } from '../../FormikContext';
 import { isValueDirty } from '../Utils';
 
-const Field = (props) => {
+const Field = props => {
   const { name, className, ...rest } = props;
   const newClassName = cx(className, {
     'is-dirty': isValueDirty(props, name),

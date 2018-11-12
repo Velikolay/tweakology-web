@@ -47,9 +47,9 @@ class UIHierarchyScene extends Component {
 
   componentDidMount() {
     const self = this;
-    this.sceneResizeSensor = new ResizeSensor(this.container, (() => {
+    this.sceneResizeSensor = new ResizeSensor(this.container, () => {
       self.updateCanvasDimensions();
-    }));
+    });
 
     const { views, constraintIndicators, onDragHandler } = this.props;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -74,15 +74,22 @@ class UIHierarchyScene extends Component {
     this.dragControls = new DragControls(camera, this.renderer.domElement);
     this.dragControls.addEventListener('dragstart', this.dragStart);
     this.dragControls.addEventListener('dragend', this.dragEnd);
-    this.dragControls.addEventListener('drag', (event) => {
-      const { userData: { id }, position: coord3D } = event.object;
+    this.dragControls.addEventListener('drag', event => {
+      const {
+        userData: { id },
+        position: coord3D,
+      } = event.object;
       const v = this.coordTranslator.calcDeviceCoord(event.object);
       const position = new THREE.Vector3();
       position.addVectors(coord3D, v);
       onDragHandler('drag', { id, position });
     });
 
-    this.sceneManager = new SceneManager(this.scene, this.coordTranslator, DEFAULT_PLANE_OFFSET);
+    this.sceneManager = new SceneManager(
+      this.scene,
+      this.coordTranslator,
+      DEFAULT_PLANE_OFFSET,
+    );
     this.sceneManager.updateViews(views);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
 
@@ -158,7 +165,12 @@ class UIHierarchyScene extends Component {
   render() {
     return (
       <React.Fragment>
-        <div ref={(el) => { this.container = el; }} className="three-scene-container" />
+        <div
+          ref={el => {
+            this.container = el;
+          }}
+          className="three-scene-container"
+        />
         <Slider
           min={1}
           max={40}
@@ -174,14 +186,18 @@ class UIHierarchyScene extends Component {
             backgroundColor: '#e0e0e0',
           }}
           railStyle={{ backgroundColor: '#e0e0e0', height: 5 }}
-          onChange={planeOffset => this.sceneManager.updatePlaneOffset(planeOffset)}
+          onChange={planeOffset =>
+            this.sceneManager.updatePlaneOffset(planeOffset)
+          }
         />
         <button
           className="texture-visibility-button"
           type="button"
           onClick={() => this.sceneManager.flipTextureVisibility()}
         >
-          <IconContext.Provider value={{ className: 'texture-visibility-icon' }}>
+          <IconContext.Provider
+            value={{ className: 'texture-visibility-icon' }}
+          >
             <FaClone />
           </IconContext.Provider>
         </button>
@@ -191,27 +207,33 @@ class UIHierarchyScene extends Component {
 }
 
 UIHierarchyScene.propTypes = {
-  views: PropTypes.arrayOf(PropTypes.shape({
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-    z: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-    selected: PropTypes.bool.isRequired,
-    onFocus: PropTypes.bool.isRequired,
-    imgUrl: PropTypes.string.isRequired,
-  })).isRequired,
-  constraintIndicators: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    lineGroup: PropTypes.arrayOf(PropTypes.shape({
-      x1: PropTypes.number.isRequired,
-      y1: PropTypes.number.isRequired,
-      z1: PropTypes.number.isRequired,
-      x2: PropTypes.number.isRequired,
-      y2: PropTypes.number.isRequired,
-      z2: PropTypes.number.isRequired,
-    })).isRequired,
-  })).isRequired,
+  views: PropTypes.arrayOf(
+    PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+      z: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
+      selected: PropTypes.bool.isRequired,
+      onFocus: PropTypes.bool.isRequired,
+      imgUrl: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  constraintIndicators: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      lineGroup: PropTypes.arrayOf(
+        PropTypes.shape({
+          x1: PropTypes.number.isRequired,
+          y1: PropTypes.number.isRequired,
+          z1: PropTypes.number.isRequired,
+          x2: PropTypes.number.isRequired,
+          y2: PropTypes.number.isRequired,
+          z2: PropTypes.number.isRequired,
+        }),
+      ).isRequired,
+    }),
+  ).isRequired,
   onDragHandler: PropTypes.func,
 };
 

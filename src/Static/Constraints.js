@@ -21,9 +21,27 @@
 // case centerYWithinMargins 20
 
 const attributeNames = [
-  'noAttribute', 'left', 'right', 'top', 'bottom', 'leading', 'trailing', 'width', 'height', 'centerX', 'centerY',
-  'lastBaseline', 'firstBaseline', 'leftMargin', 'rightMargin', 'topMargin', 'bottomMargin', 'leadingMargin', 'trailingMargin',
-  'centerXWithinMargins', 'centerYWithinMargins',
+  'noAttribute',
+  'left',
+  'right',
+  'top',
+  'bottom',
+  'leading',
+  'trailing',
+  'width',
+  'height',
+  'centerX',
+  'centerY',
+  'lastBaseline',
+  'firstBaseline',
+  'leftMargin',
+  'rightMargin',
+  'topMargin',
+  'bottomMargin',
+  'leadingMargin',
+  'trailingMargin',
+  'centerXWithinMargins',
+  'centerYWithinMargins',
 ];
 
 const relationSymbols = {
@@ -90,68 +108,70 @@ const attributeToModifiers = {
 const constraintAttributes = [
   {
     label: 'Vertical Space',
-    variants: [{
-      options: [
-        { label: 'Top with Margin', value: '15' },
-        { label: 'Center Y within Margins', value: '20' },
-        { label: 'First Baseline', value: '12' },
-        { label: 'Last Baseline', value: '11' },
-        { label: 'Bottom with Margin', value: '16' },
-      ],
-      relativeToMargin: true,
-    },
-    {
-      options: [
-        { label: 'Top', value: '3' },
-        { label: 'Center Y', value: '10' },
-        { label: 'First Baseline', value: '12' },
-        { label: 'Last Baseline', value: '11' },
-        { label: 'Bottom', value: '4' },
-      ],
-      relativeToMargin: false,
-    }],
-    modifiers: [
-      { name: 'relativeToMargin', text: 'M' },
+    variants: [
+      {
+        options: [
+          { label: 'Top with Margin', value: '15' },
+          { label: 'Center Y within Margins', value: '20' },
+          { label: 'First Baseline', value: '12' },
+          { label: 'Last Baseline', value: '11' },
+          { label: 'Bottom with Margin', value: '16' },
+        ],
+        relativeToMargin: true,
+      },
+      {
+        options: [
+          { label: 'Top', value: '3' },
+          { label: 'Center Y', value: '10' },
+          { label: 'First Baseline', value: '12' },
+          { label: 'Last Baseline', value: '11' },
+          { label: 'Bottom', value: '4' },
+        ],
+        relativeToMargin: false,
+      },
     ],
+    modifiers: [{ name: 'relativeToMargin', text: 'M' }],
   },
   {
     label: 'Horizontal Space',
-    variants: [{
-      options: [
-        { label: 'Leading with Margin', value: '17' },
-        { label: 'Center X within Margins', value: '19' },
-        { label: 'Trailing with Margin', value: '18' },
-      ],
-      respectLanguageDirection: true,
-      relativeToMargin: true,
-    },
-    {
-      options: [
-        { label: 'Leading', value: '5' },
-        { label: 'Center X', value: '9' },
-        { label: 'Trailing', value: '6' },
-      ],
-      respectLanguageDirection: true,
-      relativeToMargin: false,
-    },
-    {
-      options: [
-        { label: 'Left with Margin', value: '13' },
-        { label: 'Center X within Margins', value: '19' },
-        { label: 'Right with Margin', value: '14' },
-      ],
-      respectLanguageDirection: false,
-      relativeToMargin: true,
-    },
-    {
-      options: [
-        { label: 'Left', value: '1' },
-        { label: 'Center X', value: '9' },
-        { label: 'Right', value: '2' },
-      ],
-      respectLanguageDirection: false,
-      relativeToMargin: false,
-    }],
+    variants: [
+      {
+        options: [
+          { label: 'Leading with Margin', value: '17' },
+          { label: 'Center X within Margins', value: '19' },
+          { label: 'Trailing with Margin', value: '18' },
+        ],
+        respectLanguageDirection: true,
+        relativeToMargin: true,
+      },
+      {
+        options: [
+          { label: 'Leading', value: '5' },
+          { label: 'Center X', value: '9' },
+          { label: 'Trailing', value: '6' },
+        ],
+        respectLanguageDirection: true,
+        relativeToMargin: false,
+      },
+      {
+        options: [
+          { label: 'Left with Margin', value: '13' },
+          { label: 'Center X within Margins', value: '19' },
+          { label: 'Right with Margin', value: '14' },
+        ],
+        respectLanguageDirection: false,
+        relativeToMargin: true,
+      },
+      {
+        options: [
+          { label: 'Left', value: '1' },
+          { label: 'Center X', value: '9' },
+          { label: 'Right', value: '2' },
+        ],
+        respectLanguageDirection: false,
+        relativeToMargin: false,
+      },
+    ],
     modifiers: [
       { name: 'relativeToMargin', text: 'M' },
       { name: 'respectLanguageDirection', text: 'L' },
@@ -159,15 +179,21 @@ const constraintAttributes = [
   },
   {
     label: 'Size',
-    variants: [{
-      options: [
-        { label: 'Width', value: '7' },
-        { label: 'Height', value: '8' },
-      ],
-    }],
+    variants: [
+      {
+        options: [
+          { label: 'Width', value: '7' },
+          { label: 'Height', value: '8' },
+        ],
+      },
+    ],
   },
 ];
 
 export {
-  attributeNames, relationSymbols, valueSwitch, attributeToModifiers, constraintAttributes,
+  attributeNames,
+  relationSymbols,
+  valueSwitch,
+  attributeToModifiers,
+  constraintAttributes,
 };

@@ -11,11 +11,15 @@ import './ConstraintItemSelector.css';
 
 const buildItemsDOM = (item, props) => {
   const itemsDOM = props.items.map(option => (
-    <option key={option.value} value={option.value}>{option.label}</option>
+    <option key={option.value} value={option.value}>
+      {option.label}
+    </option>
   ));
   if (!item.value && item.placeholder) {
     itemsDOM.unshift(
-      <option key="" value="" disabled>{item.placeholder}</option>,
+      <option key="" value="" disabled>
+        {item.placeholder}
+      </option>,
     );
   }
   return itemsDOM;
@@ -23,14 +27,18 @@ const buildItemsDOM = (item, props) => {
 
 const variantFilter = (variant, attribute) => {
   if (attribute.value) {
-    if (variant.relativeToMargin !== undefined
-      && attribute.relativeToMargin !== undefined
-      && variant.relativeToMargin !== attribute.relativeToMargin) {
+    if (
+      variant.relativeToMargin !== undefined &&
+      attribute.relativeToMargin !== undefined &&
+      variant.relativeToMargin !== attribute.relativeToMargin
+    ) {
       return false;
     }
-    if (variant.respectLanguageDirection !== undefined
-      && attribute.respectLanguageDirection !== undefined
-      && variant.respectLanguageDirection !== attribute.respectLanguageDirection) {
+    if (
+      variant.respectLanguageDirection !== undefined &&
+      attribute.respectLanguageDirection !== undefined &&
+      variant.respectLanguageDirection !== attribute.respectLanguageDirection
+    ) {
       return false;
     }
   }
@@ -42,16 +50,22 @@ const buildAttributeGroupsDOM = (attribute, props) => {
 
   if (!attribute.value) {
     attributeGroupsDOM.push(
-      <option key="" value="" disabled>Attribute</option>,
+      <option key="" value="" disabled>
+        Attribute
+      </option>,
     );
   }
 
   for (const group of props.attributes) {
-    const variants = group.variants.filter(variant => variantFilter(variant, attribute));
+    const variants = group.variants.filter(variant =>
+      variantFilter(variant, attribute),
+    );
     if (variants.length > 0) {
-      const attributeDOM = variants[0].options.map(
-        option => <option key={option.value} value={option.value}>{option.label}</option>,
-      );
+      const attributeDOM = variants[0].options.map(option => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ));
       attributeGroupsDOM.push(
         <optgroup key={group.label} label={group.label}>
           {attributeDOM}
@@ -75,24 +89,29 @@ const getModifiers = (attribute, attributeGroups) => {
   return false;
 };
 
-const ConstraintItemSelector = (props) => {
+const ConstraintItemSelector = props => {
   const {
     prefix,
     disabled,
     attributes,
     onAttributeChange,
-    formik: {
-      setFieldValue,
-      handleChange,
-    },
+    formik: { setFieldValue, handleChange },
   } = props;
 
-  const handleAttributeChange = (e) => {
+  const handleAttributeChange = e => {
     const attrVal = e.target.value;
     if (attrVal) {
-      const [relativeToMargin, respectLanguageDirection] = attributeToModifiers[attrVal];
-      setFieldValue(nameWithPrefix(props, 'attribute.relativeToMargin'), relativeToMargin);
-      setFieldValue(nameWithPrefix(props, 'attribute.respectLanguageDirection'), respectLanguageDirection);
+      const [relativeToMargin, respectLanguageDirection] = attributeToModifiers[
+        attrVal
+      ];
+      setFieldValue(
+        nameWithPrefix(props, 'attribute.relativeToMargin'),
+        relativeToMargin,
+      );
+      setFieldValue(
+        nameWithPrefix(props, 'attribute.respectLanguageDirection'),
+        respectLanguageDirection,
+      );
     }
     handleChange(e);
     onAttributeChange(attrVal);
@@ -105,7 +124,10 @@ const ConstraintItemSelector = (props) => {
     setFieldValue(nameWithPrefix(props, `attribute.${modifier}`), isOn);
     const modifierSwitch = valueSwitch[modifier];
     if (attribute.value in modifierSwitch) {
-      setFieldValue(nameWithPrefix(props, 'attribute.value'), modifierSwitch[attribute.value]);
+      setFieldValue(
+        nameWithPrefix(props, 'attribute.value'),
+        modifierSwitch[attribute.value],
+      );
     }
   };
 
@@ -139,20 +161,20 @@ const ConstraintItemSelector = (props) => {
       >
         {attributeGroupsDOM}
       </Field>
-      {
-        hasModifiers
-          ? (
-            <ToggleButtonMenu
-              className="cis-options"
-              prefix={`${prefix}.attribute`}
-              onSwitch={handleSwitchModifier}
-              disabled={disabled}
-            >
-              { modifiers.map(({ name, text }) => <div key={name} name={name}>{text}</div>)}
-            </ToggleButtonMenu>
-          )
-          : null
-      }
+      {hasModifiers ? (
+        <ToggleButtonMenu
+          className="cis-options"
+          prefix={`${prefix}.attribute`}
+          onSwitch={handleSwitchModifier}
+          disabled={disabled}
+        >
+          {modifiers.map(({ name, text }) => (
+            <div key={name} name={name}>
+              {text}
+            </div>
+          ))}
+        </ToggleButtonMenu>
+      ) : null}
     </div>
   );
 };

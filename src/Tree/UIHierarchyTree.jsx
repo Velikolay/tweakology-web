@@ -22,7 +22,7 @@ class UIHierarchyTree extends Component {
     this.setState(newState);
   }
 
-  renderNode = (node) => {
+  renderNode = node => {
     const { activeNode } = this.state;
     const {
       onNodeClick,
@@ -33,18 +33,22 @@ class UIHierarchyTree extends Component {
       onClickAdd,
     } = this.props;
     return (
-      <div className={cx('container', {
-        'is-active': activeNode && node.id === activeNode.id,
-      })}
+      <div
+        className={cx('container', {
+          'is-active': activeNode && node.id === activeNode.id,
+        })}
       >
-        { activeNode && node.id === activeNode.id && !('leaf' in node)
-          ? (
-            <button type="button" className="add-button" onClick={() => onClickAdd(node)}>
-              add
-            </button>
-          )
-          : ''
-          }
+        {activeNode && node.id === activeNode.id && !('leaf' in node) ? (
+          <button
+            type="button"
+            className="add-button"
+            onClick={() => onClickAdd(node)}
+          >
+            add
+          </button>
+        ) : (
+          ''
+        )}
         <div
           className="text"
           onClick={() => onNodeClick(node)}
@@ -59,7 +63,7 @@ class UIHierarchyTree extends Component {
     );
   };
 
-  handleChange = (tree) => {
+  handleChange = tree => {
     this.setState({
       tree,
     });

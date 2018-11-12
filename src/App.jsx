@@ -8,7 +8,11 @@ import Form from './Forms/Form';
 
 import { submitChanges } from './Forms/Submit';
 import { enrichFontsData } from './Utils/Font';
-import { transformConstraintPayloadToTree, addNewConstraintToTreeNode, updatedConstraintNodeName } from './Utils/Tree/Constraint';
+import {
+  transformConstraintPayloadToTree,
+  addNewConstraintToTreeNode,
+  updatedConstraintNodeName,
+} from './Utils/Tree/Constraint';
 import toThreeViews from './Three/View';
 import toThreeConstraintIndicator from './Three/Constraint';
 import UIHierarchyScene from './Three/UIHierarchyScene';
@@ -55,21 +59,24 @@ class App extends Component {
   }
 
   componentDidMount() {
-    Split([
-      ReactDOM.findDOMNode(this.treeRef), // eslint-disable-line react/no-find-dom-node
-      ReactDOM.findDOMNode(this.middleSectionRef), // eslint-disable-line react/no-find-dom-node
-      ReactDOM.findDOMNode(this.configRef), // eslint-disable-line react/no-find-dom-node
-    ], {
-      sizes: [20, 60, 20],
-      minSize: [200, 300, 200],
-      gutterSize: 5,
-    });
+    Split(
+      [
+        ReactDOM.findDOMNode(this.treeRef), // eslint-disable-line react/no-find-dom-node
+        ReactDOM.findDOMNode(this.middleSectionRef), // eslint-disable-line react/no-find-dom-node
+        ReactDOM.findDOMNode(this.configRef), // eslint-disable-line react/no-find-dom-node
+      ],
+      {
+        sizes: [20, 60, 20],
+        minSize: [200, 300, 200],
+        gutterSize: 5,
+      },
+    );
 
     this.updateTree();
 
     fetch(`${APP_INSPECTOR_EP}fonts`)
       .then(response => response.json())
-      .then((fontsData) => {
+      .then(fontsData => {
         this.systemContext = {
           fonts: enrichFontsData(fontsData),
         };
@@ -79,23 +86,24 @@ class App extends Component {
   updateTree = () => {
     fetch(APP_INSPECTOR_EP)
       .then(response => response.json())
-      .then((data) => {
+      .then(data => {
         const { activeNode } = this.state;
         const revision = Date.now();
         const tree = this.transformPayloadToTree(data, revision);
         const updatedState = {
           tree,
-          activeNode: (activeNode && this.findNode(tree, activeNode.id)) || tree,
+          activeNode:
+            (activeNode && this.findNode(tree, activeNode.id)) || tree,
         };
         this.setState(updatedState);
       });
-  }
+  };
 
   onSubmitChanges = () => {
     const { tree } = this.state;
     submitChanges(tree, this.systemContext).then(() => this.updateTree());
     // window.localStorage.clear();
-  }
+  };
 
   onFormUpdate = (id, type, values) => {
     const { activeNode } = this.state;
@@ -106,50 +114,58 @@ class App extends Component {
       activeNode.updatedProperties = values;
     }
     this.setState({ activeNode });
-  }
+  };
 
-  onFormSelect = (formik) => {
+  onFormSelect = formik => {
     this.formikBag = formik;
-  }
+  };
 
-  onClickAdd = (node) => {
+  onClickAdd = node => {
     addNewConstraintToTreeNode(node);
     this.setState({ activeNode: node });
-  }
+  };
 
   onAddNodeClick = () => {
     const { showNewNodeMenu } = this.state;
     this.setState({ showNewNodeMenu: !showNewNodeMenu });
-  }
+  };
 
   onNodeAdded = ({ id, type, ...rest }) => {
     const { activeNode } = this.state;
-    const { children, id: superview } = ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1 ? activeNode : activeNode.superview;
-    const index = children && children[children.length - 1].module === 'Constraints' ? children.length - 1 : children.length;
+    const { children, id: superview } =
+      ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1
+        ? activeNode
+        : activeNode.superview;
+    const index =
+      children && children[children.length - 1].module === 'Constraints'
+        ? children.length - 1
+        : children.length;
 
-    const insertNewViewConfig = [{
-      operation: 'insert',
-      view: {
-        id,
-        superview,
-        index,
-        type,
-        ...rest,
+    const insertNewViewConfig = [
+      {
+        operation: 'insert',
+        view: {
+          id,
+          superview,
+          index,
+          type,
+          ...rest,
+        },
       },
-    }];
+    ];
 
     fetch('http://NIKOIVAN02M.local:8080/tweaks/test', {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(insertNewViewConfig),
     }).then(() => this.updateTree());
-  }
+  };
 
-  onNodeClick = (node) => {
+  onNodeClick = node => {
     if (node.id) {
       this.setState({ activeNode: node });
     }
-  }
+  };
 
   onNodeFocus = (node, event) => {
     if (!this.nodeDragging) {
@@ -160,36 +176,41 @@ class App extends Component {
         this.setState({ onFocusNode: null });
       }
     }
-  }
+  };
 
   onNodeFocusOut = (node, event) => {
     const { onFocusNode } = this.state;
     if (!this.nodeDragging && onFocusNode && node.id === onFocusNode.id) {
       this.setState({ onFocusNode: null });
     }
-  }
+  };
 
   onNodeMouseDown = (node, event) => {
     this.nodeDragging = true;
-  }
+  };
 
   onNodeMouseUp = (node, event) => {
     this.nodeDragging = false;
-  }
+  };
 
   on3DObjectDrag = (state, obj) => {
-    const { activeNode: { id } } = this.state;
+    const {
+      activeNode: { id },
+    } = this.state;
     if (this.formikBag) {
       const { setFieldValue } = this.formikBag;
       if (state === 'drag') {
-        const { id: objId, position: { x, y } } = obj;
+        const {
+          id: objId,
+          position: { x, y },
+        } = obj;
         if (id === objId) {
           setFieldValue('frame.x', Math.trunc(x));
           setFieldValue('frame.y', Math.trunc(y));
         }
       }
     }
-  }
+  };
 
   findNode = (tree, id) => {
     if (id) {
@@ -205,14 +226,11 @@ class App extends Component {
       }
     }
     return null;
-  }
+  };
 
   transformPayloadToTree = (uiElement, revision) => {
     const {
-      uid: {
-        value: id,
-        kind,
-      },
+      uid: { value: id, kind },
       type,
       hierarchyMetadata,
       properties,
@@ -240,7 +258,9 @@ class App extends Component {
     }
 
     if (constraints && constraints.length > 0) {
-      treeNode.children.push(transformConstraintPayloadToTree(treeNode, constraints));
+      treeNode.children.push(
+        transformConstraintPayloadToTree(treeNode, constraints),
+      );
     }
 
     if (treeNode.children.length === 0) {
@@ -248,12 +268,10 @@ class App extends Component {
     }
 
     return treeNode;
-  }
+  };
 
   render() {
-    const {
-      tree, activeNode, onFocusNode, showNewNodeMenu,
-    } = this.state;
+    const { tree, activeNode, onFocusNode, showNewNodeMenu } = this.state;
 
     const constraintIndicators = [];
     if (activeNode && activeNode.type === 'NSLayoutConstraint') {
@@ -267,7 +285,9 @@ class App extends Component {
       <div className="App">
         <SystemContext.Provider value={this.systemContext}>
           <div
-            ref={(el) => { this.treeRef = el; }}
+            ref={el => {
+              this.treeRef = el;
+            }}
             className="tree-section"
           >
             <UIHierarchyTree
@@ -285,12 +305,16 @@ class App extends Component {
               transitionEnterTimeout={500}
               transitionLeaveTimeout={300}
             >
-              { showNewNodeMenu ? <NewViewMenu onNodeAdded={this.onNodeAdded} /> : null }
+              {showNewNodeMenu ? (
+                <NewViewMenu onNodeAdded={this.onNodeAdded} />
+              ) : null}
             </CSSTransitionGroup>
             <TreeToolbar onAddNodeClick={this.onAddNodeClick} />
           </div>
           <div
-            ref={(el) => { this.middleSectionRef = el; }}
+            ref={el => {
+              this.middleSectionRef = el;
+            }}
             className="middle-section"
           >
             <UIHierarchyScene
@@ -301,10 +325,12 @@ class App extends Component {
             <MainToolbar onSubmitChanges={this.onSubmitChanges} />
           </div>
           <div
-            ref={(el) => { this.configRef = el; }}
+            ref={el => {
+              this.configRef = el;
+            }}
             className="config-section"
           >
-            { activeNode !== null ? (
+            {activeNode !== null ? (
               <Form
                 id={activeNode.id}
                 type={activeNode.type}
@@ -312,8 +338,7 @@ class App extends Component {
                 onFormUpdate={this.onFormUpdate}
                 onFormSelect={this.onFormSelect}
               />
-            ) : null
-            }
+            ) : null}
           </div>
         </SystemContext.Provider>
       </div>

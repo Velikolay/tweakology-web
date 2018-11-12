@@ -30,58 +30,66 @@ const font = {
   pointSize: 14,
 };
 
-const listItems = [{
-  type: 'UIButton',
-  name: 'Button',
-  description: ' - Intercepts touch events and sends an action message to a target object when it\'s tapped',
-  init: id => ({
-    frame: initFrame(id),
-    properties: {
-      backgroundColor,
-      title: {
+const listItems = [
+  {
+    type: 'UIButton',
+    name: 'Button',
+    description:
+      " - Intercepts touch events and sends an action message to a target object when it's tapped",
+    init: id => ({
+      frame: initFrame(id),
+      properties: {
+        backgroundColor,
+        title: {
+          text: id,
+          textColor,
+          font,
+        },
+      },
+    }),
+  },
+  {
+    type: 'UILabel',
+    name: 'Label',
+    description: ' - A variably sized amount of static text',
+    init: id => ({
+      frame: initFrame(id),
+      properties: {
         text: id,
         textColor,
+        textAlignment: 1,
         font,
+        backgroundColor,
       },
-    },
-  }),
-}, {
-  type: 'UILabel',
-  name: 'Label',
-  description: ' - A variably sized amount of static text',
-  init: id => ({
-    frame: initFrame(id),
-    properties: {
-      text: id,
-      textColor,
-      textAlignment: 1,
-      font,
-      backgroundColor,
-    },
-  }),
-}, {
-  type: 'UIImageView',
-  name: 'Image View',
-  description: ' - Displays a single image, or an animation described by an array of images.',
-  init: id => ({
-    frame: initFrame(),
-    properties: {
-      image: {
-        src: 'EmptyImage',
+    }),
+  },
+  {
+    type: 'UIImageView',
+    name: 'Image View',
+    description:
+      ' - Displays a single image, or an animation described by an array of images.',
+    init: id => ({
+      frame: initFrame(),
+      properties: {
+        image: {
+          src: 'EmptyImage',
+        },
       },
-    },
-  }),
-}, {
-  type: 'UIView',
-  name: 'View',
-  description: ' - Represents a rectangular region in which it draws and receives events',
-  init: id => ({
-    frame: initFrame(),
-    properties: {
-      backgroundColor,
-    },
-  }),
-}];
+    }),
+  },
+  {
+    type: 'UIView',
+    name: 'View',
+    description:
+      ' - Represents a rectangular region in which it draws and receives events',
+    init: id => ({
+      frame: initFrame(),
+      properties: {
+        backgroundColor,
+      },
+    }),
+  },
+];
 
 const initProperties = (id, type) => {
   const item = listItems.find(el => el.type === type);
@@ -100,13 +108,20 @@ const NewViewMenu = ({ onNodeAdded }) => (
     {({ values: { id }, isSubmitting, setFieldValue }) => (
       <Form className="new-view-menu">
         <div className="view-id">
-          <Field className="view-id__input" type="text" name="id" placeholder="Identifier" />
-          <IconContext.Provider value={{ className: cx('view-id__icon', { 'is-disabled': !id }) }}>
+          <Field
+            className="view-id__input"
+            type="text"
+            name="id"
+            placeholder="Identifier"
+          />
+          <IconContext.Provider
+            value={{ className: cx('view-id__icon', { 'is-disabled': !id }) }}
+          >
             <FaPlusCircle />
           </IconContext.Provider>
         </div>
         <div className="view-list">
-          { listItems.map(viewInfo => (
+          {listItems.map(viewInfo => (
             <button
               className="view-item"
               type="submit"
@@ -114,9 +129,11 @@ const NewViewMenu = ({ onNodeAdded }) => (
               onClick={() => setFieldValue('type', viewInfo.type)}
             >
               <span className="view-item__name">{viewInfo.name}</span>
-              <span className="view-item__description">{viewInfo.description}</span>
+              <span className="view-item__description">
+                {viewInfo.description}
+              </span>
             </button>
-          )) }
+          ))}
         </div>
       </Form>
     )}

@@ -1,9 +1,10 @@
 {
   "parser": "babel-eslint",
   "extends": [
-    "plugin:prettier/recommended",
+    "airbnb",
     "plugin:flowtype/recommended",
-    "airbnb"
+    "plugin:prettier/recommended",
+    "prettier/flowtype"
   ],
   "plugins": [
     "prettier",
@@ -26,7 +27,13 @@
       },
       "allowChildren": false
     }],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["src/electron-starter.js"]
+      }
+    ]
   },
   "env": {
     "browser": true,

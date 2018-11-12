@@ -22,22 +22,30 @@ const alignmentOptions = [
   { value: 4, icon: <div className="text-alignment-button-text">┅</div> },
 ];
 
-const TextAlignmentGroup = (props) => {
-  const { formik: { setFieldValue } } = props;
+const TextAlignmentGroup = props => {
+  const {
+    formik: { setFieldValue },
+  } = props;
   return (
     <div className="form-group">
       <div className="form-row">
         <label className="input-title">
           {titleForField(props, 'textAlignment', 'Alignment')}
         </label>
-        <IconContext.Provider value={{ className: 'text-alignment-button-icon' }}>
+        <IconContext.Provider
+          value={{ className: 'text-alignment-button-icon' }}
+        >
           <ToggleButtonMenu
             className="full-width-input"
             exclusiveMode
             name={nameWithPrefix(props, 'textAlignment')}
             onSwitch={(name, value) => setFieldValue(name, value)}
           >
-            {alignmentOptions.map(({ value, icon }) => <div key={value} value={value}>{icon}</div>)}
+            {alignmentOptions.map(({ value, icon }) => (
+              <div key={value} value={value}>
+                {icon}
+              </div>
+            ))}
           </ToggleButtonMenu>
         </IconContext.Provider>
       </div>

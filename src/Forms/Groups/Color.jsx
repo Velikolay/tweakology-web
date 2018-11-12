@@ -7,8 +7,10 @@ import { nameWithPrefix, titleForField, formikValueWithPrefix } from './Utils';
 import './Groups.css';
 import './Color.css';
 
-const ColorGroup = (props) => {
-  const { formik: { setFieldValue } } = props;
+const ColorGroup = props => {
+  const {
+    formik: { setFieldValue },
+  } = props;
   const alpha = nameWithPrefix(props, 'alpha');
   const color = nameWithPrefix(props, 'hexValue');
   return (
@@ -17,7 +19,14 @@ const ColorGroup = (props) => {
         <label className="input-title" htmlFor={alpha}>
           {titleForField(props, 'alpha', 'Alpha')}
         </label>
-        <Field name={alpha} type="number" min={0} max={1} step={0.05} className="full-width-input" />
+        <Field
+          name={alpha}
+          type="number"
+          min={0}
+          max={1}
+          step={0.05}
+          className="full-width-input"
+        />
       </div>
       <div className="form-row">
         <label className="input-title" htmlFor={color}>

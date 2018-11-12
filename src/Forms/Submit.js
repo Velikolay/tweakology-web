@@ -2,7 +2,7 @@ import { readPersistedConstraints } from './Persistence/Presistence';
 import ConstraintTransformer from '../Transformers/Constraint';
 import getTransformer from '../Transformers';
 
-const treeToFormIds = (uiElement) => {
+const treeToFormIds = uiElement => {
   const treeNode = [uiElement.id];
   if ('leaf' in uiElement && uiElement.leaf === true) {
     return treeNode;
@@ -14,7 +14,7 @@ const treeToFormIds = (uiElement) => {
   return treeNode;
 };
 
-const constraintToPayload = (constraints) => {
+const constraintToPayload = constraints => {
   const constraintValues = ConstraintTransformer.toPayload(constraints.values);
   return {
     idx: parseInt(constraints.id.split(':')[1], 10),
@@ -27,7 +27,7 @@ const submitChanges = (tree, systemContext) => {
   const changeSet = [];
 
   const constraints = readPersistedConstraints();
-  ids.forEach((id) => {
+  ids.forEach(id => {
     const formState = window.localStorage.getItem(id);
     if (formState) {
       const state = JSON.parse(formState);
@@ -66,7 +66,7 @@ const submitChanges = (tree, systemContext) => {
     method: 'put',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(changeSet),
-  }).then((res) => {
+  }).then(res => {
     localStorage.clear();
     return res;
   });

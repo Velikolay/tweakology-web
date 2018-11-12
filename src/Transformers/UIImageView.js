@@ -2,11 +2,12 @@ import UIViewTransformer from './UIView';
 import UIImageTransformer from './UIImage';
 
 const UIImageViewTransformer = {
-
   fromPayload: props => ({
     ...UIViewTransformer.fromPayload(props),
     image: UIImageTransformer.fromPayload(props.image || {}),
-    highlightedImage: UIImageTransformer.fromPayload(props.highlightedImage || {}),
+    highlightedImage: UIImageTransformer.fromPayload(
+      props.highlightedImage || {},
+    ),
   }),
 
   toPayload: props => ({

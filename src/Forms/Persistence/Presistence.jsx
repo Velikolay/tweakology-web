@@ -36,20 +36,16 @@ class Persist extends Component {
     dispatchFormikBag(nextProps);
   }
 
-  setForm = (props) => {
+  setForm = props => {
     // console.log('Form loading..');
     const maybeState = window.localStorage.getItem(props.name);
 
     let modifiedProps = props.formik;
     if (maybeState && maybeState !== null) {
-      modifiedProps = JSON.parse(
-        maybeState,
-      );
+      modifiedProps = JSON.parse(maybeState);
     }
 
-    const {
-      values, errors, touched, isSubmitting, status,
-    } = modifiedProps;
+    const { values, errors, touched, isSubmitting, status } = modifiedProps;
 
     const { formik } = this.props;
     if (formik) {
@@ -74,14 +70,14 @@ class Persist extends Component {
       }
       // console.log('Form Loaded');
     }
-  }
+  };
 
   render() {
     return null;
   }
 }
 
-export const readPersistedValues = (id) => {
+export const readPersistedValues = id => {
   const maybeState = window.localStorage.getItem(id);
   return maybeState ? JSON.parse(maybeState).values : null;
 };
@@ -93,7 +89,10 @@ export const readPersistedConstraints = () => {
     const formState = window.localStorage.getItem(id);
     if (formState) {
       const state = JSON.parse(formState);
-      if (state.type === 'NSLayoutConstraint' && (state.dirty || state.values.meta.added)) {
+      if (
+        state.type === 'NSLayoutConstraint' &&
+        (state.dirty || state.values.meta.added)
+      ) {
         const viewId = id.split('.')[0];
         if (!(viewId in constraints)) {
           constraints[viewId] = [];
@@ -103,9 +102,12 @@ export const readPersistedConstraints = () => {
     }
   }
 
-  Object.values(constraints).forEach(constraint => (
-    constraint.sort((a, b) => parseInt(a.id.split(':')[1], 10) > parseInt(b.id.split(':')[1], 10))
-  ));
+  Object.values(constraints).forEach(constraint =>
+    constraint.sort(
+      (a, b) =>
+        parseInt(a.id.split(':')[1], 10) > parseInt(b.id.split(':')[1], 10),
+    ),
+  );
 
   return constraints;
 };

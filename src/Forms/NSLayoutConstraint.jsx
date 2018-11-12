@@ -16,9 +16,7 @@ const InnerNSLayoutConstraint = ({
 }) => (
   <form onSubmit={handleSubmit}>
     <Constraint itemOptions={formData.itemOptions} />
-    <FormikObserver
-      onChange={({ values }) => onFormChange(id, type, values)}
-    />
+    <FormikObserver onChange={({ values }) => onFormChange(id, type, values)} />
 
     <Persist name={id} />
   </form>

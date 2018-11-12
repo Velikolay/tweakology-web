@@ -8,15 +8,18 @@ import UIImageView from './UIImageView';
 import NSLayoutConstraint from './NSLayoutConstraint';
 import UIView from './UIView';
 
-const Form = (props) => {
+const Form = props => {
   const { type } = props;
   if (type === 'UIButton') {
     return <UIButtonView {...props} />;
-  } if (type === 'UILabel' || type === 'UIButtonLabel') {
+  }
+  if (type === 'UILabel' || type === 'UIButtonLabel') {
     return <UILabelView {...props} />;
-  } if (type === 'UIImageView') {
+  }
+  if (type === 'UIImageView') {
     return <UIImageView {...props} />;
-  } if (type === 'NSLayoutConstraint') {
+  }
+  if (type === 'NSLayoutConstraint') {
     return <NSLayoutConstraint {...props} />;
   }
   return <UIView {...props} />;

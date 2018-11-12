@@ -8,7 +8,7 @@ import { withFormikContext } from '../FormikContext';
 
 import './Groups.css';
 
-const getAttributeGroup = (attribute) => {
+const getAttributeGroup = attribute => {
   for (const group of constraintAttributes) {
     for (const variant of group.variants) {
       for (const option of variant.options) {
@@ -21,7 +21,7 @@ const getAttributeGroup = (attribute) => {
   return null;
 };
 
-const getAttributes1 = (itemOptions) => {
+const getAttributes1 = itemOptions => {
   if (itemOptions.length === 1) {
     // Size group
     return [constraintAttributes[constraintAttributes.length - 1]];
@@ -29,7 +29,7 @@ const getAttributes1 = (itemOptions) => {
   return constraintAttributes;
 };
 
-const getAttributes2 = (attribute1) => {
+const getAttributes2 = attribute1 => {
   const group = getAttributeGroup(attribute1.value);
   if (group && group.label !== 'Size') {
     return [group];
@@ -37,22 +37,16 @@ const getAttributes2 = (attribute1) => {
   return [];
 };
 
-const getItems2 = (itemOptions, item1) => itemOptions.filter(item => item.value !== item1.value);
+const getItems2 = (itemOptions, item1) =>
+  itemOptions.filter(item => item.value !== item1.value);
 
-const Constraint = (props) => {
+const Constraint = props => {
   const {
-    formik: {
-      values,
-      formData,
-      errors,
-      touched,
-      setFieldValue,
-    },
+    formik: { values, formData, errors, touched, setFieldValue },
     itemOptions,
   } = props;
 
-
-  const onAttribute1Change = (attribute1) => {
+  const onAttribute1Change = attribute1 => {
     const attribute2 = formikValueWithPrefix(props, 'second.attribute.value');
     if (attribute2) {
       const group1 = getAttributeGroup(attribute1);
@@ -72,8 +66,10 @@ const Constraint = (props) => {
   const items2 = getItems2(itemOptions, item1);
   const disabled = !values.meta.added;
 
-  const priorityDisabled = formData.constraint.meta.synced && values.priority === 1000;
-  const priorityMax = formData.constraint.meta.synced && values.priority < 1000 ? 999 : 1000;
+  const priorityDisabled =
+    formData.constraint.meta.synced && values.priority === 1000;
+  const priorityMax =
+    formData.constraint.meta.synced && values.priority < 1000 ? 999 : 1000;
 
   const multiplier = nameWithPrefix(props, 'multiplier');
   const constant = nameWithPrefix(props, 'constant');
@@ -102,43 +98,78 @@ const Constraint = (props) => {
           <option value="1">Greater Than or Equal</option>
         </Field>
       </div>
-      {
-        items2.length > 0 && attributes2.length > 0
-          ? (
-            <div className="form-row">
-              <ConstraintItemSelector
-                prefix={nameWithPrefix(props, 'second')}
-                disabled={disabled}
-                items={items2}
-                attributes={attributes2}
-              />
-            </div>
-          )
-          : null
-      }
+      {items2.length > 0 && attributes2.length > 0 ? (
+        <div className="form-row">
+          <ConstraintItemSelector
+            prefix={nameWithPrefix(props, 'second')}
+            disabled={disabled}
+            items={items2}
+            attributes={attributes2}
+          />
+        </div>
+      ) : null}
       <div className="form-row">
         <label className="input-title" htmlFor={multiplier}>
           Multiplier
         </label>
-        <Field name={multiplier} type="number" min={0} step={0.1} disabled={disabled} className={errors.multiplier && touched.multiplier ? 'full-width-input error' : 'full-width-input'} />
+        <Field
+          name={multiplier}
+          type="number"
+          min={0}
+          step={0.1}
+          disabled={disabled}
+          className={
+            errors.multiplier && touched.multiplier
+              ? 'full-width-input error'
+              : 'full-width-input'
+          }
+        />
       </div>
       <div className="form-row">
         <label className="input-title" htmlFor={constant}>
           Constant
         </label>
-        <Field name={constant} type="number" className={errors.constant && touched.constant ? 'full-width-input error' : 'full-width-input'} />
+        <Field
+          name={constant}
+          type="number"
+          className={
+            errors.constant && touched.constant
+              ? 'full-width-input error'
+              : 'full-width-input'
+          }
+        />
       </div>
       <div className="form-row">
         <label className="input-title" htmlFor={priority}>
           Priority
         </label>
-        <Field name={priority} type="number" min={0} max={priorityMax} disabled={priorityDisabled} className={errors.priority && touched.priority ? 'full-width-input error' : 'full-width-input'} />
+        <Field
+          name={priority}
+          type="number"
+          min={0}
+          max={priorityMax}
+          disabled={priorityDisabled}
+          className={
+            errors.priority && touched.priority
+              ? 'full-width-input error'
+              : 'full-width-input'
+          }
+        />
       </div>
       <div className="form-row">
         <label className="input-title" htmlFor={isActive}>
           Installed
         </label>
-        <Field name={isActive} type="checkbox" checked={formikValueWithPrefix(props, 'isActive')} className={errors.isActive && touched.isActive ? 'full-width-input error' : 'full-width-input'} />
+        <Field
+          name={isActive}
+          type="checkbox"
+          checked={formikValueWithPrefix(props, 'isActive')}
+          className={
+            errors.isActive && touched.isActive
+              ? 'full-width-input error'
+              : 'full-width-input'
+          }
+        />
       </div>
     </div>
   );

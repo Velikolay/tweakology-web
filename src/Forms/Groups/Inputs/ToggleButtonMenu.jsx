@@ -6,7 +6,7 @@ import { formikValueWithPrefix } from '../Utils';
 
 import './ToggleButtonMenu.css';
 
-const ToggleButtonMenu = (props) => {
+const ToggleButtonMenu = props => {
   const {
     className,
     name: globalName,
@@ -16,50 +16,44 @@ const ToggleButtonMenu = (props) => {
     children,
   } = props;
   if (children.length) {
-    const exclusiveValue = exclusiveMode ? formikValueWithPrefix(props, globalName) : null;
+    const exclusiveValue = exclusiveMode
+      ? formikValueWithPrefix(props, globalName)
+      : null;
     const width = 100 / children.length;
-    const buttons = children.map(({
-      props: {
-        name: optionName,
-        value: optionValue,
-        children: optionChildren,
+    const buttons = children.map(
+      ({
+        props: {
+          name: optionName,
+          value: optionValue,
+          children: optionChildren,
+        },
+      }) => {
+        const isOn = exclusiveMode
+          ? exclusiveValue === optionValue
+          : formikValueWithPrefix(props, optionName);
+        const name = exclusiveMode ? globalName : optionName;
+        const value = exclusiveMode ? optionValue : !isOn;
+        const key = exclusiveMode ? `${globalName}-${optionValue}` : optionName;
+        return (
+          <ToggleButton
+            key={key}
+            width={width}
+            isOn={isOn}
+            disabled={disabled}
+            onSwitch={() => onSwitch(name, value)}
+          >
+            {optionChildren}
+          </ToggleButton>
+        );
       },
-    }) => {
-      const isOn = exclusiveMode
-        ? exclusiveValue === optionValue
-        : formikValueWithPrefix(props, optionName);
-      const name = exclusiveMode ? globalName : optionName;
-      const value = exclusiveMode ? optionValue : !isOn;
-      const key = exclusiveMode ? `${globalName}-${optionValue}` : optionName;
-      return (
-        <ToggleButton
-          key={key}
-          width={width}
-          isOn={isOn}
-          disabled={disabled}
-          onSwitch={() => onSwitch(name, value)}
-        >
-          {optionChildren}
-        </ToggleButton>
-      );
-    });
-    return (
-      <div className={className}>
-        {buttons}
-      </div>
     );
+    return <div className={className}>{buttons}</div>;
   }
   return null;
 };
 
-const ToggleButton = (props) => {
-  const {
-    width,
-    disabled,
-    isOn,
-    children,
-    onSwitch,
-  } = props;
+const ToggleButton = props => {
+  const { width, disabled, isOn, children, onSwitch } = props;
 
   const style = { width: `${width}%` };
 

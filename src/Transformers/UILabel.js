@@ -2,7 +2,6 @@ import UIViewTransformer from './UIView';
 import FontTransformer from './UIFont';
 
 const UILabelTransformer = {
-
   fromPayload: (props, systemContext) => ({
     ...UIViewTransformer.fromPayload(props),
     text: props.text,

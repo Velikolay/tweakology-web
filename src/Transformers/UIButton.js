@@ -2,7 +2,6 @@ import UIViewTransformer from './UIView';
 import FontTransformer from './UIFont';
 
 const UIButtonLabelTransformer = {
-
   fromPayload: (props, systemContext) => ({
     text: props.text,
     textColor: props.textColor,
@@ -17,10 +16,12 @@ const UIButtonLabelTransformer = {
 };
 
 const UIButtonTransformer = {
-
   fromPayload: (props, systemContext) => ({
     ...UIViewTransformer.fromPayload(props),
-    title: UIButtonLabelTransformer.fromPayload(props.title.properties, systemContext),
+    title: UIButtonLabelTransformer.fromPayload(
+      props.title.properties,
+      systemContext,
+    ),
   }),
 
   toPayload: (props, systemContext) => ({
