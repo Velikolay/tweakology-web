@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
-import FormikObserver from 'formik-observer';
 
-import Persist from './Persistence/Presistence';
+import { withFormikShell } from './FormikShell';
 import { withFormikContextProvider } from './FormikContext';
+
 import Constraint from './Groups/Constraint';
 
 const InnerNSLayoutConstraint = ({
@@ -13,14 +13,7 @@ const InnerNSLayoutConstraint = ({
   formData,
   handleSubmit,
   onFormChange,
-}) => (
-  <form onSubmit={handleSubmit}>
-    <Constraint itemOptions={formData.itemOptions} />
-    <FormikObserver onChange={({ values }) => onFormChange(id, type, values)} />
-
-    <Persist name={id} />
-  </form>
-);
+}) => <Constraint itemOptions={formData.itemOptions} />;
 
 const EnhancedNSLayoutConstraint = withFormik({
   enableReinitialize: true,
@@ -37,7 +30,7 @@ const EnhancedNSLayoutConstraint = withFormik({
     }, 1000);
   },
   displayName: 'NSLayoutConstraint',
-})(withFormikContextProvider(InnerNSLayoutConstraint));
+})(withFormikContextProvider(withFormikShell(InnerNSLayoutConstraint)));
 
 const NSLayoutConstraint = props => <EnhancedNSLayoutConstraint {...props} />;
 

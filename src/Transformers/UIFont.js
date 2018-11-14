@@ -1,29 +1,44 @@
+// @flow
+import type { UIFont, DeviceFonts } from '../Device/Types';
 import { toFontStyles } from '../Utils/Font';
 
 const FontTransformer = {
-  fromPayload: (font, systemContext) => {
-    const { fontName, pointSize } = font;
+  fromPayload: (font: UIFont, systemContext: { fonts: DeviceFonts }) => {
+    const { trait, fontName, pointSize } = font;
     const { system, preffered } = systemContext.fonts;
 
-    let res = font;
-    Object.entries(system).forEach(([sysFamilyName, sysFontNames]) => {
-      if (sysFontNames.includes(fontName)) {
-        res = { familyName: sysFamilyName, fontName, pointSize };
+    for (const sysFamilyName in system) {
+      if ({}.hasOwnProperty.call(system, sysFamilyName)) {
+        const sysFontNames = system[sysFamilyName];
+        if (sysFontNames.includes(fontName)) {
+          return { trait, familyName: sysFamilyName, fontName, pointSize };
+        }
       }
-    });
-    Object.entries(preffered).forEach(([presetGroup, presetOptions]) => {
-      Object.entries(presetOptions).forEach(
-        ([presetName, { fontName: fn, pointSize: ps }]) => {
-          if (fontName === fn && pointSize === ps) {
-            res = { familyName: presetGroup, fontName: presetName, pointSize };
+    }
+
+    for (const presetGroup in preffered) {
+      if ({}.hasOwnProperty.call(preffered, presetGroup)) {
+        const presetOptions = preffered[presetGroup];
+        for (const presetName in presetOptions) {
+          if ({}.hasOwnProperty.call(presetOptions, presetName)) {
+            const { fontName: fn, pointSize: ps } = presetOptions[presetName];
+            if (fontName === fn && pointSize === ps) {
+              return {
+                trait,
+                familyName: presetGroup,
+                fontName: presetName,
+                pointSize,
+              };
+            }
           }
-        },
-      );
-    });
-    return res;
+        }
+      }
+    }
+    return font;
   },
 
-  toPayload: ({ familyName, fontName, pointSize }) => ({
+  toPayload: ({ trait, familyName, fontName, pointSize }: any): UIFont => ({
+    trait,
     familyName,
     fontName,
     fontStyle: toFontStyles(fontName),

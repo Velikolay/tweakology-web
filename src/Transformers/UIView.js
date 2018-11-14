@@ -1,7 +1,10 @@
+// @flow
+import type { UIView } from '../Device/Types';
+
 const UIViewTransformer = {
   fromPayload: (
-    { frame, backgroundColor, contentMode, semanticContentAttribute },
-    systemContext,
+    { frame, backgroundColor, contentMode, semanticContentAttribute }: UIView,
+    systemContext: any,
   ) => ({
     frame,
     backgroundColor,
@@ -10,9 +13,9 @@ const UIViewTransformer = {
   }),
 
   toPayload: (
-    { frame, backgroundColor, contentMode, semanticContentAttribute },
-    systemContext,
-  ) => ({
+    { frame, backgroundColor, contentMode, semanticContentAttribute }: any,
+    systemContext: any,
+  ): UIView => ({
     frame,
     backgroundColor,
     contentMode: parseInt(contentMode, 10),
