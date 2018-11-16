@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { CSSTransitionGroup } from 'react-transition-group';
-import Split from 'split.js';
+import Split from 'react-split';
 
 import SystemContext from './Context/SystemContext';
 import Form from './Forms/Form';
@@ -59,19 +58,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    Split(
-      [
-        ReactDOM.findDOMNode(this.treeRef), // eslint-disable-line react/no-find-dom-node
-        ReactDOM.findDOMNode(this.middleSectionRef), // eslint-disable-line react/no-find-dom-node
-        ReactDOM.findDOMNode(this.configRef), // eslint-disable-line react/no-find-dom-node
-      ],
-      {
-        sizes: [20, 60, 20],
-        minSize: [200, 300, 200],
-        gutterSize: 5,
-      },
-    );
-
     this.updateTree();
 
     fetch(`${APP_INSPECTOR_EP}fonts`)
@@ -282,14 +268,15 @@ class App extends Component {
     // }).map(props => <UIElementConstraintLine {...props} />);
 
     return (
-      <div className="App">
+      <Split
+        className="App"
+        sizes={[20, 60, 20]}
+        minSize={[250, 300, 250]}
+        gutterSize={4}
+        expandToMin
+      >
         <SystemContext.Provider value={this.systemContext}>
-          <div
-            ref={el => {
-              this.treeRef = el;
-            }}
-            className="tree-section"
-          >
+          <div className="tree-section">
             <UIHierarchyTree
               tree={tree}
               activeNode={activeNode}
@@ -311,12 +298,7 @@ class App extends Component {
             </CSSTransitionGroup>
             <TreeToolbar onAddNodeClick={this.onAddNodeClick} />
           </div>
-          <div
-            ref={el => {
-              this.middleSectionRef = el;
-            }}
-            className="middle-section"
-          >
+          <div className="middle-section">
             <UIHierarchyScene
               views={toThreeViews({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
@@ -324,12 +306,7 @@ class App extends Component {
             />
             <MainToolbar onSubmitChanges={this.onSubmitChanges} />
           </div>
-          <div
-            ref={el => {
-              this.configRef = el;
-            }}
-            className="config-section"
-          >
+          <div className="config-section">
             {activeNode !== null ? (
               <Form
                 id={activeNode.id}
@@ -341,7 +318,7 @@ class App extends Component {
             ) : null}
           </div>
         </SystemContext.Provider>
-      </div>
+      </Split>
     );
   }
 }
