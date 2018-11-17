@@ -22,7 +22,7 @@ const constraintToPayload = constraints => {
   };
 };
 
-const submitChanges = (tree, systemContext) => {
+const buildChangeSet = (tree, systemContext) => {
   const ids = treeToFormIds(tree);
   const changeSet = [];
 
@@ -61,15 +61,7 @@ const submitChanges = (tree, systemContext) => {
     });
   });
 
-  console.log(changeSet);
-  return fetch('http://NIKOIVAN02M.local:8080/tweaks/test', {
-    method: 'put',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(changeSet),
-  }).then(res => {
-    localStorage.clear();
-    return res;
-  });
+  return changeSet;
 };
 
-export { submitChanges };
+export { buildChangeSet };

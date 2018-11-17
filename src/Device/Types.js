@@ -88,6 +88,8 @@ export type UIViewNode<T: AnyUIView> = {
   subviews: UIViewNode<T>[],
 };
 
+export type UITree = UIViewNode<AnyUIView>;
+
 export type DeviceFonts = {
   families?: string[],
   all?: { [fontFamily: string]: string[] },
@@ -101,4 +103,8 @@ export type DeviceFonts = {
       },
     },
   },
+};
+
+export type DeviceSystemData = {
+  fonts: DeviceFonts,
 };

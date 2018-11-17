@@ -1,7 +1,8 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
+const bonjour = require('bonjour')();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -32,6 +33,9 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  // mainWindow.webContents.once('dom-ready', () => {
+  // });
 }
 
 // This method will be called when Electron has finished
@@ -56,5 +60,31 @@ app.on('activate', () => {
   }
 });
 
+const agentCreds = service => {
+  const { name, host, port } = service;
+  const myRegexp = /^TweakologyAgent_(\w+)/g;
+  const match = myRegexp.exec(name);
+  if (match) {
+    return { name: match[1], host, port };
+  }
+  return null;
+};
+
+ipcMain.on('app-component-mounted', () => {
+  // browse for all http services
+  const browser = bonjour.find({ type: 'http' });
+  browser.on('up', service => {
+    const agent = agentCreds(service);
+    if (agent) {
+      mainWindow.webContents.send('agent-update', { online: true, ...agent });
+    }
+  });
+  browser.on('down', service => {
+    const agent = agentCreds(service);
+    if (agent) {
+      mainWindow.webContents.send('agent-update', { online: false, ...agent });
+    }
+  });
+});
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

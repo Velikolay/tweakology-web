@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
+
 import { CSSTransitionGroup } from 'react-transition-group';
 import Split from 'react-split';
 
+import DeviceConnector from './Device/Connector';
 import SystemContext from './Context/SystemContext';
-import Form from './Forms/Form';
 
-import { submitChanges } from './Forms/Submit';
+import Form from './Forms/Form';
+import { buildChangeSet } from './Forms/Submit';
+import { readPersistedValues } from './Forms/Persistence/Presistence';
+
 import { enrichFontsData } from './Utils/Font';
 import {
   transformConstraintPayloadToTree,
@@ -22,15 +26,14 @@ import TreeToolbar from './TreeToolbar';
 import NewViewMenu from './NewViewMenu';
 
 import './App.css';
-import { readPersistedValues } from './Forms/Persistence/Presistence';
 
 require('react-ui-tree/dist/react-ui-tree.css');
-
-const APP_INSPECTOR_EP = 'http://NIKOIVAN02M.local:8080/';
 
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.deviceConnector = new DeviceConnector();
 
     this.state = {
       tree: {
@@ -58,37 +61,52 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.updateTree();
-
-    fetch(`${APP_INSPECTOR_EP}fonts`)
-      .then(response => response.json())
-      .then(fontsData => {
-        this.systemContext = {
-          fonts: enrichFontsData(fontsData),
-        };
-      });
+    const { ipcRenderer } = window.require('electron');
+    ipcRenderer.on('agent-update', (event, device) => {
+      const connected = this.deviceConnector.isConnected();
+      this.deviceConnector.updateRemoteDevice(device);
+      if (!connected && this.deviceConnector.isConnected()) {
+        this.updateTree();
+        this.updateSystemContext();
+      }
+    });
+    ipcRenderer.send('app-component-mounted');
   }
 
-  updateTree = () => {
-    fetch(APP_INSPECTOR_EP)
-      .then(response => response.json())
-      .then(data => {
+  updateSystemContext = () =>
+    this.deviceConnector
+      .fetchSystemData()
+      .then(({ fonts }) => {
+        this.systemContext = {
+          fonts: enrichFontsData(fonts),
+        };
+      })
+      .catch(err => console.log(err));
+
+  updateTree = () =>
+    this.deviceConnector
+      .fetchUITree()
+      .then(uiTree => {
         const { activeNode } = this.state;
         const revision = Date.now();
-        const tree = this.transformPayloadToTree(data, revision);
+        const tree = this.transformPayloadToTree(uiTree, revision);
         const updatedState = {
           tree,
           activeNode:
             (activeNode && this.findNode(tree, activeNode.id)) || tree,
         };
         this.setState(updatedState);
-      });
-  };
+      })
+      .catch(err => console.log(err));
 
   onSubmitChanges = () => {
     const { tree } = this.state;
-    submitChanges(tree, this.systemContext).then(() => this.updateTree());
-    // window.localStorage.clear();
+    const changeSet = buildChangeSet(tree, this.systemContext);
+    this.deviceConnector
+      .submitChanges('test', changeSet)
+      .then(() => this.updateTree())
+      .then(() => localStorage.clear())
+      .catch(err => console.log(err));
   };
 
   onFormUpdate = (id, type, values) => {
@@ -139,12 +157,10 @@ class App extends Component {
         },
       },
     ];
-
-    fetch('http://NIKOIVAN02M.local:8080/tweaks/test', {
-      method: 'put',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(insertNewViewConfig),
-    }).then(() => this.updateTree());
+    this.deviceConnector
+      .submitChanges('test', insertNewViewConfig)
+      .then(() => this.updateTree())
+      .catch(err => console.log(err));
   };
 
   onNodeClick = node => {
@@ -268,14 +284,14 @@ class App extends Component {
     // }).map(props => <UIElementConstraintLine {...props} />);
 
     return (
-      <Split
-        className="App"
-        sizes={[20, 60, 20]}
-        minSize={[250, 300, 250]}
-        gutterSize={4}
-        expandToMin
-      >
-        <SystemContext.Provider value={this.systemContext}>
+      <SystemContext.Provider value={this.systemContext}>
+        <Split
+          className="App"
+          sizes={[20, 60, 20]}
+          minSize={[250, 300, 250]}
+          gutterSize={4}
+          expandToMin
+        >
           <div className="tree-section">
             <UIHierarchyTree
               tree={tree}
@@ -317,8 +333,8 @@ class App extends Component {
               />
             ) : null}
           </div>
-        </SystemContext.Provider>
-      </Split>
+        </Split>
+      </SystemContext.Provider>
     );
   }
 }
