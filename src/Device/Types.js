@@ -83,7 +83,6 @@ export type UIViewNode<T: AnyUIView> = {
     kind: number,
   },
   properties: T,
-  hierarchyMetadata: string,
   constraints: NSLayoutConstraint[],
   subviews: UIViewNode<T>[],
 };

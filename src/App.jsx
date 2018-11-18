@@ -234,7 +234,6 @@ class App extends Component {
     const {
       uid: { value: id, kind },
       type,
-      hierarchyMetadata,
       properties,
       constraints,
       subviews,
@@ -245,7 +244,7 @@ class App extends Component {
       id,
       type,
       revision,
-      hierarchyMetadata,
+      imgUrl: `${this.deviceConnector.endpoint}/images/${id}`,
       properties,
       updatedProperties: readPersistedValues(id),
     };

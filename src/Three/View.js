@@ -22,15 +22,19 @@ const toThreeViews = ({ tree, activeNode, onFocusNode }, depth = 0) => {
   if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
     return null;
   }
-
-  const { id, revision, children, properties, updatedProperties } = treeNode;
+  const {
+    id,
+    revision,
+    imgUrl,
+    children,
+    properties,
+    updatedProperties,
+  } = treeNode;
   const { frame } = updatedProperties || properties;
   const meshTree = {
     id,
     revision,
-    imgUrl: `http://NIKOIVAN02M.local:8080/images?path=${
-      treeNode.hierarchyMetadata
-    }`,
+    imgUrl,
     selected: isSelected(treeNode, activeNode),
     onFocus: onFocusNode !== null && onFocusNode.id === id,
     ...frame,

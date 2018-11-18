@@ -14,7 +14,6 @@ const TreeViewNodeShape = PropTypes.shape({
   module: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  hierarchyMetadata: PropTypes.string.isRequired,
   revision: PropTypes.number.isRequired,
   properties: PropTypes.object.isRequired,
   threeD: PropTypes.shape({
