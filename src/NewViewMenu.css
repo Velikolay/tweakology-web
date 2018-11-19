@@ -67,7 +67,7 @@
 }
 
 .sliding-enter {
-  bottom: -162px;
+  bottom: -186px;
   /* opacity: 0.01; */
 }
 
@@ -83,7 +83,7 @@
 }
 
 .sliding-leave.sliding-leave-active {
-  bottom: -162px;
+  bottom: -186px;
   /* opacity: 0.01; */
   transition: bottom 100ms ease-in;
 }
