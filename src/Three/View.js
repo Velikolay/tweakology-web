@@ -17,7 +17,22 @@ const isSelected = (node, activeNode) => {
   return selected;
 };
 
-const toThreeViews = ({ tree, activeNode, onFocusNode }, depth = 0) => {
+class DepthCounter {
+  constructor() {
+    this.counter = 0;
+  }
+
+  getAndIncrement = () => {
+    const res = this.counter;
+    this.counter += 1;
+    return res;
+  };
+}
+
+const toThreeViews = (
+  { tree, activeNode, onFocusNode },
+  depthCounter = new DepthCounter(),
+) => {
   const treeNode = tree;
   if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
     return null;
@@ -38,17 +53,15 @@ const toThreeViews = ({ tree, activeNode, onFocusNode }, depth = 0) => {
     selected: isSelected(treeNode, activeNode),
     onFocus: onFocusNode !== null && onFocusNode.id === id,
     ...frame,
-    z: depth,
+    z: depthCounter.getAndIncrement(),
     children: [],
   };
   if (children) {
-    let depthCnt = depth;
     children.forEach(childNode => {
       if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
-        depthCnt += 1;
         const childMeshTree = toThreeViews(
           { tree: childNode, activeNode, onFocusNode },
-          depthCnt,
+          depthCounter,
         );
         meshTree.children.push(childMeshTree);
       }

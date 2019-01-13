@@ -15,7 +15,7 @@ import DragControls from './Controls/DragControls';
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
-const DEFAULT_PLANE_OFFSET = 10;
+const DEFAULT_PLANE_OFFSET = 2;
 
 const initOrbitControls = (camera, constainer) => {
   const controls = new OrbitControls(camera, constainer);
@@ -173,7 +173,7 @@ class UIHierarchyScene extends Component {
         />
         <Slider
           min={1}
-          max={40}
+          max={15}
           className="plane-offset-slider"
           defaultValue={DEFAULT_PLANE_OFFSET}
           trackStyle={{ backgroundColor: '#c89637', height: 5 }}

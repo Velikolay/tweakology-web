@@ -83,6 +83,7 @@ const valueSwitch = {
 
 const attributeToModifiers = {
   // attribute: [relativeToMargin, respectLanguageDirection]
+  0: [undefined, undefined],
   1: [false, false],
   2: [false, false],
   3: [false, undefined],

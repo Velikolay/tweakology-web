@@ -108,6 +108,26 @@
   padding-left: 96px;
 }
 
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 112px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 128px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 144px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 160px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+  padding-left: 176px;
+}
+
 .m-node .collapse {
   padding-left: 4px;
 }
@@ -130,6 +150,26 @@
 
 .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
   padding-left: 84px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 100px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 116px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 132px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 148px;
+}
+
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
+  padding-left: 164px;
 }
 
 .m-node .collapse {
