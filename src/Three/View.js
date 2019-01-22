@@ -29,8 +29,22 @@ class DepthCounter {
   };
 }
 
+const calcRectDimensions = (frame, offset) => {
+  if (offset) {
+    const { x: offX, y: offY } = offset;
+    const { x, y, ...rest } = frame;
+    return {
+      x: x - offX,
+      y: y - offY,
+      ...rest,
+    };
+  }
+  return frame;
+};
+
 const toThreeViews = (
   { tree, activeNode, onFocusNode },
+  offset = { x: 0, y: 0 },
   depthCounter = new DepthCounter(),
 ) => {
   const treeNode = tree;
@@ -45,14 +59,14 @@ const toThreeViews = (
     properties,
     updatedProperties,
   } = treeNode;
-  const { frame } = updatedProperties || properties;
+  const { frame, contentOffset } = updatedProperties || properties;
   const meshTree = {
     id,
     revision,
     imgUrl,
     selected: isSelected(treeNode, activeNode),
     onFocus: onFocusNode !== null && onFocusNode.id === id,
-    ...frame,
+    ...calcRectDimensions(frame, offset),
     z: depthCounter.getAndIncrement(),
     children: [],
   };
@@ -61,6 +75,7 @@ const toThreeViews = (
       if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
         const childMeshTree = toThreeViews(
           { tree: childNode, activeNode, onFocusNode },
+          contentOffset,
           depthCounter,
         );
         meshTree.children.push(childMeshTree);

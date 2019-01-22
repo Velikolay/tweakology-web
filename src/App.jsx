@@ -233,6 +233,7 @@ class App extends Component {
   transformPayloadToTree = (uiElement, revision) => {
     const {
       uid: { value: id, kind },
+      name,
       type,
       properties,
       constraints,
@@ -240,8 +241,9 @@ class App extends Component {
     } = uiElement;
 
     const treeNode = {
-      module: kind === 0 ? type : id,
+      module: kind === 0 ? name : id,
       id,
+      name,
       type,
       revision,
       imgUrl: `${this.deviceConnector.endpoint}/images/${id}`,

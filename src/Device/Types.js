@@ -1,11 +1,16 @@
 // @flow
 
-export type CGRect = {
+export type CGPoint = {
   x: number,
   y: number,
+};
+
+export type CGSize = {
   width: number,
   height: number,
-};
+}
+
+export type CGRect = CGPoint & CGSize;
 
 export type UIColor = {
   hexValue: string,
@@ -55,7 +60,17 @@ export type UIImageView = UIView & {
   },
 };
 
-export type AnyUIView = UIView | UILabel | UIButton | UIImageView;
+export type UIScrollView = UIView & {
+  contentOffset: CGPoint,
+  contentSize: CGSize,
+};
+
+export type AnyUIView =
+  | UIView
+  | UILabel
+  | UIButton
+  | UIImageView
+  | UIScrollView;
 
 export type NSLayoutConstraint = {
   meta: {

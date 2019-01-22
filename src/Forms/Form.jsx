@@ -13,7 +13,7 @@ const Form = props => {
   if (type === 'UIButton') {
     return <UIButtonView {...props} />;
   }
-  if (type === 'UILabel' || type === 'UIButtonLabel') {
+  if (type === 'UILabel') {
     return <UILabelView {...props} />;
   }
   if (type === 'UIImageView') {

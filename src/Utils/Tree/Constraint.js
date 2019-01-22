@@ -12,8 +12,8 @@ const numToFixed = num => {
   return num;
 };
 
-const isLeaf = viewNode =>
-  viewNode.type === 'UILabel' || viewNode.type === 'UIButton';
+const isLeaf = ({ type }) =>
+  type === 'UILabel' || type === 'UIButton' || type === 'UIImageView';
 
 const itemTypeById = (itemId, superview) => {
   if (superview) {
@@ -82,7 +82,7 @@ const constraintNodeName = (constraint, superview) => {
 const constraintItemOptions = viewNode => {
   const itemOptions = [];
   if (isLeaf(viewNode)) {
-    itemOptions.push({ label: viewNode.type, value: viewNode.id });
+    itemOptions.push({ label: viewNode.name, value: viewNode.id });
   } else {
     itemOptions.push({ label: 'Superview', value: viewNode.id });
     for (const childViewNode of viewNode.children) {
