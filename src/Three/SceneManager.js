@@ -11,6 +11,7 @@ const _createMesh = props => {
     polygonOffset: true,
     polygonOffsetFactor: 1, // positive value pushes polygon further away
     polygonOffsetUnits: 1,
+    alphaTest: 0.5,
   });
   // img.map.needsUpdate = true;
   img.map.minFilter = THREE.LinearFilter;
@@ -57,7 +58,6 @@ const _createLineSegments = props => {
 
 const _updateView = (group, viewProps, nextViewProps) => {
   const { width, height, selected, onFocus, imgUrl, revision } = nextViewProps;
-
   for (const el of group.children) {
     if (viewProps.width) {
       el.scale.x *= width / viewProps.width;

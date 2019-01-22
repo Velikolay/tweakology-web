@@ -173,7 +173,7 @@ class UIHierarchyScene extends Component {
         />
         <Slider
           min={1}
-          max={15}
+          max={25}
           className="plane-offset-slider"
           defaultValue={DEFAULT_PLANE_OFFSET}
           trackStyle={{ backgroundColor: '#c89637', height: 5 }}
