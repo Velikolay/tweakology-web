@@ -195,21 +195,26 @@ class App extends Component {
     this.nodeDragging = false;
   };
 
-  on3DObjectDrag = (state, obj) => {
-    const {
-      activeNode: { id },
-    } = this.state;
+  sceneEventHandler = (eventName, obj) => {
+    const { activeNode } = this.state;
     if (this.formikBag) {
       const { setFieldValue } = this.formikBag;
-      if (state === 'drag') {
+      if (eventName === 'drag') {
         const {
-          id: objId,
           position: { x, y },
         } = obj;
-        if (id === objId) {
+        if (activeNode.id === obj.id) {
           setFieldValue('frame.x', Math.trunc(x));
           setFieldValue('frame.y', Math.trunc(y));
         }
+      }
+      if (eventName === 'select') {
+        const { tree } = this.state;
+        this.setState({ activeNode: this.findNode(tree, obj.id) });
+      }
+      if (eventName === 'hoveron') {
+        const { tree } = this.state;
+        this.setState({ onFocusNode: this.findNode(tree, obj.id) });
       }
     }
   };
@@ -297,6 +302,7 @@ class App extends Component {
             <UIHierarchyTree
               tree={tree}
               activeNode={activeNode}
+              onFocusNode={onFocusNode}
               onClickAdd={this.onClickAdd}
               onNodeClick={this.onNodeClick}
               onNodeFocus={this.onNodeFocus}
@@ -319,7 +325,7 @@ class App extends Component {
             <UIHierarchyScene
               views={toThreeViews({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
-              onDragHandler={this.on3DObjectDrag}
+              eventHandler={this.sceneEventHandler}
             />
             <MainToolbar onSubmitChanges={this.onSubmitChanges} />
           </div>

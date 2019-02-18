@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 
-class DragControls extends THREE.EventDispatcher {
+const getNode = intersect => {
+  const { parent: meshGroup } = intersect.object;
+  const { parent: nodeGroup } = meshGroup;
+  return nodeGroup;
+};
+
+class AppControls extends THREE.EventDispatcher {
   constructor(camera, domElement, objects) {
     super();
     this.objects = objects;
@@ -28,7 +34,7 @@ class DragControls extends THREE.EventDispatcher {
     this.activate();
   }
 
-  setDraggableObjects(objects) {
+  setObjects(objects) {
     this.objects = objects;
   }
 
@@ -134,11 +140,10 @@ class DragControls extends THREE.EventDispatcher {
     const intersects = this.raycaster.intersectObjects(this.objects, true);
 
     if (intersects.length > 0) {
-      const { object } = intersects[0];
-      if (this.hovered !== object) {
-        this.dispatchEvent({ type: 'hoveron', object });
+      if (this.hovered !== intersects[0]) {
+        this.hovered = getNode(intersects[0]);
         this.domElement.style.cursor = 'pointer';
-        this.hovered = object;
+        this.dispatchEvent({ type: 'hoveron', object: this.hovered });
       }
     } else if (this.hovered !== null) {
       this.dispatchEvent({ type: 'hoveroff', object: this.hovered });
@@ -153,13 +158,12 @@ class DragControls extends THREE.EventDispatcher {
     const intersects = this.raycaster.intersectObjects(this.objects, true);
 
     if (intersects.length > 0) {
-      const { parent: meshGroup } = intersects[0].object;
-      const { parent: nodeGroup } = meshGroup;
-      this.selected = nodeGroup;
+      this.selected = getNode(intersects[0]);
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
       }
       this.domElement.style.cursor = 'move';
+      this.dispatchEvent({ type: 'select', object: this.selected });
       this.dispatchEvent({ type: 'dragstart', object: this.selected });
     }
   }
@@ -206,13 +210,12 @@ class DragControls extends THREE.EventDispatcher {
     const intersects = this.raycaster.intersectObjects(this.objects);
 
     if (intersects.length > 0) {
-      const { parent: meshGroup } = intersects[0].object;
-      const { parent: nodeGroup } = meshGroup;
-      this.selected = nodeGroup;
+      this.selected = getNode(intersects[0]);
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
       }
       this.domElement.style.cursor = 'move';
+      this.dispatchEvent({ type: 'select', object: this.selected });
       this.dispatchEvent({ type: 'dragstart', object: this.selected });
     }
   }
@@ -227,4 +230,4 @@ class DragControls extends THREE.EventDispatcher {
   }
 }
 
-export default DragControls;
+export default AppControls;

@@ -10,7 +10,7 @@ import SceneManager from './SceneManager';
 
 import 'rc-slider/assets/index.css';
 import './UIHierarchyScene.css';
-import DragControls from './Controls/DragControls';
+import AppControls from './Controls/AppControls';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -51,7 +51,7 @@ class UIHierarchyScene extends Component {
       self.updateCanvasDimensions();
     });
 
-    const { views, constraintIndicators, onDragHandler } = this.props;
+    const { views, constraintIndicators, eventHandler } = this.props;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     const fov = 75;
@@ -71,10 +71,10 @@ class UIHierarchyScene extends Component {
     this.coordTranslator = new CoordinateTranslator(scene);
 
     this.orbitControls = initOrbitControls(camera, this.renderer.domElement);
-    this.dragControls = new DragControls(camera, this.renderer.domElement);
-    this.dragControls.addEventListener('dragstart', this.dragStart);
-    this.dragControls.addEventListener('dragend', this.dragEnd);
-    this.dragControls.addEventListener('drag', event => {
+    this.appControls = new AppControls(camera, this.renderer.domElement);
+    this.appControls.addEventListener('dragstart', this.dragStart);
+    this.appControls.addEventListener('dragend', this.dragEnd);
+    this.appControls.addEventListener('drag', event => {
       const {
         userData: { id },
         position: coord3D,
@@ -82,9 +82,20 @@ class UIHierarchyScene extends Component {
       const v = this.coordTranslator.calcDeviceCoord(event.object);
       const position = new THREE.Vector3();
       position.addVectors(coord3D, v);
-      onDragHandler('drag', { id, position });
+      eventHandler('drag', { id, position });
     });
-
+    this.appControls.addEventListener('select', event => {
+      const {
+        userData: { id },
+      } = event.object;
+      eventHandler('select', { id });
+    });
+    this.appControls.addEventListener('hoveron', event => {
+      const {
+        userData: { id },
+      } = event.object;
+      eventHandler('hoveron', { id });
+    });
     this.sceneManager = new SceneManager(
       this.scene,
       this.coordTranslator,
@@ -101,18 +112,16 @@ class UIHierarchyScene extends Component {
     const { views, constraintIndicators } = nextProps;
     this.sceneManager.updateViews(views);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
-    if (this.dragControls) {
-      this.dragControls.setDraggableObjects(
-        this.sceneManager.getSelectedMeshGroups(),
-      );
+    if (this.appControls) {
+      this.appControls.setObjects(this.sceneManager.getMeshGroups());
     }
   }
 
   componentWillUnmount() {
     this.orbitControls.dispose();
     delete this.orbitControls;
-    this.dragControls.dispose();
-    delete this.dragControls;
+    this.appControls.dispose();
+    delete this.appControls;
     this.sceneResizeSensor.detach();
     this.stop();
     this.container.removeChild(this.renderer.domElement);
@@ -131,20 +140,20 @@ class UIHierarchyScene extends Component {
     }
   }
 
-  dragStart() {
+  dragStart(event) {
     if (this.orbitControls) {
       this.orbitControls.enabled = false;
     }
-    const { onDragHandler } = this.props;
-    onDragHandler('dragstart');
+    const { eventHandler } = this.props;
+    eventHandler('dragstart');
   }
 
   dragEnd() {
     if (this.orbitControls) {
       this.orbitControls.enabled = true;
     }
-    const { onDragHandler } = this.props;
-    onDragHandler('dragend');
+    const { eventHandler } = this.props;
+    eventHandler('dragend');
   }
 
   start() {
@@ -234,7 +243,7 @@ UIHierarchyScene.propTypes = {
       ).isRequired,
     }),
   ).isRequired,
-  onDragHandler: PropTypes.func,
+  eventHandler: PropTypes.func,
 };
 
 export default UIHierarchyScene;

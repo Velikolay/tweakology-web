@@ -95,8 +95,8 @@ const toThreeViews = (
     properties,
     updatedProperties,
   } = treeNode;
-  const { frame, contentOffset } = updatedProperties || properties;
-  const { globalFrame } = properties;
+  const { frame } = updatedProperties || properties;
+  const { globalFrame, contentOffset } = properties;
   const rectDim = offsetRectDim(frame, offset);
   const meshTree = {
     id,

@@ -105,10 +105,10 @@ class SceneManager {
     this.showTexture = true;
   }
 
-  getSelectedMeshGroups() {
-    return Object.values(this.viewsMap)
-      .filter(({ userData: { selected } }) => selected)
-      .map(({ children: [meshGroup] }) => meshGroup);
+  getMeshGroups() {
+    return Object.values(this.viewsMap).map(
+      ({ children: [meshGroup] }) => meshGroup,
+    );
   }
 
   flipTextureVisibility() {

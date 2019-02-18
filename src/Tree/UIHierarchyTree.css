@@ -31,11 +31,7 @@
   background-color: #0071b899;
 }
 
-.m-node .container.is-active:hover {
-  background-color: #0071b899;
-}
-
-.m-node .container:hover {
+.m-node .container.is-onfocus {
   background-color: #34343499;
 }
 

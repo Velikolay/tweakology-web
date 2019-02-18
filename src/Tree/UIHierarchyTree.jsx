@@ -10,20 +10,15 @@ import './UIHierarchyTree.css';
 class UIHierarchyTree extends Component {
   constructor(props) {
     super(props);
-    const { tree, activeNode } = this.props;
-    this.state = { tree, activeNode };
+    const { tree, activeNode, onFocusNode } = this.props;
+    this.state = { tree, activeNode, onFocusNode };
   }
 
   componentWillReceiveProps(nextProps) {
-    const newState = {
-      tree: nextProps.tree,
-      activeNode: nextProps.activeNode,
-    };
-    this.setState(newState);
+    this.setState(nextProps);
   }
 
   renderNode = node => {
-    const { activeNode } = this.state;
     const {
       onNodeClick,
       onNodeFocus,
@@ -35,10 +30,11 @@ class UIHierarchyTree extends Component {
     return (
       <div
         className={cx('container', {
-          'is-active': activeNode && node.id === activeNode.id,
+          'is-active': this.isActive(node),
+          'is-onfocus': this.isOnFocus(node) && !this.isActive(node),
         })}
       >
-        {activeNode && node.id === activeNode.id && !('leaf' in node) ? (
+        {this.isActive(node) && !('leaf' in node) ? (
           <button
             type="button"
             className="add-button"
@@ -61,6 +57,16 @@ class UIHierarchyTree extends Component {
         </div>
       </div>
     );
+  };
+
+  isActive = node => {
+    const { activeNode } = this.state;
+    return activeNode && activeNode.id === node.id;
+  };
+
+  isOnFocus = node => {
+    const { onFocusNode } = this.state;
+    return onFocusNode && onFocusNode.id === node.id;
   };
 
   handleChange = tree => {
@@ -95,6 +101,7 @@ class UIHierarchyTree extends Component {
 UIHierarchyTree.propTypes = {
   tree: TreeRootNodeShape.isRequired,
   activeNode: TreeNodeShape,
+  onFocusNode: TreeNodeShape,
   onNodeClick: PropTypes.func.isRequired,
   onNodeFocus: PropTypes.func.isRequired,
   onNodeFocusOut: PropTypes.func.isRequired,
@@ -105,6 +112,7 @@ UIHierarchyTree.propTypes = {
 
 UIHierarchyTree.defaultProps = {
   activeNode: null,
+  onFocusNode: null,
 };
 
 export default UIHierarchyTree;
