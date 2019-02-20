@@ -8,7 +8,7 @@ export type CGPoint = {
 export type CGSize = {
   width: number,
   height: number,
-}
+};
 
 export type CGRect = CGPoint & CGSize;
 
@@ -22,6 +22,7 @@ export type UIView = {
   backgroundColor: UIColor,
   contentMode: number,
   semanticContentAttribute: number,
+  isHidden: boolean,
 };
 
 export type UIFont = {

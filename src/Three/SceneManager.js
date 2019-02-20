@@ -58,7 +58,8 @@ const _createLineSegments = props => {
 
 const _updateView = (group, viewProps, nextViewProps) => {
   const { width, height, selected, onFocus, imgUrl, revision } = nextViewProps;
-  for (const el of group.children) {
+  /* eslint-disable no-param-reassign */
+  group.children.forEach(el => {
     if (viewProps.width) {
       el.scale.x *= width / viewProps.width;
     } else {
@@ -70,12 +71,12 @@ const _updateView = (group, viewProps, nextViewProps) => {
     } else {
       el.scale.y += height;
     }
-  }
+  });
 
   if (imgUrl !== viewProps.imgUrl || revision !== viewProps.revision) {
-    // eslint-disable-next-line no-param-reassign
     group.children[0].material.map = new THREE.TextureLoader().load(imgUrl);
   }
+  /* eslint-enable no-param-reassign */
 
   let wireframeColor = 0x666666;
   if (selected) {
@@ -93,6 +94,11 @@ const _updateView = (group, viewProps, nextViewProps) => {
   } else if (group.children.length === 3) {
     group.remove(group.children[2]);
   }
+};
+
+const _isVisible = props => {
+  const { height, width, isHidden } = props;
+  return height > 0 && width > 0 && !isHidden;
 };
 
 class SceneManager {
@@ -141,17 +147,13 @@ class SceneManager {
   }
 
   updateConstraintIndicators(indicators) {
-    for (const id in this.constraintIndicatorsMap) {
-      if (
-        Object.prototype.hasOwnProperty.call(this.constraintIndicatorsMap, id)
-      ) {
-        const { lineGroup } = this.constraintIndicatorsMap[id];
-        this.scene.remove(lineGroup);
-        delete this.constraintIndicatorsMap[id];
-      }
-    }
+    Object.entries(this.constraintIndicatorsMap).forEach(([key, value]) => {
+      const { lineGroup } = value;
+      this.scene.remove(lineGroup);
+      delete this.constraintIndicatorsMap[key];
+    });
 
-    for (const nextIndicatorProps of indicators) {
+    indicators.forEach(nextIndicatorProps => {
       const lineGroup = this._createConstraintIndicator(
         nextIndicatorProps.lineGroup,
       );
@@ -160,7 +162,7 @@ class SceneManager {
         indicatorProps: nextIndicatorProps,
       };
       this.scene.add(lineGroup);
-    }
+    });
   }
 
   updateViews(treeNode) {
@@ -210,6 +212,7 @@ class SceneManager {
     nodeGroup.add(meshGroup);
 
     nodeGroup.position.set(x, y, z * this.planeOffset);
+    nodeGroup.visible = _isVisible(viewProps);
     return nodeGroup;
   }
 
@@ -235,17 +238,19 @@ class SceneManager {
   _updateViewNode(nodeGroup, viewProps, nextViewProps) {
     const { x, y, z } = nextViewProps;
     nodeGroup.position.set(x, y, z * this.planeOffset);
+    /* eslint-disable no-param-reassign */
+    nodeGroup.visible = _isVisible(nextViewProps);
+    nodeGroup.userData = nextViewProps;
+    /* eslint-enable no-param-reassign */
     const [meshGroup] = nodeGroup.children;
     _updateView(meshGroup, viewProps, nextViewProps);
-    // eslint-disable-next-line no-param-reassign
-    nodeGroup.userData = nextViewProps;
   }
 
   _createConstraintIndicator(constraintIndicatorProps) {
     const lineGroup = new THREE.Group();
-    for (const indicator of constraintIndicatorProps) {
-      lineGroup.add(this._createLine(indicator));
-    }
+    constraintIndicatorProps.forEach(indicator =>
+      lineGroup.add(this._createLine(indicator)),
+    );
     return lineGroup;
   }
 

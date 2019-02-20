@@ -96,7 +96,7 @@ const toThreeViews = (
     updatedProperties,
   } = treeNode;
   const { frame } = updatedProperties || properties;
-  const { globalFrame, contentOffset } = properties;
+  const { globalFrame, contentOffset, isHidden } = properties;
   const rectDim = offsetRectDim(frame, offset);
   const meshTree = {
     id,
@@ -106,6 +106,7 @@ const toThreeViews = (
     onFocus: onFocusNode !== null && onFocusNode.id === id,
     ...rectDim,
     z: 1,
+    isHidden,
     depthMap: [[globalFrame]],
     children: [],
   };
