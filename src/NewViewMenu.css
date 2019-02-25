@@ -77,12 +77,12 @@
   transition: bottom 100ms ease-in;
 }
 
-.sliding-leave {
+.sliding-exit {
   bottom: 30px;
   /* opacity: 1; */
 }
 
-.sliding-leave.sliding-leave-active {
+.sliding-exit.sliding-exit-active {
   bottom: -186px;
   /* opacity: 0.01; */
   transition: bottom 100ms ease-in;

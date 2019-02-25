@@ -6,36 +6,34 @@
     "bonjour": "^3.5.0",
     "classnames": "^2.2.6",
     "css-element-queries": "^1.1.1",
-    "formik": "^0.11.11",
+    "formik": "^1.5.1",
     "formik-observer": "^1.0.1",
     "lodash": "^4.17.11",
-    "prop-types": "^15.6.2",
-    "rc-slider": "^8.6.3",
-    "react": "^16.6.1",
-    "react-dom": "^16.6.1",
-    "react-icons": "^3.2.2",
+    "prop-types": "^15.7.2",
+    "rc-slider": "^8.6.6",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-icons": "^3.4.0",
     "react-split": "^2.0.4",
-    "react-transition-group": "^1.2.1",
+    "react-transition-group": "^2.5.3",
     "react-ui-tree": "^3.1.0",
-    "three": "^0.96.0",
+    "three": "^0.101.1",
     "three-orbit-controls": "^82.1.0",
-    "yup": "^0.26.6"
+    "yup": "^0.26.10"
   },
   "devDependencies": {
-    "babel-eslint": "^9.0.0",
-    "electron": "^3.0.8",
-    "eslint": "^5.9.0",
+    "electron": "^4.0.5",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-prettier": "^3.3.0",
-    "eslint-plugin-flowtype": "^3.2.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-react": "^7.11.1",
-    "flow-bin": "^0.86.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "flow-bin": "^0.93.0",
     "foreman": "^3.0.1",
-    "prettier": "1.15.2",
-    "react-scripts": "^1.1.5"
+    "prettier": "^1.16.4",
+    "react-scripts": "^2.1.5"
   },
   "homepage": "./",
   "main": "src/electron-starter.js",
@@ -50,5 +48,11 @@
     "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron .",
     "dev": "nf start",
     "flow": "flow"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

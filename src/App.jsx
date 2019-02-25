@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { CSSTransitionGroup } from 'react-transition-group';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Split from 'react-split';
 
 import DeviceConnector from './Device/Connector';
@@ -310,15 +310,16 @@ class App extends Component {
               onNodeMouseDown={this.onNodeMouseDown}
               onNodeMouseUp={this.onNodeMouseUp}
             />
-            <CSSTransitionGroup
-              transitionName="sliding"
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={300}
-            >
+            <TransitionGroup>
               {showNewNodeMenu ? (
-                <NewViewMenu onNodeAdded={this.onNodeAdded} />
+                <CSSTransition
+                  classNames="sliding"
+                  timeout={{ enter: 500, exit: 300 }}
+                >
+                  <NewViewMenu onNodeAdded={this.onNodeAdded} />
+                </CSSTransition>
               ) : null}
-            </CSSTransitionGroup>
+            </TransitionGroup>
             <TreeToolbar onAddNodeClick={this.onAddNodeClick} />
           </div>
           <div className="middle-section">
