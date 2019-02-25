@@ -2,10 +2,11 @@
   float: left;
   height: 100%;
   width: 100%;
+  overflow-y: hidden;
+}
+
+.tree-view:hover {
   overflow-y: auto;
-  /* background-color: #252526; */
-  /* background-color: #1d1e21; */
-  background-color: #282841;
 }
 
 .m-node .placeholder {
