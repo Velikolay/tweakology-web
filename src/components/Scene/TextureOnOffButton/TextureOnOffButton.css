@@ -1,15 +1,4 @@
-.three-scene-container {
-  height: 100%;
-}
-
-.plane-offset-slider {
-  position: absolute;
-  top: 32px;
-  right: 32px;
-  width: 80px;
-}
-
-.texture-visibility-button {
+.texture-onoff-button {
   position: absolute;
   top: 32px;
   left: 32px;
@@ -20,11 +9,11 @@
   border: 1px solid #666666;
 }
 
-.texture-visibility-button:hover {
+.texture-onoff-button:hover {
   border: 1px solid #cccccc;
 }
 
-.texture-visibility-icon {
+.texture-onoff-icon {
   color: #c89637;
   height: 16px;
   width: 16px;

@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
-import { IconContext } from 'react-icons';
-import { FaClone } from 'react-icons/fa';
-import Slider from 'rc-slider';
 
+import OffsetSlider from '../../components/Scene/OffsetSlider/OffsetSlider';
+import TextureOnOffButton from '../../components/Scene/TextureOnOffButton/TextureOnOffButton';
+
+import { UITreeShape, ConstraintIndicatorShape } from './SceneShapes';
 import CoordinateTranslator from './CoordinateTranslator';
 import SceneManager from './SceneManager';
 import AppControls from './Controls/AppControls';
 
-import 'rc-slider/assets/index.css';
-import './UIHierarchyScene.css';
+import './UIScene.css';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
-const DEFAULT_PLANE_OFFSET = 2;
+const INITIAL_PLANE_OFFSET = 2;
 
 const initOrbitControls = (camera, constainer) => {
   const controls = new OrbitControls(camera, constainer);
@@ -33,7 +33,7 @@ const initOrbitControls = (camera, constainer) => {
   return controls;
 };
 
-class UIHierarchyScene extends Component {
+class UIScene extends Component {
   constructor(props) {
     super(props);
     this.cameraPosition = new THREE.Vector3();
@@ -99,7 +99,7 @@ class UIHierarchyScene extends Component {
     this.sceneManager = new SceneManager(
       this.scene,
       this.coordTranslator,
-      DEFAULT_PLANE_OFFSET,
+      INITIAL_PLANE_OFFSET,
     );
     this.sceneManager.updateViews(tree);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
@@ -178,91 +178,30 @@ class UIHierarchyScene extends Component {
           ref={el => {
             this.container = el;
           }}
-          className="three-scene-container"
+          className="ui-scene-container"
         />
-        <Slider
-          min={1}
-          max={25}
-          className="plane-offset-slider"
-          defaultValue={DEFAULT_PLANE_OFFSET}
-          trackStyle={{ backgroundColor: '#c89637', height: 5 }}
-          handleStyle={{
-            borderColor: '#c89637',
-            borderWidth: 2,
-            height: 14,
-            width: 14,
-            marginTop: -5,
-            backgroundColor: '#e0e0e0',
-          }}
-          railStyle={{ backgroundColor: '#e0e0e0', height: 5 }}
-          onChange={planeOffset =>
-            this.sceneManager.updatePlaneOffset(planeOffset)
-          }
+        <OffsetSlider
+          initial={INITIAL_PLANE_OFFSET}
+          onChange={value => this.sceneManager.updatePlaneOffset(value)}
         />
-        <button
-          className="texture-visibility-button"
-          type="button"
+        <TextureOnOffButton
           onClick={() => this.sceneManager.flipTextureVisibility()}
-        >
-          <IconContext.Provider
-            value={{ className: 'texture-visibility-icon' }}
-          >
-            <FaClone />
-          </IconContext.Provider>
-        </button>
+        />
       </React.Fragment>
     );
   }
 }
 
-const lazyPropType = f => (...args) => f().apply(this, args);
-
-const TreeShape = PropTypes.shape({
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-  z: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  selected: PropTypes.bool.isRequired,
-  onFocus: PropTypes.bool.isRequired,
-  isHidden: PropTypes.bool.isRequired,
-  imgUrl: PropTypes.string.isRequired,
-  depthMap: PropTypes.arrayOf(
-    PropTypes.arrayOf(
-      PropTypes.shape({
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired,
-        width: PropTypes.number.isRequired,
-        height: PropTypes.number.isRequired,
-      }),
-    ),
-  ),
-  children: PropTypes.arrayOf(lazyPropType(() => TreeShape)),
-});
-
-UIHierarchyScene.propTypes = {
-  tree: TreeShape,
-  constraintIndicators: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      lineGroup: PropTypes.arrayOf(
-        PropTypes.shape({
-          x1: PropTypes.number.isRequired,
-          y1: PropTypes.number.isRequired,
-          z1: PropTypes.number.isRequired,
-          x2: PropTypes.number.isRequired,
-          y2: PropTypes.number.isRequired,
-          z2: PropTypes.number.isRequired,
-        }),
-      ).isRequired,
-    }),
-  ).isRequired,
+UIScene.propTypes = {
+  tree: UITreeShape,
+  constraintIndicators: PropTypes.arrayOf(ConstraintIndicatorShape),
   eventHandler: PropTypes.func,
 };
 
-UIHierarchyScene.defaultProps = {
-  eventHandler: () => {},
+UIScene.defaultProps = {
   tree: null,
+  constraintIndicators: [],
+  eventHandler: () => {},
 };
 
-export default UIHierarchyScene;
+export default UIScene;

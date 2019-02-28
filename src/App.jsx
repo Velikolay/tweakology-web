@@ -18,8 +18,8 @@ import {
 } from './Utils/Tree/Constraint';
 import toThreeViews from './Three/View';
 import toThreeConstraintIndicator from './Three/Constraint';
-import UIHierarchyScene from './Three/UIHierarchyScene';
-import UIHierarchyTree from './Tree/UIHierarchyTree';
+import UIScene from './containers/Scene/UIScene';
+import UITree from './containers/Tree/UITree';
 
 import MainToolbar from './MainToolbar';
 import TreeToolbar from './TreeToolbar';
@@ -53,11 +53,8 @@ class App extends Component {
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
     this.onAddNodeClick = this.onAddNodeClick.bind(this);
     this.onNodeAdded = this.onNodeAdded.bind(this);
-    this.onNodeClick = this.onNodeClick.bind(this);
-    this.onNodeFocus = this.onNodeFocus.bind(this);
-    this.onNodeFocusOut = this.onNodeFocus.bind(this);
-    this.onNodeMouseDown = this.onNodeMouseDown.bind(this);
-    this.onNodeMouseUp = this.onNodeMouseUp.bind(this);
+    this.uiTreeEventHandler = this.uiTreeEventHandler.bind(this);
+    this.uiSceneEventHandler = this.uiSceneEventHandler.bind(this);
   }
 
   componentDidMount() {
@@ -124,11 +121,6 @@ class App extends Component {
     this.formikBag = formik;
   };
 
-  onClickAdd = node => {
-    addNewConstraintToTreeNode(node);
-    this.setState({ activeNode: node });
-  };
-
   onAddNodeClick = () => {
     const { showNewNodeMenu } = this.state;
     this.setState({ showNewNodeMenu: !showNewNodeMenu });
@@ -163,39 +155,41 @@ class App extends Component {
       .catch(err => console.log(err));
   };
 
-  onNodeClick = node => {
-    if (node.id) {
+  uiTreeEventHandler = (eventName, node) => {
+    if (eventName === 'select') {
+      if (node.id) {
+        this.setState({ activeNode: node });
+      }
+    }
+    if (eventName === 'add') {
+      addNewConstraintToTreeNode(node);
       this.setState({ activeNode: node });
     }
-  };
-
-  onNodeFocus = (node, event) => {
-    if (!this.nodeDragging) {
-      const { activeNode } = this.state;
-      if (node.id && (!activeNode || node.id !== activeNode.id)) {
-        this.setState({ onFocusNode: node });
-      } else {
+    if (eventName === 'mouseup') {
+      this.nodeDragging = false;
+    }
+    if (eventName === 'mousedown') {
+      this.nodeDragging = true;
+    }
+    if (eventName === 'hoveron') {
+      if (!this.nodeDragging) {
+        const { activeNode } = this.state;
+        if (node.id && (!activeNode || node.id !== activeNode.id)) {
+          this.setState({ onFocusNode: node });
+        } else {
+          this.setState({ onFocusNode: null });
+        }
+      }
+    }
+    if (eventName === 'hoveroff') {
+      const { onFocusNode } = this.state;
+      if (!this.nodeDragging && onFocusNode && node.id === onFocusNode.id) {
         this.setState({ onFocusNode: null });
       }
     }
   };
 
-  onNodeFocusOut = (node, event) => {
-    const { onFocusNode } = this.state;
-    if (!this.nodeDragging && onFocusNode && node.id === onFocusNode.id) {
-      this.setState({ onFocusNode: null });
-    }
-  };
-
-  onNodeMouseDown = (node, event) => {
-    this.nodeDragging = true;
-  };
-
-  onNodeMouseUp = (node, event) => {
-    this.nodeDragging = false;
-  };
-
-  sceneEventHandler = (eventName, obj) => {
+  uiSceneEventHandler = (eventName, obj) => {
     const { activeNode } = this.state;
     if (this.formikBag) {
       const { setFieldValue } = this.formikBag;
@@ -299,16 +293,11 @@ class App extends Component {
           expandToMin
         >
           <div className="tree-section">
-            <UIHierarchyTree
+            <UITree
               tree={tree}
               activeNode={activeNode}
               onFocusNode={onFocusNode}
-              onClickAdd={this.onClickAdd}
-              onNodeClick={this.onNodeClick}
-              onNodeFocus={this.onNodeFocus}
-              onNodeFocusOut={this.onNodeFocusOut}
-              onNodeMouseDown={this.onNodeMouseDown}
-              onNodeMouseUp={this.onNodeMouseUp}
+              eventHandler={this.uiTreeEventHandler}
             />
             <TransitionGroup>
               {showNewNodeMenu ? (
@@ -323,10 +312,10 @@ class App extends Component {
             <TreeToolbar onAddNodeClick={this.onAddNodeClick} />
           </div>
           <div className="middle-section">
-            <UIHierarchyScene
+            <UIScene
               tree={toThreeViews({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
-              eventHandler={this.sceneEventHandler}
+              eventHandler={this.uiSceneEventHandler}
             />
             <MainToolbar onSubmitChanges={this.onSubmitChanges} />
           </div>

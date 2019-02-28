@@ -24,37 +24,6 @@
   font-size: 12px;
 }
 
-.m-node .container {
-  width: 100%;
-}
-
-.m-node .container.is-active {
-  background-color: #0071b899;
-}
-
-.m-node .container.is-onfocus {
-  background-color: #34343499;
-}
-
-.m-node .text {
-  padding: 4px 10px;
-  text-align: left;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.m-node .add-button {
-  float: right;
-  background: none!important;
-  color: rgb(200, 150, 55);
-  border: none;
-  padding: 4px 6px;
-  overflow: auto;
-  font: inherit;
-  cursor: pointer;
-}
-
 .m-node .caret-down::before {
   display: inline-block;
   width: 0;
@@ -81,47 +50,47 @@
   transition: 200ms ease;
 }
 
-.m-node .text {
+.m-node .tree-node-text {
   padding-left: 16px;
 }
 
-.m-node div > .m-node .text {
+.m-node div > .m-node .tree-node-text {
   padding-left: 32px;
 }
 
-.m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 48px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 64px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 80px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 96px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 112px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 128px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 144px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 160px;
 }
 
-.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .text {
+.m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .tree-node-text {
   padding-left: 176px;
 }
 

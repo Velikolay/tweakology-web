@@ -1,5 +1,5 @@
 /* eslint no-underscore-dangle: 0 */
-import _ from 'lodash';
+import isEqual from 'lodash.isequal';
 import * as THREE from 'three';
 
 const _createMesh = props => {
@@ -175,7 +175,7 @@ class SceneManager {
       if (treeNode.id in this.viewsMap) {
         const nodeGroup = this.viewsMap[treeNode.id];
         const { userData: viewProps } = nodeGroup;
-        if (!_.isEqual(viewProps, nextViewProps)) {
+        if (!isEqual(viewProps, nextViewProps)) {
           this._updateViewNode(nodeGroup, viewProps, nextViewProps);
           this._translate3DObject(nodeGroup);
           this.viewsMap[nextViewProps.id].viewProps = nextViewProps;
