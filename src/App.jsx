@@ -324,7 +324,7 @@ class App extends Component {
           </div>
           <div className="middle-section">
             <UIHierarchyScene
-              views={toThreeViews({ tree, activeNode, onFocusNode })}
+              tree={toThreeViews({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
               eventHandler={this.sceneEventHandler}
             />

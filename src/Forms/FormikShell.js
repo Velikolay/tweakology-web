@@ -1,6 +1,8 @@
 import React from 'react';
-import FormikObserver from 'formik-observer';
-import Persist from './Persistence/Presistence';
+// import PropTypes from 'prop-types';
+
+import FormikPersistence from './Persistence/Presistence';
+import FormikObserver from './Observer/Observer';
 
 // eslint-disable-next-line import/prefer-default-export
 export const withFormikShell = Component => props => {
@@ -11,7 +13,7 @@ export const withFormikShell = Component => props => {
       <FormikObserver
         onChange={({ values }) => onFormUpdate(id, type, values)}
       />
-      <Persist name={id} />
+      <FormikPersistence name={id} />
     </form>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { withSystemContext } from '../Context/SystemContext';
 
@@ -23,6 +24,10 @@ const Form = props => {
     return <NSLayoutConstraint {...props} />;
   }
   return <UIView {...props} />;
+};
+
+Form.propTypes = {
+  type: PropTypes.string.isRequired,
 };
 
 export default withSystemContext(Form);

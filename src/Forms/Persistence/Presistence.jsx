@@ -7,7 +7,7 @@ import { withFormikContext } from '../FormikContext';
 
 const dispatchFormikBag = ({ formik }) => formik.onFormSelect(formik);
 
-class Persist extends Component {
+class FormikPersistence extends Component {
   saveForm = debounce((name, data) => {
     if (this.props.excludeSystemContext) {
       const { systemContext, ...other } = data;
@@ -112,16 +112,16 @@ export const readPersistedConstraints = () => {
   return constraints;
 };
 
-Persist.defaultProps = {
-  debounce: 300,
-  excludeSystemContext: true,
-};
-
-Persist.propTypes = {
+FormikPersistence.propTypes = {
   name: PropTypes.string.isRequired,
   formik: PropTypes.object.isRequired,
   debounce: PropTypes.number,
   excludeSystemContext: PropTypes.bool,
 };
 
-export default withFormikContext(Persist);
+FormikPersistence.defaultProps = {
+  debounce: 300,
+  excludeSystemContext: true,
+};
+
+export default withFormikContext(FormikPersistence);

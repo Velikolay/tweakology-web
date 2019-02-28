@@ -5,7 +5,7 @@ class CoordinateTranslator {
     this.scene = scene;
   }
 
-  calc3DCoord(obj) {
+  calc3DSceneCoord(obj) {
     const { userData: viewProps, parent } = obj;
     const v = new THREE.Vector3();
     if (parent !== this.scene) {

@@ -7,10 +7,10 @@ import Slider from 'rc-slider';
 
 import CoordinateTranslator from './CoordinateTranslator';
 import SceneManager from './SceneManager';
+import AppControls from './Controls/AppControls';
 
 import 'rc-slider/assets/index.css';
 import './UIHierarchyScene.css';
-import AppControls from './Controls/AppControls';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -51,7 +51,7 @@ class UIHierarchyScene extends Component {
       self.updateCanvasDimensions();
     });
 
-    const { views, constraintIndicators, eventHandler } = this.props;
+    const { tree, constraintIndicators, eventHandler } = this.props;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     const fov = 75;
@@ -77,11 +77,11 @@ class UIHierarchyScene extends Component {
     this.appControls.addEventListener('drag', event => {
       const {
         userData: { id },
-        position: coord3D,
+        position: coord3DScene,
       } = event.object;
       const v = this.coordTranslator.calcDeviceCoord(event.object);
       const position = new THREE.Vector3();
-      position.addVectors(coord3D, v);
+      position.addVectors(coord3DScene, v);
       eventHandler('drag', { id, position });
     });
     this.appControls.addEventListener('select', event => {
@@ -101,7 +101,7 @@ class UIHierarchyScene extends Component {
       this.coordTranslator,
       DEFAULT_PLANE_OFFSET,
     );
-    this.sceneManager.updateViews(views);
+    this.sceneManager.updateViews(tree);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
 
     this.container.appendChild(this.renderer.domElement);
@@ -109,8 +109,8 @@ class UIHierarchyScene extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { views, constraintIndicators } = nextProps;
-    this.sceneManager.updateViews(views);
+    const { tree, constraintIndicators } = nextProps;
+    this.sceneManager.updateViews(tree);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
     if (this.appControls) {
       this.appControls.setObjects(this.sceneManager.getMeshGroups());
@@ -215,19 +215,33 @@ class UIHierarchyScene extends Component {
   }
 }
 
+const lazyPropType = f => (...args) => f().apply(this, args);
+
+const TreeShape = PropTypes.shape({
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  z: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  selected: PropTypes.bool.isRequired,
+  onFocus: PropTypes.bool.isRequired,
+  isHidden: PropTypes.bool.isRequired,
+  imgUrl: PropTypes.string.isRequired,
+  depthMap: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
+        width: PropTypes.number.isRequired,
+        height: PropTypes.number.isRequired,
+      }),
+    ),
+  ),
+  children: PropTypes.arrayOf(lazyPropType(() => TreeShape)),
+});
+
 UIHierarchyScene.propTypes = {
-  views: PropTypes.arrayOf(
-    PropTypes.shape({
-      x: PropTypes.number.isRequired,
-      y: PropTypes.number.isRequired,
-      z: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-      height: PropTypes.number.isRequired,
-      selected: PropTypes.bool.isRequired,
-      onFocus: PropTypes.bool.isRequired,
-      imgUrl: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  tree: TreeShape,
   constraintIndicators: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -244,6 +258,11 @@ UIHierarchyScene.propTypes = {
     }),
   ).isRequired,
   eventHandler: PropTypes.func,
+};
+
+UIHierarchyScene.defaultProps = {
+  eventHandler: () => {},
+  tree: null,
 };
 
 export default UIHierarchyScene;

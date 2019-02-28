@@ -196,9 +196,10 @@ class SceneManager {
   }
 
   _translate3DObject(obj) {
-    const { x: translateX, y: translateY } = this.coordTranslator.calc3DCoord(
-      obj,
-    );
+    const {
+      x: translateX,
+      y: translateY,
+    } = this.coordTranslator.calc3DSceneCoord(obj);
     obj.translateX(translateX);
     obj.translateY(translateY);
   }
