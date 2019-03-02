@@ -82,6 +82,7 @@ const calcRelDepth = (parent, child, testDepth = 1) => {
 const toThreeViews = (
   { tree, activeNode, onFocusNode },
   offset = { x: 0, y: 0 },
+  globalOriginBase = { x: 0, y: 0 },
 ) => {
   const treeNode = tree;
   if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
@@ -95,9 +96,18 @@ const toThreeViews = (
     properties,
     updatedProperties,
   } = treeNode;
+  const { contentOffset, isHidden } = properties;
   const { frame } = updatedProperties || properties;
-  const { globalFrame, contentOffset, isHidden } = properties;
   const rectDim = offsetRectDim(frame, offset);
+  const globalOrigin = {
+    x: globalOriginBase.x + rectDim.x,
+    y: globalOriginBase.y + rectDim.y,
+  };
+  const globalFrame = {
+    ...globalOrigin,
+    width: rectDim.width,
+    height: rectDim.height,
+  };
   const meshTree = {
     id,
     revision,
@@ -116,6 +126,7 @@ const toThreeViews = (
         const childMeshTree = toThreeViews(
           { tree: childNode, activeNode, onFocusNode },
           contentOffset,
+          globalOrigin,
         );
         childMeshTree.z = calcRelDepth(meshTree, childMeshTree);
         mergeIntoDepthMap(
