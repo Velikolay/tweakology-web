@@ -22,6 +22,8 @@ class FormikObserver extends Component {
 
 FormikObserver.propTypes = {
   formik: PropTypes.object.isRequired,
+  debounce: PropTypes.number,
+  onChange: PropTypes.func,
 };
 
 FormikObserver.defaultProps = {

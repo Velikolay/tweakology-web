@@ -6,7 +6,7 @@ import './TreeNode.css';
 
 const TreeNode = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
   <div
-    className={cx('tree-node-container', {
+    className={cx('tree-node__container', {
       'is-active': isActive,
       'is-onfocus': isOnFocus && !isActive,
     })}
@@ -21,7 +21,7 @@ const TreeNode = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
   >
     {isActive && !isLeaf ? (
       <button
-        className="tree-node-add-button"
+        className="tree-node__add-button"
         type="button"
         onClick={() => eventHandler('add')}
       >
@@ -30,7 +30,7 @@ const TreeNode = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
     ) : (
       ''
     )}
-    <div className="tree-node-text">{text}</div>
+    <div className="tree-node__text">{text}</div>
   </div>
 );
 

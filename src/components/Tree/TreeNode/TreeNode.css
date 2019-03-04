@@ -1,16 +1,16 @@
-.tree-node-container {
+.tree-node__container {
   width: 100%;
 }
 
-.tree-node-container.is-active {
+.tree-node__container.is-active {
   background-color: #0071b899;
 }
 
-.tree-node-container.is-onfocus {
+.tree-node__container.is-onfocus {
   background-color: #34343499;
 }
 
-.tree-node-text {
+.tree-node__text {
   padding: 4px 10px;
   text-align: left;
   white-space: nowrap;
@@ -18,7 +18,7 @@
   overflow: hidden;
 }
 
-.tree-node-add-button {
+.tree-node__add-button {
   float: right;
   background: none!important;
   color: rgb(200, 150, 55);

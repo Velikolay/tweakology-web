@@ -303,7 +303,7 @@ class App extends Component {
               {showNewNodeMenu ? (
                 <CSSTransition
                   classNames="sliding"
-                  timeout={{ enter: 500, exit: 300 }}
+                  timeout={{ enter: 100, exit: 100 }}
                 >
                   <NewViewMenu onNodeAdded={this.onNodeAdded} />
                 </CSSTransition>

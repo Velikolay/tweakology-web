@@ -1,14 +1,13 @@
 .App {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   height: 100%;
   min-width: 960px;
-  overflow-y: auto;
   text-align: center;
+  overflow-y: hidden;
 }
 
 .tree-section {
+  display: flex;
+  flex-flow: column nowrap;
   position: relative;
   float: left;
   height: 100%;
@@ -19,15 +18,12 @@
   position: relative;
   float: left;
   height: 100%;
-  /* background-color: #1e1e1e; */
-  /* background-color: #1d1e21; */
   background-color: #282841;
 }
 
 .config-section {
   float: left;
   height: 100%;
-  /* background-color: #252526; */
   background-color: #1e202e;
   overflow-y: auto;
 }
