@@ -88,6 +88,7 @@ const toThreeViews = (
   if (Object.keys(treeNode).length === 0 || treeNode.module === 'Loading...') {
     return null;
   }
+
   const {
     id,
     revision,

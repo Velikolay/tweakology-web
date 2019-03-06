@@ -101,6 +101,13 @@ const _isVisible = props => {
   return height > 0 && width > 0 && !isHidden;
 };
 
+const _getMeshGroup = nodeGroup => {
+  const {
+    children: [meshGroup],
+  } = nodeGroup;
+  return meshGroup;
+};
+
 class SceneManager {
   constructor(scene, coordTranslator, planeOffset) {
     this.scene = scene;
@@ -112,9 +119,7 @@ class SceneManager {
   }
 
   getMeshGroups() {
-    return Object.values(this.viewsMap).map(
-      ({ children: [meshGroup] }) => meshGroup,
-    );
+    return Object.values(this.viewsMap).map(_getMeshGroup);
   }
 
   flipTextureVisibility() {
@@ -129,11 +134,11 @@ class SceneManager {
 
   updatePlaneOffset(planeOffset) {
     this.planeOffset = planeOffset;
-    Object.values(this.viewsMap).forEach(meshGroup => {
+    Object.values(this.viewsMap).forEach(nodeGroup => {
       const {
         userData: { z },
-      } = meshGroup;
-      meshGroup.position.setZ(z * this.planeOffset);
+      } = nodeGroup;
+      nodeGroup.position.setZ(z * this.planeOffset);
     });
     Object.values(this.constraintIndicatorsMap).forEach(
       ({ lineGroup: { children }, indicatorProps }) =>

@@ -19,6 +19,7 @@ class AppControls extends THREE.EventDispatcher {
     this.mouse = new THREE.Vector2();
     this.offset = new THREE.Vector3();
     this.intersection = new THREE.Vector3();
+    this.selectedPositionCopy = new THREE.Vector3();
 
     this.selected = null;
     this.hovered = null;
@@ -36,6 +37,11 @@ class AppControls extends THREE.EventDispatcher {
 
   setObjects(objects) {
     this.objects = objects;
+    if (this.selected && this.selectedPositionCopy) {
+      const zDiff = this.selectedPositionCopy.z - this.selected.position.z;
+      this.offset.add(new THREE.Vector3(0, 0, zDiff));
+      this.selectedPositionCopy.copy(this.selected.position);
+    }
   }
 
   activate() {
@@ -131,7 +137,6 @@ class AppControls extends THREE.EventDispatcher {
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.selected.position.copy(this.intersection.sub(this.offset));
       }
-
       this.dispatchEvent({ type: 'drag', object: this.selected });
       return;
     }
@@ -161,6 +166,7 @@ class AppControls extends THREE.EventDispatcher {
       this.selected = getNode(intersects[0]);
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
+        this.selectedPositionCopy.copy(this.selected.position);
       }
       this.domElement.style.cursor = 'move';
       this.dispatchEvent({ type: 'select', object: this.selected });
@@ -213,6 +219,7 @@ class AppControls extends THREE.EventDispatcher {
       this.selected = getNode(intersects[0]);
       if (this.raycaster.ray.intersectPlane(this.plane, this.intersection)) {
         this.offset.copy(this.intersection).sub(this.selected.position);
+        this.selectedPositionCopy.copy(this.selected.position);
       }
       this.domElement.style.cursor = 'move';
       this.dispatchEvent({ type: 'select', object: this.selected });

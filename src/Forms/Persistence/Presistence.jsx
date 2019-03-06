@@ -25,19 +25,23 @@ class FormikPersistence extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { name, formik } = this.props;
-    if (nextProps.name !== name) {
+    /*
+      This is a fragile logic for handling form resets caused by enableReinitialize.
+      It is used to set forms of the same type(e.g. UILabel, UIButton) with persisted values when clicked sequentially
+      Works with formik version 1.5.1
+    */
+    if (!isEqual(formik.initialValues, nextProps.formik.initialValues)) {
       this.setForm(nextProps);
-    } else if (!isEqual(nextProps.formik, formik)) {
-      // console.log('Form saving..');
-      this.saveForm(nextProps.name, nextProps.formik);
-    } else {
-      // console.log('Form wont save');
     }
+
+    if (name === nextProps.name && !isEqual(formik, nextProps.formik)) {
+      this.saveForm(nextProps.name, nextProps.formik);
+    }
+
     dispatchFormikBag(nextProps);
   }
 
   setForm = props => {
-    // console.log('Form loading..');
     const maybeState = window.localStorage.getItem(props.name);
 
     let modifiedProps = props.formik;

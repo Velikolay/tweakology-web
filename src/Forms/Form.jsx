@@ -9,22 +9,24 @@ import UIImageView from './UIImageView';
 import NSLayoutConstraint from './NSLayoutConstraint';
 import UIView from './UIView';
 
-const Form = props => {
-  const { type } = props;
-  if (type === 'UIButton') {
-    return <UIButtonView {...props} />;
+class Form extends React.PureComponent {
+  render() {
+    const { type } = this.props;
+    if (type === 'UIButton') {
+      return <UIButtonView {...this.props} />;
+    }
+    if (type === 'UILabel') {
+      return <UILabelView {...this.props} />;
+    }
+    if (type === 'UIImageView') {
+      return <UIImageView {...this.props} />;
+    }
+    if (type === 'NSLayoutConstraint') {
+      return <NSLayoutConstraint {...this.props} />;
+    }
+    return <UIView {...this.props} />;
   }
-  if (type === 'UILabel') {
-    return <UILabelView {...props} />;
-  }
-  if (type === 'UIImageView') {
-    return <UIImageView {...props} />;
-  }
-  if (type === 'NSLayoutConstraint') {
-    return <NSLayoutConstraint {...props} />;
-  }
-  return <UIView {...props} />;
-};
+}
 
 Form.propTypes = {
   type: PropTypes.string.isRequired,

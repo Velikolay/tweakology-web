@@ -94,7 +94,10 @@ class UIScene extends Component {
       const {
         userData: { id },
       } = event.object;
-      eventHandler('hoveron', { id });
+      if (this.previousHoverOnObject !== id) {
+        this.previousHoverOnObject = id;
+        eventHandler('hoveron', { id });
+      }
     });
     this.sceneManager = new SceneManager(
       this.scene,

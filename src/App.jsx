@@ -282,7 +282,6 @@ class App extends Component {
     // const constraintLine = lineProps({
     //   x1: 50, y1: 50, z1: 100, x2: 150, y2: 90, z2: 100,
     // }).map(props => <UIElementConstraintLine {...props} />);
-
     return (
       <SystemContext.Provider value={this.systemContext}>
         <Split
