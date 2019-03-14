@@ -1,13 +1,15 @@
 .tree-view {
-  float: left;
   flex-grow: 1;
-  width: 100%;
   overflow-y: hidden;
 }
 
 .tree-view:hover {
-  overflow-y: auto;
+  overflow-y: overlay;
 }
+
+/* .m-tree {
+  display: inline-block;
+} */
 
 .m-node .placeholder {
   border: 1px dashed #1385e5;
@@ -18,7 +20,6 @@
 }
 
 .m-node .inner {
-  width: 100%;
   padding-left: 0!important;
   color: #c8c8c8;
   font-size: 12px;

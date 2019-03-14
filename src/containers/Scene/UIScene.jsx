@@ -62,7 +62,7 @@ class UIScene extends Component {
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x282841);
+    scene.background = new THREE.Color(0x3c3f41);
 
     this.scene = scene;
     this.camera = camera;

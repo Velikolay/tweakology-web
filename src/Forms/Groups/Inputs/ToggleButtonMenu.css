@@ -12,10 +12,6 @@
   border-bottom-left-radius: 0px;
 }
 
-/* .toggle-button:hover {
-  background-color: #2b882e;
-} */
-
 .toggle-button:focus {
   outline: 0;
 }
@@ -27,7 +23,7 @@
 .toggle-button {
   height: 18px;
   color: #c8c8c8;
-  background-color: #3c3c3c;
+  background-color: #3c3f41;
   border: 1px solid #846937;
   border-radius: 2px;
 }

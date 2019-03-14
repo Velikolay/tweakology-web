@@ -23,8 +23,7 @@
   background: none!important;
   color: rgb(200, 150, 55);
   border: none;
-  padding: 4px 6px;
-  overflow: auto;
+  padding: 4px 12px 4px 4px;
   font: inherit;
   cursor: pointer;
 }
