@@ -2,22 +2,22 @@ import UIViewTransformer from './UIView';
 import FontTransformer from './UIFont';
 
 const UILabelTransformer = {
-  fromPayload: (props, systemContext) => ({
+  fromPayload: (props, device) => ({
     ...UIViewTransformer.fromPayload(props),
     text: props.text,
     textColor: props.textColor,
-    font: FontTransformer.fromPayload(props.font, systemContext),
+    font: FontTransformer.fromPayload(props.font, device),
     numberOfLines: props.numberOfLines,
     textAlignment: props.textAlignment,
     baselineAdjustment: props.baselineAdjustment.toString(),
     lineBreakMode: props.lineBreakMode.toString(),
   }),
 
-  toPayload: (props, systemContext) => ({
+  toPayload: (props, device) => ({
     ...UIViewTransformer.toPayload(props),
     text: props.text,
     textColor: props.textColor,
-    font: FontTransformer.toPayload(props.font, systemContext),
+    font: FontTransformer.toPayload(props.font, device),
     numberOfLines: props.numberOfLines,
     textAlignment: props.textAlignment,
     baselineAdjustment: parseInt(props.baselineAdjustment, 10),

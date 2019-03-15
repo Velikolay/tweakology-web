@@ -5,18 +5,18 @@ import UIViewTransformer from './UIView';
 import FontTransformer from './UIFont';
 
 const UIButtonLabelTransformer = {
-  fromPayload: (props: UIButtonLabel, systemContext: any) => ({
+  fromPayload: (props: UIButtonLabel, device: any) => ({
     ...UIViewTransformer.fromPayload(props),
     text: props.text,
     textColor: props.textColor,
-    font: FontTransformer.fromPayload(props.font, systemContext),
+    font: FontTransformer.fromPayload(props.font, device),
     numberOfLines: props.numberOfLines,
     textAlignment: props.textAlignment,
     baselineAdjustment: props.baselineAdjustment.toString(),
     lineBreakMode: props.lineBreakMode.toString(),
   }),
 
-  toPayload: (props: any, systemContext): UIButtonLabel => ({
+  toPayload: (props: any, device): UIButtonLabel => ({
     ...UIViewTransformer.toPayload(props),
     text: props.text,
     textColor: props.textColor,
@@ -29,14 +29,14 @@ const UIButtonLabelTransformer = {
 };
 
 const UIButtonTransformer = {
-  fromPayload: (props: UIButton, systemContext: any) => ({
+  fromPayload: (props: UIButton, device: any) => ({
     ...UIViewTransformer.fromPayload(props),
-    title: UIButtonLabelTransformer.fromPayload(props.title, systemContext),
+    title: UIButtonLabelTransformer.fromPayload(props.title, device),
   }),
 
-  toPayload: (props: any, systemContext: any): UIButton => ({
+  toPayload: (props: any, device: any): UIButton => ({
     ...UIViewTransformer.toPayload(props),
-    title: UIButtonLabelTransformer.toPayload(props.title, systemContext),
+    title: UIButtonLabelTransformer.toPayload(props.title, device),
   }),
 };
 

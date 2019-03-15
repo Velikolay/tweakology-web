@@ -3,9 +3,9 @@ import type { UIFont, DeviceFonts } from '../Device/Types';
 import { toFontStyles } from '../Utils/Font';
 
 const FontTransformer = {
-  fromPayload: (font: UIFont, systemContext: { fonts: DeviceFonts }) => {
+  fromPayload: (font: UIFont, device: { fonts: DeviceFonts }) => {
     const { trait, fontName, pointSize } = font;
-    const { system, preffered } = systemContext.fonts;
+    const { system, preffered } = device.fonts;
 
     for (const sysFamilyName in system) {
       if ({}.hasOwnProperty.call(system, sysFamilyName)) {

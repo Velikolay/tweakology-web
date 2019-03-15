@@ -4,9 +4,8 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Split from 'react-split';
 
 import DeviceConnector from './Device/Connector';
-import SystemContext from './Context/SystemContext';
+import DeviceContext from './contexts/Device/DeviceContext';
 
-import Form from './Forms/Form';
 import { buildChangeSet } from './Forms/Submit';
 import { readPersistedValues } from './Forms/Persistence/Presistence';
 
@@ -18,8 +17,10 @@ import {
 } from './Utils/Tree/Constraint';
 import toThreeViews from './Three/View';
 import toThreeConstraintIndicator from './Three/Constraint';
-import UIScene from './containers/Scene/UIScene';
+
 import UITree from './containers/Tree/UITree';
+import UIScene from './containers/Scene/UIScene';
+import Form from './containers/Form/Form';
 
 import MainToolbar from './MainToolbar';
 import TreeToolbar from './TreeToolbar';
@@ -64,17 +65,17 @@ class App extends Component {
       this.deviceConnector.updateRemoteDevice(device);
       if (!connected && this.deviceConnector.isConnected()) {
         this.updateTree();
-        this.updateSystemContext();
+        this.updateDeviceContext();
       }
     });
     ipcRenderer.send('app-component-mounted');
   }
 
-  updateSystemContext = () =>
+  updateDeviceContext = () =>
     this.deviceConnector
       .fetchSystemData()
       .then(({ fonts }) => {
-        this.systemContext = {
+        this.deviceContext = {
           fonts: enrichFontsData(fonts),
         };
       })
@@ -98,7 +99,7 @@ class App extends Component {
 
   onSubmitChanges = () => {
     const { tree } = this.state;
-    const changeSet = buildChangeSet(tree, this.systemContext);
+    const changeSet = buildChangeSet(tree, this.deviceContext);
     this.deviceConnector
       .submitChanges('test', changeSet)
       .then(() => this.updateTree())
@@ -283,7 +284,7 @@ class App extends Component {
     //   x1: 50, y1: 50, z1: 100, x2: 150, y2: 90, z2: 100,
     // }).map(props => <UIElementConstraintLine {...props} />);
     return (
-      <SystemContext.Provider value={this.systemContext}>
+      <DeviceContext.Provider value={this.deviceContext}>
         <Split
           className="App"
           sizes={[20, 60, 20]}
@@ -330,7 +331,7 @@ class App extends Component {
             ) : null}
           </div>
         </Split>
-      </SystemContext.Provider>
+      </DeviceContext.Provider>
     );
   }
 }
