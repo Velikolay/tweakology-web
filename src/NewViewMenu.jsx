@@ -5,7 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import { IconContext } from 'react-icons';
 import { FaPlusCircle } from 'react-icons/fa';
 
-import './NewViewMenu.css';
+import './NewViewMenu.scss';
 
 const initFrame = id => ({
   x: 0,

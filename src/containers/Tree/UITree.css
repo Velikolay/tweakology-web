@@ -16,11 +16,11 @@
 }
 
 .m-node .children {
-  padding-left: 0!important;
+  padding-left: 0 !important;
 }
 
 .m-node .inner {
-  padding-left: 0!important;
+  padding-left: 0 !important;
   color: #c8c8c8;
   font-size: 12px;
 }
@@ -97,6 +97,8 @@
 
 .m-node .collapse {
   padding-left: 4px;
+  top: 50%;
+  transform: translate(0%, -50%);
 }
 
 .m-node div > .m-node .collapse {
@@ -137,9 +139,4 @@
 
 .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node div > .m-node .collapse {
   padding-left: 164px;
-}
-
-.m-node .collapse {
-  top: 50%;
-  transform: translate(0%, -50%);
 }

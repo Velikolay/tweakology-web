@@ -9,6 +9,7 @@
     "formik": "^1.5.1",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
+    "node-sass": "^4.11.0",
     "prop-types": "^15.7.2",
     "rc-slider": "^8.6.6",
     "react": "^16.8.3",
@@ -33,7 +34,9 @@
     "flow-bin": "^0.93.0",
     "foreman": "^3.0.1",
     "prettier": "^1.16.4",
-    "react-scripts": "^2.1.5"
+    "react-scripts": "^2.1.5",
+    "stylelint": "^9.10.1",
+    "stylelint-config-standard": "^18.2.0"
   },
   "homepage": "./",
   "main": "src/electron-starter.js",
@@ -44,6 +47,8 @@
     "eject": "react-scripts eject",
     "lint:js": "eslint . --ignore-path .gitignore --ext .js,.jsx",
     "lint:js:fix": "eslint . --fix --ignore-path .gitignore --ext .js,.jsx",
+    "lint:scss": "stylelint \"src/**/*.scss\" --syntax scss",
+    "lint:scss:fix": "stylefmt --recursive \"src/**/*.scss\"",
     "electron": "electron .",
     "electron-dev": "ELECTRON_START_URL=http://localhost:3000 electron .",
     "dev": "nf start",

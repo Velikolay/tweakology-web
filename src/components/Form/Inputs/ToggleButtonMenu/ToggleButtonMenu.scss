@@ -1,0 +1,35 @@
+.toggle-button {
+  height: 18px;
+  color: #c8c8c8;
+  background-color: #3c3f41;
+  border: 1px solid #846937;
+  border-radius: 2px;
+}
+
+.toggle-button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.toggle-button:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.toggle-button:focus {
+  outline: 0;
+}
+
+.toggle-button.is-active {
+  background-color: #846937;
+}
+
+.toggle-button:disabled {
+  background-color: rgb(45, 45, 45);
+  color: rgb(160, 160, 160);
+}
+
+.toggle-button.is-active:disabled {
+  background-color: #846937;
+}

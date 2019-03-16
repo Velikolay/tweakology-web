@@ -6,8 +6,8 @@ import Split from 'react-split';
 import DeviceConnector from './Device/Connector';
 import DeviceContext from './contexts/Device/DeviceContext';
 
-import { buildChangeSet } from './Forms/Submit';
-import { readPersistedValues } from './Forms/Persistence/Presistence';
+import { buildChangeSet } from './containers/Form/Submit';
+import { readPersistedValues } from './containers/Form/Persistence/Presistence';
 
 import { enrichFontsData } from './Utils/Font';
 import {
@@ -26,7 +26,7 @@ import MainToolbar from './MainToolbar';
 import TreeToolbar from './TreeToolbar';
 import NewViewMenu from './NewViewMenu';
 
-import './App.css';
+import './App.scss';
 
 require('react-ui-tree/dist/react-ui-tree.css');
 

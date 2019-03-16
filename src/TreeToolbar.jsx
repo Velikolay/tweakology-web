@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons';
 import { FaPlus, FaSearch } from 'react-icons/fa';
 
-import './TreeToolbar.css';
+import './TreeToolbar.scss';
 
 const TreeToolbar = props => {
   const { onAddNodeClick } = props;

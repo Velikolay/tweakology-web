@@ -8,7 +8,7 @@ import ConstraintItemSelector from '../../Inputs/ConstraintItemSelector/Constrai
 import { nameWithPrefix, formikValueWithPrefix } from '../../FormikHelpers';
 import { constraintAttributes } from '../../../../Static/Constraints';
 
-import '../Blocks.css';
+import '../Blocks.scss';
 
 const getAttributeGroup = attribute => {
   for (const group of constraintAttributes) {

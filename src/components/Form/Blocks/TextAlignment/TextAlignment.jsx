@@ -13,8 +13,7 @@ import { withFormikContext } from '../../../../contexts/Form/FormikContext';
 import ToggleButtonMenu from '../../Inputs/ToggleButtonMenu/ToggleButtonMenu';
 import { nameWithPrefix, titleForField } from '../../FormikHelpers';
 
-import '../Blocks.css';
-import './TextAlignment.css';
+import '../Blocks.scss';
 
 const alignmentOptions = [
   { value: 0, icon: <FaAlignLeft /> },

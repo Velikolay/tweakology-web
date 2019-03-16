@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import './TreeNode.css';
+import './TreeNode.scss';
 
 const TreeNode = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
   <div

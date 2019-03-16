@@ -5,7 +5,7 @@ import cx from 'classnames';
 import { withFormikContext } from '../../../../contexts/Form/FormikContext';
 import { formikValueWithPrefix } from '../../FormikHelpers';
 
-import './ToggleButtonMenu.css';
+import './ToggleButtonMenu.scss';
 
 const ToggleButtonMenu = props => {
   const {

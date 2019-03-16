@@ -10,8 +10,8 @@ import {
   formikValueWithPrefix,
 } from '../../FormikHelpers';
 
-import '../Blocks.css';
-import './Color.css';
+import '../Blocks.scss';
+import './Color.scss';
 
 const Color = props => {
   const {

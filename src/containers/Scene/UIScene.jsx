@@ -10,7 +10,7 @@ import CoordinateTranslator from './CoordinateTranslator';
 import SceneManager from './SceneManager';
 import AppControls from './Controls/AppControls';
 
-import './UIScene.css';
+import './UIScene.scss';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');

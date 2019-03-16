@@ -5,7 +5,7 @@ import { withFormikContext } from '../../../../contexts/Form/FormikContext';
 
 import Field from '../../Inputs/Field/Field';
 
-import '../Blocks.css';
+import '../Blocks.scss';
 
 const InputField = ({ title, ...rest }) => (
   <div className="form-group">

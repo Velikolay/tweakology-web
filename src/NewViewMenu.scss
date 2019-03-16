@@ -72,7 +72,7 @@
 }
 
 .sliding-enter {
-  height: 0px;
+  height: 0;
 }
 
 .sliding-enter.sliding-enter-active {
@@ -85,6 +85,6 @@
 }
 
 .sliding-exit.sliding-exit-active {
-  height: 0px;
+  height: 0;
   transition: height 100ms ease-in;
 }

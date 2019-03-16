@@ -2,7 +2,7 @@ import { attributeNames, relationSymbols } from '../../Static/Constraints';
 import {
   readPersistedValues,
   readPersistedConstraints,
-} from '../../Forms/Persistence/Presistence';
+} from '../../containers/Form/Persistence/Presistence';
 import ConstraintTransformer from '../../Transformers/Constraint';
 
 const numToFixed = num => {

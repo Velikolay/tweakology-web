@@ -12,7 +12,7 @@ import {
   formikValueWithPrefix,
 } from '../../FormikHelpers';
 
-import '../Blocks.css';
+import '../Blocks.scss';
 
 const Font = props => {
   const {

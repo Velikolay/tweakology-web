@@ -6,7 +6,7 @@ import { withFormikContext } from '../../../../contexts/Form/FormikContext';
 import Field from '../../Inputs/Field/Field';
 import { nameWithPrefix, titleForField } from '../../FormikHelpers';
 
-import '../Blocks.css';
+import '../Blocks.scss';
 
 const Frame = props => {
   const {

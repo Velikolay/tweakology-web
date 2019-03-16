@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons';
 import { FaSync } from 'react-icons/fa';
 
-import './MainToolbar.css';
+import './MainToolbar.scss';
 
 const MainToolbar = props => {
   const { onSubmitChanges } = props;

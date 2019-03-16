@@ -5,7 +5,7 @@ import { withFormikContext } from '../../../../contexts/Form/FormikContext';
 
 import Field from '../../Inputs/Field/Field';
 
-import '../Blocks.css';
+import '../Blocks.scss';
 
 const SelectField = ({ name, options, title }) => (
   <div className="form-group">

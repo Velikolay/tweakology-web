@@ -12,7 +12,7 @@ import {
   valueSwitch,
 } from '../../../../Static/Constraints';
 
-import './ConstraintItemSelector.css';
+import './ConstraintItemSelector.scss';
 
 const buildItemsDOM = (item, props) => {
   const itemsDOM = props.items.map(option => (
