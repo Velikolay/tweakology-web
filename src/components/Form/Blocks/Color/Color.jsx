@@ -38,11 +38,11 @@ const Color = props => {
         <label className="input-title" htmlFor={color}>
           {titleForField(props, 'color', 'Color')}
         </label>
-        <Field name={color} type="text" className="color-input" />
+        <Field name={color} type="text" className="Color__textInput" />
         <input
           type="color"
           value={formikValueWithPrefix(props, 'hexValue')}
-          className="color-picker-input"
+          className="Color__pickerInput"
           onChange={event => setFieldValue(color, event.target.value)}
         />
       </div>

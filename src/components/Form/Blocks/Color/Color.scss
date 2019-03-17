@@ -1,15 +1,17 @@
-.color-input {
-  box-sizing: border-box;
-  display: inline-block;
-  width: calc(60% - 40px);
-  margin-right: 4px;
-}
+.Color {
+  &__textInput {
+    box-sizing: border-box;
+    display: inline-block;
+    width: calc(60% - 40px);
+    margin-right: 4px;
+  }
 
-.color-picker-input {
-  box-sizing: border-box;
-  display: inline-block;
-  width: 36px;
-  height: 18px;
-  vertical-align: middle;
-  padding: 0;
+  &__pickerInput {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 36px;
+    height: 18px;
+    vertical-align: middle;
+    padding: 0;
+  }
 }

@@ -1,3 +1,5 @@
+@import 'assets/styles/colors';
+
 .tree-toolbar {
   display: flex;
   flex: 0 0 28px;
@@ -14,7 +16,7 @@
 }
 
 .tree-toolbar-button-icon {
-  color: #c8c8c8;
+  color: $text-color;
   height: 12px;
   width: 12px;
   display: block;

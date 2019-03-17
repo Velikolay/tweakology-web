@@ -1,3 +1,5 @@
+@import 'assets/styles/colors';
+
 .main-toolbar {
   display: table;
   position: absolute;
@@ -16,7 +18,7 @@
 .submit-button {
   height: 24px;
   width: 64px;
-  background: #3c3f41;
+  background: $input-color;
   border-radius: 4px;
   border: 1px solid #666;
 }
@@ -26,7 +28,7 @@
 }
 
 .submit-button-icon {
-  color: #c8c8c8;
+  color: $text-color;
   height: 12px;
   width: 12px;
   display: block;

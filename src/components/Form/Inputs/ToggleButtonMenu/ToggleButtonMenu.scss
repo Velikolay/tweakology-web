@@ -1,7 +1,9 @@
+@import '../../../../assets/styles/colors';
+
 .toggle-button {
   height: 18px;
-  color: #c8c8c8;
-  background-color: #3c3f41;
+  color: $text-color;
+  background-color: $input-color;
   border: 1px solid #846937;
   border-radius: 2px;
 }

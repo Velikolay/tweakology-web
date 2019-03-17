@@ -6,7 +6,7 @@ import TreeNode from '../../components/Tree/TreeNode/TreeNode';
 
 import { TreeRootNodeShape, TreeNodeShape } from './TreeShapes';
 
-import './UITree.css';
+import './UITree.scss';
 
 class UITree extends Component {
   constructor(props) {

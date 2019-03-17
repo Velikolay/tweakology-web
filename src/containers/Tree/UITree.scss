@@ -1,3 +1,5 @@
+@import '../../assets/styles/colors';
+
 .tree-view {
   flex-grow: 1;
   overflow-y: hidden;
@@ -21,7 +23,7 @@
 
 .m-node .inner {
   padding-left: 0 !important;
-  color: #c8c8c8;
+  color: $text-color;
   font-size: 12px;
 }
 

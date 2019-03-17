@@ -1,3 +1,5 @@
+@import 'assets/styles/colors';
+
 .new-view-menu {
   display: flex;
   flex-flow: column nowrap;
@@ -14,7 +16,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  background-color: #3c3f41;
+  background-color: $input-color;
   border: 1px solid #846937;
 }
 
@@ -23,7 +25,7 @@
 }
 
 .view-id__icon {
-  color: #c8c8c8;
+  color: $text-color;
   height: 16px;
   width: 16px;
   padding: 0 4px;
@@ -51,7 +53,7 @@
   padding: 12px 0 12px 8px;
   line-height: 14px;
   text-align: left;
-  color: #c8c8c8;
+  color: $text-color;
   background-color: #2b2b2be6;
   border-width: 1px 0 0 0;
   border-style: solid;
