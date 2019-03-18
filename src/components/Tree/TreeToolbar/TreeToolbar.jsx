@@ -6,21 +6,21 @@ import { FaPlus, FaSearch } from 'react-icons/fa';
 import './TreeToolbar.scss';
 
 const TreeToolbar = props => {
-  const { onAddNodeClick } = props;
+  const { eventHandler } = props;
   return (
-    <div className="tree-toolbar">
-      <IconContext.Provider value={{ className: 'tree-toolbar-button-icon' }}>
+    <div className="TreeToolbar">
+      <IconContext.Provider value={{ className: 'TreeToolbar__buttonIcon' }}>
         <button
-          className="tree-toolbar-button"
+          className="TreeToolbar__button"
           type="button"
-          onClick={onAddNodeClick}
+          onClick={() => eventHandler('enhancementclick')}
         >
           <FaPlus />
         </button>
         <button
-          className="tree-toolbar-button"
+          className="TreeToolbar__button"
           type="button"
-          onClick={onAddNodeClick}
+          onClick={() => eventHandler('enhancementclick')}
         >
           <FaSearch />
         </button>
@@ -30,7 +30,7 @@ const TreeToolbar = props => {
 };
 
 TreeToolbar.propTypes = {
-  onAddNodeClick: PropTypes.func.isRequired,
+  eventHandler: PropTypes.func.isRequired,
 };
 
 export default TreeToolbar;

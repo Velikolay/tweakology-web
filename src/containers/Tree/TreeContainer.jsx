@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Tree from 'react-ui-tree';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import TreeNode from '../../components/Tree/TreeNode/TreeNode';
+import TreeToolbar from '../../components/Tree/TreeToolbar/TreeToolbar';
+import TreeEnhancementMenu from '../../components/Tree/TreeEnhancementMenu/TreeEnhancementMenu';
+import Tree from '../../components/Tree/Tree';
 
 import { TreeRootNodeShape, TreeNodeShape } from './TreeShapes';
 
-import './UITree.scss';
-
-class UITree extends Component {
+class TreeContainer extends Component {
   constructor(props) {
     super(props);
     const { tree, activeNode, onFocusNode } = this.props;
@@ -44,38 +45,58 @@ class UITree extends Component {
     return onFocusNode && onFocusNode.id === node.id;
   };
 
-  handleChange = tree => {
+  onChange = tree => {
     this.setState({
       tree,
     });
   };
 
+  toolbarEventHandler = eventName => {
+    if (eventName === 'enhancementclick') {
+      const { showTreeEnhancementMenu } = this.state;
+      this.setState({ showTreeEnhancementMenu: !showTreeEnhancementMenu });
+    }
+  };
+
   render() {
-    const { tree } = this.state;
+    const { eventHandler } = this.props;
+    const { tree, showTreeEnhancementMenu } = this.state;
     return (
-      <div className="tree-view">
+      <React.Fragment>
         <Tree
           tree={tree}
-          onChange={this.handleChange}
-          isNodeCollapsed={this.isNodeCollapsed}
+          onChange={this.onChange}
           renderNode={this.renderNode}
         />
-      </div>
+        <TransitionGroup>
+          {showTreeEnhancementMenu ? (
+            <CSSTransition
+              classNames="TreeEnhancementMenu"
+              timeout={{ enter: 100, exit: 100 }}
+            >
+              <TreeEnhancementMenu
+                onItemAdded={item => eventHandler('additem', item)}
+              />
+            </CSSTransition>
+          ) : null}
+        </TransitionGroup>
+        <TreeToolbar eventHandler={this.toolbarEventHandler} />
+      </React.Fragment>
     );
   }
 }
 
-UITree.propTypes = {
+TreeContainer.propTypes = {
   tree: TreeRootNodeShape.isRequired,
   activeNode: TreeNodeShape,
   onFocusNode: TreeNodeShape,
   eventHandler: PropTypes.func,
 };
 
-UITree.defaultProps = {
+TreeContainer.defaultProps = {
   activeNode: null,
   onFocusNode: null,
   eventHandler: () => {},
 };
 
-export default UITree;
+export default TreeContainer;

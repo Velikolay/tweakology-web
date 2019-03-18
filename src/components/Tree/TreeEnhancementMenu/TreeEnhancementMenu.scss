@@ -1,0 +1,92 @@
+@import '../../../assets/styles/colors';
+
+.TreeEnhancementMenu {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 210px;
+  background-color: #2b2b2be6;
+  border-top: 2px solid rgb(58, 58, 58);
+
+  &__itemId {
+    flex: 0 0 24px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: $input-color;
+    border: 1px solid #846937;
+
+    &__input {
+      border: none;
+    }
+
+    &__icon {
+      height: 16px;
+      width: 16px;
+      padding: 0 4px;
+      margin: 0 auto;
+      color: $text-color;
+
+      &.disabled {
+        color: #808080;
+      }
+    }
+  }
+
+  &__itemList {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: hidden;
+
+    &:hover {
+      overflow-y: auto;
+    }
+  }
+
+  &__item {
+    width: 100%;
+    padding: 12px 0 12px 8px;
+    line-height: 14px;
+    text-align: left;
+    color: $text-color;
+    background-color: #2b2b2be6;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    border-color: rgb(58, 58, 58);
+
+    &:hover {
+      background-color: #0071b899;
+    }
+
+    &__name {
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    &__description {
+      font-size: 10px;
+    }
+  }
+}
+
+.TreeEnhancementMenu-enter {
+  height: 0;
+}
+
+.TreeEnhancementMenu-enter.TreeEnhancementMenu-enter-active {
+  height: 210px;
+  transition: height 100ms ease-in;
+}
+
+.TreeEnhancementMenu-exit {
+  height: 210px;
+}
+
+.TreeEnhancementMenu-exit.TreeEnhancementMenu-exit-active {
+  height: 0;
+  transition: height 100ms ease-in;
+}

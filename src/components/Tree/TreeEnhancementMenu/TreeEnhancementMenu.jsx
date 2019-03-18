@@ -5,7 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import { IconContext } from 'react-icons';
 import { FaPlusCircle } from 'react-icons/fa';
 
-import './NewViewMenu.scss';
+import './TreeEnhancementMenu.scss';
 
 const initFrame = id => ({
   x: 0,
@@ -96,40 +96,47 @@ const initProperties = (id, type) => {
   return item.init(id);
 };
 
-const NewViewMenu = ({ onNodeAdded }) => (
+const TreeEnhancementMenu = ({ onItemAdded }) => (
   <Formik
     initialValues={{ id: '', type: '' }}
     onSubmit={({ id, type }, { setSubmitting, resetForm }) => {
-      onNodeAdded({ id, type, ...initProperties(id, type) });
+      onItemAdded({ id, type, ...initProperties(id, type) });
       setSubmitting(false);
       resetForm();
     }}
   >
     {({ values: { id }, isSubmitting, setFieldValue }) => (
-      <Form className="new-view-menu">
-        <div className="view-id">
+      <Form className="TreeEnhancementMenu">
+        <div className="TreeEnhancementMenu__itemId">
           <Field
-            className="view-id__input"
+            className="TreeEnhancementMenu__itemId__input"
             type="text"
             name="id"
             placeholder="Identifier"
           />
           <IconContext.Provider
-            value={{ className: cx('view-id__icon', { 'is-disabled': !id }) }}
+            value={{
+              className: cx('TreeEnhancementMenu__itemId__icon', {
+                disabled: !id,
+              }),
+            }}
           >
             <FaPlusCircle />
           </IconContext.Provider>
         </div>
-        <div className="view-list">
+        <div className="TreeEnhancementMenu__itemList">
           {listItems.map(viewInfo => (
             <button
-              className="view-item"
+              className="TreeEnhancementMenu__item"
+              key={viewInfo.type}
               type="submit"
               disabled={!id || isSubmitting}
               onClick={() => setFieldValue('type', viewInfo.type)}
             >
-              <span className="view-item__name">{viewInfo.name}</span>
-              <span className="view-item__description">
+              <span className="TreeEnhancementMenu__item__name">
+                {viewInfo.name}
+              </span>
+              <span className="TreeEnhancementMenu__item__description">
                 {viewInfo.description}
               </span>
             </button>
@@ -140,8 +147,8 @@ const NewViewMenu = ({ onNodeAdded }) => (
   </Formik>
 );
 
-NewViewMenu.propTypes = {
-  onNodeAdded: PropTypes.func.isRequired,
+TreeEnhancementMenu.propTypes = {
+  onItemAdded: PropTypes.func.isRequired,
 };
 
-export default NewViewMenu;
+export default TreeEnhancementMenu;

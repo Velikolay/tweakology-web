@@ -41,7 +41,7 @@ class DeviceConnector {
     }
   }
 
-  fetchUITree(): Promise<UITree> {
+  fetchTree(): Promise<UITree> {
     if (this.endpoint) {
       return fetch(this.endpoint).then(response => response.json());
     }

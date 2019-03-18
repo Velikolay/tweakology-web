@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Split from 'react-split';
 
 import DeviceConnector from './Device/Connector';
@@ -18,13 +16,11 @@ import {
 import toThreeViews from './Three/View';
 import toThreeConstraintIndicator from './Three/Constraint';
 
-import UITree from './containers/Tree/UITree';
+import Tree from './containers/Tree/TreeContainer';
 import UIScene from './containers/Scene/UIScene';
 import Form from './containers/Form/Form';
 
 import MainToolbar from './MainToolbar';
-import TreeToolbar from './TreeToolbar';
-import NewViewMenu from './NewViewMenu';
 
 import './App.scss';
 
@@ -43,7 +39,6 @@ class App extends Component {
       },
       activeNode: null,
       onFocusNode: null,
-      showNewNodeMenu: false,
     };
 
     this.formikBag = null;
@@ -52,9 +47,8 @@ class App extends Component {
     this.onFormUpdate = this.onFormUpdate.bind(this);
     this.onFormSelect = this.onFormSelect.bind(this);
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
-    this.onAddNodeClick = this.onAddNodeClick.bind(this);
-    this.onNodeAdded = this.onNodeAdded.bind(this);
-    this.uiTreeEventHandler = this.uiTreeEventHandler.bind(this);
+    this.onItemAdded = this.onItemAdded.bind(this);
+    this.treeEventHandler = this.treeEventHandler.bind(this);
     this.uiSceneEventHandler = this.uiSceneEventHandler.bind(this);
   }
 
@@ -83,11 +77,11 @@ class App extends Component {
 
   updateTree = () =>
     this.deviceConnector
-      .fetchUITree()
-      .then(uiTree => {
+      .fetchTree()
+      .then(payload => {
         const { activeNode } = this.state;
         const revision = Date.now();
-        const tree = this.transformPayloadToTree(uiTree, revision);
+        const tree = this.transformPayloadToTree(payload, revision);
         const updatedState = {
           tree,
           activeNode:
@@ -122,12 +116,7 @@ class App extends Component {
     this.formikBag = formik;
   };
 
-  onAddNodeClick = () => {
-    const { showNewNodeMenu } = this.state;
-    this.setState({ showNewNodeMenu: !showNewNodeMenu });
-  };
-
-  onNodeAdded = ({ id, type, ...rest }) => {
+  onItemAdded = ({ id, type, ...rest }) => {
     const { activeNode } = this.state;
     const { children, id: superview } =
       ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1
@@ -156,7 +145,7 @@ class App extends Component {
       .catch(err => console.log(err));
   };
 
-  uiTreeEventHandler = (eventName, node) => {
+  treeEventHandler = (eventName, node) => {
     if (eventName === 'select') {
       if (node.id) {
         this.setState({ activeNode: node });
@@ -187,6 +176,9 @@ class App extends Component {
       if (!this.nodeDragging && onFocusNode && node.id === onFocusNode.id) {
         this.setState({ onFocusNode: null });
       }
+    }
+    if (eventName === 'additem') {
+      this.onItemAdded(node);
     }
   };
 
@@ -274,7 +266,7 @@ class App extends Component {
   };
 
   render() {
-    const { tree, activeNode, onFocusNode, showNewNodeMenu } = this.state;
+    const { tree, activeNode, onFocusNode } = this.state;
 
     const constraintIndicators = [];
     if (activeNode && activeNode.type === 'NSLayoutConstraint') {
@@ -293,23 +285,12 @@ class App extends Component {
           expandToMin
         >
           <div className="tree-section">
-            <UITree
+            <Tree
               tree={tree}
               activeNode={activeNode}
               onFocusNode={onFocusNode}
-              eventHandler={this.uiTreeEventHandler}
+              eventHandler={this.treeEventHandler}
             />
-            <TransitionGroup>
-              {showNewNodeMenu ? (
-                <CSSTransition
-                  classNames="sliding"
-                  timeout={{ enter: 100, exit: 100 }}
-                >
-                  <NewViewMenu onNodeAdded={this.onNodeAdded} />
-                </CSSTransition>
-              ) : null}
-            </TransitionGroup>
-            <TreeToolbar onAddNodeClick={this.onAddNodeClick} />
           </div>
           <div className="middle-section">
             <UIScene

@@ -1,29 +1,29 @@
-.tree-node__container {
+.TreeNode {
   width: 100%;
-}
 
-.tree-node__container.is-active {
-  background-color: #0071b899;
-}
+  &.is-active {
+    background-color: #0071b899;
+  }
 
-.tree-node__container.is-onfocus {
-  background-color: #34343499;
-}
+  &.is-onfocus {
+    background-color: #34343499;
+  }
 
-.tree-node__text {
-  padding: 4px 10px;
-  text-align: left;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
+  &__text {
+    padding: 4px 10px;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 
-.tree-node__add-button {
-  float: right;
-  background: none !important;
-  color: rgb(200, 150, 55);
-  border: none;
-  padding: 4px 12px 4px 4px;
-  font: inherit;
-  cursor: pointer;
+  &__addButton {
+    float: right;
+    background: none !important;
+    color: rgb(200, 150, 55);
+    border: none;
+    padding: 4px;
+    font: inherit;
+    cursor: pointer;
+  }
 }
