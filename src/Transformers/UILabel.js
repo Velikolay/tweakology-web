@@ -1,12 +1,12 @@
 import UIViewTransformer from './UIView';
-import FontTransformer from './UIFont';
+import UIFontTransformer from './UIFont';
 
 const UILabelTransformer = {
   fromPayload: (props, device) => ({
     ...UIViewTransformer.fromPayload(props),
     text: props.text,
     textColor: props.textColor,
-    font: FontTransformer.fromPayload(props.font, device),
+    font: UIFontTransformer.fromPayload(props.font, device),
     numberOfLines: props.numberOfLines,
     textAlignment: props.textAlignment,
     baselineAdjustment: props.baselineAdjustment.toString(),
@@ -17,7 +17,7 @@ const UILabelTransformer = {
     ...UIViewTransformer.toPayload(props),
     text: props.text,
     textColor: props.textColor,
-    font: FontTransformer.toPayload(props.font, device),
+    font: UIFontTransformer.toPayload(props.font, device),
     numberOfLines: props.numberOfLines,
     textAlignment: props.textAlignment,
     baselineAdjustment: parseInt(props.baselineAdjustment, 10),

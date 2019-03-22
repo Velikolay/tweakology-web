@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import { withFormikContext } from '../../../../contexts/Form/FormikContext';
+import { withFormikContext } from '../../../../contexts/FormikContext';
 import { formikValueWithPrefix } from '../../FormikHelpers';
 
 import './ToggleButtonMenu.scss';

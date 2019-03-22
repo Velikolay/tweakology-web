@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Split from 'react-split';
 
-import DeviceConnector from './Device/Connector';
-import DeviceContext from './contexts/Device/DeviceContext';
+import PersistenceService from './services/persistence';
+import DeviceConnector from './services/device/connector';
+
+import DeviceContext from './contexts/DeviceContext';
 
 import { buildChangeSet } from './containers/Form/Submit';
-import { readPersistedValues } from './containers/Form/Persistence/Presistence';
 
 import { enrichFontsData } from './Utils/Font';
 import {
@@ -13,14 +14,15 @@ import {
   addNewConstraintToTreeNode,
   updatedConstraintNodeName,
 } from './Utils/Tree/Constraint';
-import toThreeViews from './Three/View';
-import toThreeConstraintIndicator from './Three/Constraint';
 
-import Tree from './containers/Tree/TreeContainer';
-import Scene from './containers/Scene/SceneContainer';
+import TreeTransformer from './containers/Scene/transformers/tree';
+import ConstraintTransformer from './containers/Scene/transformers/constraint';
+
+import Tree from './containers/Tree/Tree';
+import Scene from './containers/Scene/Scene';
 import Form from './containers/Form/Form';
 
-import MainToolbar from './MainToolbar';
+import MainToolbar from './components/MainToolbar/MainToolbar';
 
 import './App.scss';
 
@@ -104,7 +106,8 @@ class App extends Component {
   onFormUpdate = (id, type, values) => {
     const { activeNode } = this.state;
     if (type === 'NSLayoutConstraint') {
-      activeNode.updatedProperties = { constraint: values };
+      console.log(activeNode.updatedProperties);
+      activeNode.updatedProperties = values;
       activeNode.module = updatedConstraintNodeName(activeNode);
     } else {
       activeNode.updatedProperties = values;
@@ -240,7 +243,7 @@ class App extends Component {
       revision,
       imgUrl: `${this.deviceConnector.endpoint}/images/${id}`,
       properties,
-      updatedProperties: readPersistedValues(id),
+      updatedProperties: PersistenceService.read(id, 'values'),
     };
 
     treeNode.children = [];
@@ -270,11 +273,8 @@ class App extends Component {
 
     const constraintIndicators = [];
     if (activeNode && activeNode.type === 'NSLayoutConstraint') {
-      constraintIndicators.push(toThreeConstraintIndicator(activeNode));
+      constraintIndicators.push(ConstraintTransformer.toScene(activeNode));
     }
-    // const constraintLine = lineProps({
-    //   x1: 50, y1: 50, z1: 100, x2: 150, y2: 90, z2: 100,
-    // }).map(props => <UIElementConstraintLine {...props} />);
     return (
       <DeviceContext.Provider value={this.deviceContext}>
         <Split
@@ -294,7 +294,7 @@ class App extends Component {
           </div>
           <div className="middle-section">
             <Scene
-              tree={toThreeViews({ tree, activeNode, onFocusNode })}
+              tree={TreeTransformer.toScene({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
               eventHandler={this.sceneEventHandler}
             />

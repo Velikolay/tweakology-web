@@ -1,30 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withFormik } from 'formik';
 
-import { withDeviceContext } from '../../contexts/Device/DeviceContext';
+import { withDeviceContext } from '../../contexts/DeviceContext';
 
-import UIViewAttributes from './Sections/Attributes/UIView/UIView';
-import UIButtonViewAttributes from './Sections/Attributes/UIButtonView/UIButtonView';
-import UILabelViewAttributes from './Sections/Attributes/UILabelView/UILabelView';
-import UIImageViewAttributes from './Sections/Attributes/UIImageView/UIImageView';
-import NSLayoutConstraintAttributes from './Sections/Attributes/NSLayoutConstraint/NSLayoutConstraint';
+import { withFormikContextProvider } from '../../contexts/FormikContext';
+import { withFormikShell } from './FormikShell';
+
+import getAttributesComponent from '../../components/Form/Sections/Attributes';
+import getTransformer from '../../transformers';
+
+const getAttributesComponentWithFormik = type => {
+  return withFormik({
+    enableReinitialize: true,
+    mapPropsToValues: props =>
+      getTransformer(type).fromPayload(props.formData, props.device),
+    displayName: type,
+  })(withFormikContextProvider(withFormikShell(getAttributesComponent(type))));
+};
 
 class Form extends React.PureComponent {
   render() {
     const { type } = this.props;
-    if (type === 'UIButton') {
-      return <UIButtonViewAttributes {...this.props} />;
-    }
-    if (type === 'UILabel') {
-      return <UILabelViewAttributes {...this.props} />;
-    }
-    if (type === 'UIImageView') {
-      return <UIImageViewAttributes {...this.props} />;
-    }
-    if (type === 'NSLayoutConstraint') {
-      return <NSLayoutConstraintAttributes {...this.props} />;
-    }
-    return <UIViewAttributes {...this.props} />;
+    const AttributesComponent = getAttributesComponentWithFormik(type);
+    return <AttributesComponent {...this.props} />;
   }
 }
 

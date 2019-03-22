@@ -1,5 +1,5 @@
 // @flow
-import type { DeviceFonts } from '../Device/Types';
+import type { DeviceFonts } from '../services/device/types';
 
 const mergeEnchancers = styles => {
   const enchancers = new Set(['Extra', 'Ultra', 'Semi', 'Demi']);

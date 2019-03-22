@@ -1,9 +1,11 @@
-import { attributeNames, relationSymbols } from '../../Static/Constraints';
+import PersistenceService from '../../services/persistence';
+
 import {
-  readPersistedValues,
-  readPersistedConstraints,
-} from '../../containers/Form/Persistence/Presistence';
-import ConstraintTransformer from '../../Transformers/Constraint';
+  attributeNames,
+  relationSymbols,
+} from '../../services/device/metadata/NSLayoutConstraints';
+import { readPersistedConstraints } from '../../containers/Form/Presistence';
+import NSLayoutConstraintTransformer from '../../transformers/NSLayoutConstraint';
 
 const numToFixed = num => {
   if (num % 1 !== 0) {
@@ -52,7 +54,7 @@ const constraintNodeName = (constraint, superview) => {
       if (constraint.multiplier !== 1) {
         name += `${numToFixed(constraint.multiplier)} * `;
       }
-      let secondItem = `${attributeNames[constraint.second.attribute.value]}`;
+      let secondItem = `${attributeNames[constraint.second.attribute.value]} `;
       if (constraint.second.item.value !== superview.id) {
         secondItem = `${itemTypeById(
           constraint.second.item.value,
@@ -62,17 +64,19 @@ const constraintNodeName = (constraint, superview) => {
       name += secondItem;
     }
 
-    if (constraint.constant !== 0) {
-      const constantToPrint = numToFixed(constraint.constant);
-      if (constraint.constant > 0) {
-        if (isSecondInit) {
-          name += ` + ${constantToPrint}`;
-        } else {
-          name += ` ${constantToPrint}`;
-        }
-      } else {
-        name += ` - ${-1 * constantToPrint}`;
+    const constantToPrint = numToFixed(constraint.constant);
+    if (constraint.constant === 0) {
+      if (!isSecondInit) {
+        name += `${constantToPrint}`;
       }
+    } else if (constraint.constant > 0) {
+      if (!isSecondInit) {
+        name += `${constantToPrint}`;
+      } else {
+        name += `+ ${constantToPrint}`;
+      }
+    } else {
+      name += `- ${-1 * constantToPrint}`;
     }
     return name;
   }
@@ -128,7 +132,7 @@ const newConstraint = () => ({
 });
 
 const updatedConstraintNodeName = node =>
-  constraintNodeName(node.updatedProperties.constraint, node.superview);
+  constraintNodeName(node.updatedProperties, node.superview);
 
 const addNewConstraintToTreeNode = node => {
   const constraintsListNode = node.children[node.children.length - 1];
@@ -142,7 +146,7 @@ const addNewConstraintToTreeNode = node => {
       type: 'NSLayoutConstraint',
       id: constraintId,
       properties: {
-        constraint,
+        ...constraint,
         itemOptions: constraintItemOptions(node),
       },
       leaf: true,
@@ -152,7 +156,9 @@ const addNewConstraintToTreeNode = node => {
 };
 
 const transformConstraintPayloadToTree = (viewNode, constraints) => {
-  const constraintNodes = constraints.map(ConstraintTransformer.fromPayload);
+  const constraintNodes = constraints.map(
+    NSLayoutConstraintTransformer.fromPayload,
+  );
   const lastIdx = constraintNodes.length - 1;
   const constraintsByView = readPersistedConstraints();
   if (viewNode.id in constraintsByView) {
@@ -167,15 +173,15 @@ const transformConstraintPayloadToTree = (viewNode, constraints) => {
   const itemOptions = constraintItemOptions(viewNode);
   const children = constraintNodes.map((constraint, idx) => {
     const constraintId = `${viewNode.id}.constraints:${idx}`;
-    const local = readPersistedValues(constraintId);
+    const storedConstraint = PersistenceService.read(constraintId, 'values');
 
     return {
-      module: constraintNodeName(local || constraint, viewNode),
+      module: constraintNodeName(storedConstraint || constraint, viewNode),
       superview: viewNode,
       type: 'NSLayoutConstraint',
       id: constraintId,
       properties: {
-        constraint,
+        ...constraint,
         itemOptions,
       },
       leaf: true,

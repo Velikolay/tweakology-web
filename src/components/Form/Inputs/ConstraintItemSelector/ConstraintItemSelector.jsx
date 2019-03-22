@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import Field from '../Field/Field';
+import Field from '../Field';
 import ToggleButtonMenu from '../ToggleButtonMenu/ToggleButtonMenu';
 
-import { withFormikContext } from '../../../../contexts/Form/FormikContext';
+import { withFormikContext } from '../../../../contexts/FormikContext';
 import { nameWithPrefix, formikValueWithPrefix } from '../../FormikHelpers';
 import {
   attributeToModifiers,
   valueSwitch,
-} from '../../../../Static/Constraints';
+} from '../../../../services/device/metadata/NSLayoutConstraints';
 
 import './ConstraintItemSelector.scss';
 

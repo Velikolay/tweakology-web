@@ -1,6 +1,7 @@
-import { readPersistedConstraints } from './Persistence/Presistence';
-import ConstraintTransformer from '../../Transformers/Constraint';
-import getTransformer from '../../Transformers';
+import PersistenceService from '../../services/persistence';
+import { readPersistedConstraints } from './Presistence';
+import NSLayoutConstraintTransformer from '../../transformers/NSLayoutConstraint';
+import getTransformer from '../../transformers';
 
 const treeToFormIds = uiElement => {
   const treeNode = [uiElement.id];
@@ -15,7 +16,9 @@ const treeToFormIds = uiElement => {
 };
 
 const constraintToPayload = constraints => {
-  const constraintValues = ConstraintTransformer.toPayload(constraints.values);
+  const constraintValues = NSLayoutConstraintTransformer.toPayload(
+    constraints.values,
+  );
   return {
     idx: parseInt(constraints.id.split(':')[1], 10),
     ...constraintValues,
@@ -28,12 +31,11 @@ const buildChangeSet = (tree, device) => {
 
   const constraints = readPersistedConstraints();
   ids.forEach(id => {
-    const formState = window.localStorage.getItem(id);
-    if (formState) {
-      const state = JSON.parse(formState);
-      if (state.type !== 'NSLayoutConstraint' && state.dirty) {
-        const transformer = getTransformer(state.type);
-        const { frame, ...rest } = state.values;
+    const form = PersistenceService.read(id);
+    if (form) {
+      if (form.type !== 'NSLayoutConstraint' && form.dirty) {
+        const transformer = getTransformer(form.type);
+        const { frame, ...rest } = form.values;
         const change = {
           operation: 'modify',
           view: {

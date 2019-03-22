@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withFormikContext } from '../../../../contexts/Form/FormikContext';
+import { withFormikContext } from '../../../../contexts/FormikContext';
 
-import Field from '../../Inputs/Field/Field';
+import Field from '../../Inputs/Field';
 import {
   nameWithPrefix,
   titleForField,

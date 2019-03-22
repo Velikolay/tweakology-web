@@ -1,8 +1,8 @@
 // @flow
-import type { UIFont, DeviceFonts } from '../Device/Types';
+import type { UIFont, DeviceFonts } from '../services/device/types';
 import { toFontStyles } from '../Utils/Font';
 
-const FontTransformer = {
+const UIFontTransformer = {
   fromPayload: (font: UIFont, device: { fonts: DeviceFonts }) => {
     const { trait, fontName, pointSize } = font;
     const { system, preffered } = device.fonts;
@@ -46,4 +46,4 @@ const FontTransformer = {
   }),
 };
 
-export default FontTransformer;
+export default UIFontTransformer;

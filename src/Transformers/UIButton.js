@@ -1,15 +1,15 @@
 // @flow
-import type { UIButton, UIButtonLabel } from '../Device/Types';
+import type { UIButton, UIButtonLabel } from '../services/device/types';
 
 import UIViewTransformer from './UIView';
-import FontTransformer from './UIFont';
+import UIFontTransformer from './UIFont';
 
 const UIButtonLabelTransformer = {
   fromPayload: (props: UIButtonLabel, device: any) => ({
     ...UIViewTransformer.fromPayload(props),
     text: props.text,
     textColor: props.textColor,
-    font: FontTransformer.fromPayload(props.font, device),
+    font: UIFontTransformer.fromPayload(props.font, device),
     numberOfLines: props.numberOfLines,
     textAlignment: props.textAlignment,
     baselineAdjustment: props.baselineAdjustment.toString(),
@@ -20,7 +20,7 @@ const UIButtonLabelTransformer = {
     ...UIViewTransformer.toPayload(props),
     text: props.text,
     textColor: props.textColor,
-    font: FontTransformer.toPayload(props.font),
+    font: UIFontTransformer.toPayload(props.font),
     numberOfLines: props.numberOfLines,
     textAlignment: props.textAlignment,
     baselineAdjustment: parseInt(props.baselineAdjustment, 10),

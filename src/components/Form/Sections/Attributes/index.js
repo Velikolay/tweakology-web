@@ -3,17 +3,16 @@ import UIButton from './UIButton';
 import UILabel from './UILabel';
 import UIImageView from './UIImageView';
 import NSLayoutConstraint from './NSLayoutConstraint';
-import Identity from './Identity';
 
-const TRANSFORMERS = {
+const ATTRIBUTES = {
   UIView,
   UILabel,
   UIButton,
   UIImageView,
-  NSLayoutConstraint: Identity,
+  NSLayoutConstraint,
 };
 
-const getTransformer = name =>
-  name in TRANSFORMERS ? TRANSFORMERS[name] : UIView;
+const getAttributesComponent = name =>
+  name in ATTRIBUTES ? ATTRIBUTES[name] : UIView;
 
-export default getTransformer;
+export default getAttributesComponent;
