@@ -6,7 +6,7 @@ const getNode = intersect => {
   return nodeGroup;
 };
 
-class AppControls extends THREE.EventDispatcher {
+class SceneControls extends THREE.EventDispatcher {
   constructor(camera, domElement, objects) {
     super();
     this.objects = objects;
@@ -237,4 +237,4 @@ class AppControls extends THREE.EventDispatcher {
   }
 }
 
-export default AppControls;
+export default SceneControls;

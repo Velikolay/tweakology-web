@@ -17,7 +17,7 @@ import toThreeViews from './Three/View';
 import toThreeConstraintIndicator from './Three/Constraint';
 
 import Tree from './containers/Tree/TreeContainer';
-import UIScene from './containers/Scene/UIScene';
+import Scene from './containers/Scene/SceneContainer';
 import Form from './containers/Form/Form';
 
 import MainToolbar from './MainToolbar';
@@ -49,7 +49,7 @@ class App extends Component {
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
     this.onItemAdded = this.onItemAdded.bind(this);
     this.treeEventHandler = this.treeEventHandler.bind(this);
-    this.uiSceneEventHandler = this.uiSceneEventHandler.bind(this);
+    this.sceneEventHandler = this.sceneEventHandler.bind(this);
   }
 
   componentDidMount() {
@@ -182,7 +182,7 @@ class App extends Component {
     }
   };
 
-  uiSceneEventHandler = (eventName, obj) => {
+  sceneEventHandler = (eventName, obj) => {
     const { activeNode } = this.state;
     if (this.formikBag) {
       const { setFieldValue } = this.formikBag;
@@ -293,10 +293,10 @@ class App extends Component {
             />
           </div>
           <div className="middle-section">
-            <UIScene
+            <Scene
               tree={toThreeViews({ tree, activeNode, onFocusNode })}
               constraintIndicators={constraintIndicators}
-              eventHandler={this.uiSceneEventHandler}
+              eventHandler={this.sceneEventHandler}
             />
             <MainToolbar onSubmitChanges={this.onSubmitChanges} />
           </div>

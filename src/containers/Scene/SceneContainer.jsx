@@ -8,9 +8,9 @@ import TextureOnOffButton from '../../components/Scene/TextureOnOffButton/Textur
 import { UITreeShape, ConstraintIndicatorShape } from './SceneShapes';
 import CoordinateTranslator from './CoordinateTranslator';
 import SceneManager from './SceneManager';
-import AppControls from './Controls/AppControls';
+import SceneControls from './SceneControls';
 
-import './UIScene.scss';
+import './SceneContainer.scss';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
@@ -33,7 +33,7 @@ const initOrbitControls = (camera, constainer) => {
   return controls;
 };
 
-class UIScene extends Component {
+class SceneContainer extends Component {
   constructor(props) {
     super(props);
     this.cameraPosition = new THREE.Vector3();
@@ -71,10 +71,10 @@ class UIScene extends Component {
     this.coordTranslator = new CoordinateTranslator(scene);
 
     this.orbitControls = initOrbitControls(camera, this.renderer.domElement);
-    this.appControls = new AppControls(camera, this.renderer.domElement);
-    this.appControls.addEventListener('dragstart', this.dragStart);
-    this.appControls.addEventListener('dragend', this.dragEnd);
-    this.appControls.addEventListener('drag', event => {
+    this.sceneControls = new SceneControls(camera, this.renderer.domElement);
+    this.sceneControls.addEventListener('dragstart', this.dragStart);
+    this.sceneControls.addEventListener('dragend', this.dragEnd);
+    this.sceneControls.addEventListener('drag', event => {
       const {
         userData: { id },
         position: coord3DScene,
@@ -84,13 +84,13 @@ class UIScene extends Component {
       position.addVectors(coord3DScene, v);
       eventHandler('drag', { id, position });
     });
-    this.appControls.addEventListener('select', event => {
+    this.sceneControls.addEventListener('select', event => {
       const {
         userData: { id },
       } = event.object;
       eventHandler('select', { id });
     });
-    this.appControls.addEventListener('hoveron', event => {
+    this.sceneControls.addEventListener('hoveron', event => {
       const {
         userData: { id },
       } = event.object;
@@ -115,16 +115,16 @@ class UIScene extends Component {
     const { tree, constraintIndicators } = nextProps;
     this.sceneManager.updateViews(tree);
     this.sceneManager.updateConstraintIndicators(constraintIndicators);
-    if (this.appControls) {
-      this.appControls.setObjects(this.sceneManager.getMeshGroups());
+    if (this.sceneControls) {
+      this.sceneControls.setObjects(this.sceneManager.getMeshGroups());
     }
   }
 
   componentWillUnmount() {
     this.orbitControls.dispose();
     delete this.orbitControls;
-    this.appControls.dispose();
-    delete this.appControls;
+    this.sceneControls.dispose();
+    delete this.sceneControls;
     this.sceneResizeSensor.detach();
     this.stop();
     this.container.removeChild(this.renderer.domElement);
@@ -181,7 +181,7 @@ class UIScene extends Component {
           ref={el => {
             this.container = el;
           }}
-          className="ui-scene-container"
+          className="SceneContainer"
         />
         <OffsetSlider
           initial={INITIAL_PLANE_OFFSET}
@@ -195,16 +195,16 @@ class UIScene extends Component {
   }
 }
 
-UIScene.propTypes = {
+SceneContainer.propTypes = {
   tree: UITreeShape,
   constraintIndicators: PropTypes.arrayOf(ConstraintIndicatorShape),
   eventHandler: PropTypes.func,
 };
 
-UIScene.defaultProps = {
+SceneContainer.defaultProps = {
   tree: null,
   constraintIndicators: [],
   eventHandler: () => {},
 };
 
-export default UIScene;
+export default SceneContainer;
