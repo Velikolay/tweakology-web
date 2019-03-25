@@ -8,27 +8,27 @@ import { withFormikContextProvider } from '../../contexts/FormikContext';
 import { withFormikShell } from './FormikShell';
 
 import getAttributesComponent from '../../components/Form/Sections/Attributes';
-import getTransformer from '../../transformers';
 
 const getAttributesComponentWithFormik = type => {
   return withFormik({
     enableReinitialize: true,
-    mapPropsToValues: props =>
-      getTransformer(type).fromPayload(props.formData, props.device),
+    mapPropsToValues: props => props.formData,
     displayName: type,
   })(withFormikContextProvider(withFormikShell(getAttributesComponent(type))));
 };
 
-class Form extends React.PureComponent {
-  render() {
-    const { type } = this.props;
-    const AttributesComponent = getAttributesComponentWithFormik(type);
-    return <AttributesComponent {...this.props} />;
-  }
-}
-
-Form.propTypes = {
-  type: PropTypes.string.isRequired,
+const FormContainer = props => {
+  const { type } = props;
+  const AttributesComponent = getAttributesComponentWithFormik(type);
+  return <AttributesComponent {...props} />;
 };
 
-export default withDeviceContext(Form);
+FormContainer.propTypes = {
+  id: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  formData: PropTypes.object.isRequired,
+  onFormUpdate: PropTypes.func.isRequired,
+  onFormSelect: PropTypes.func.isRequired,
+};
+
+export default withDeviceContext(FormContainer);

@@ -2,7 +2,6 @@ import UIView from './UIView';
 import UIButton from './UIButton';
 import UILabel from './UILabel';
 import UIImageView from './UIImageView';
-import NSLayoutConstraint from './NSLayoutConstraint';
 import Identity from './Identity';
 
 const TRANSFORMERS = {

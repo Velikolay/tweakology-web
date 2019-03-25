@@ -1,4 +1,4 @@
-import { attributeToModifiers } from '../services/device/metadata/NSLayoutConstraints';
+import { attributeToModifiers } from '../../../../services/device/metadata/NSLayoutConstraints';
 
 const toItem = (payloadItem, placeholder) => {
   const attrVal = payloadItem.attribute.toString();

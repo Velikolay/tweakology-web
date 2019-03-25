@@ -1,5 +1,5 @@
 // @flow
-import type { UIScrollView } from '../services/device/types';
+import type { UIScrollView } from '../../../../services/device/types';
 import UIViewTransformer from './UIView';
 
 const UIScrollViewTransformer = {

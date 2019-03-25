@@ -1,5 +1,5 @@
 // @flow
-import type { UIImage } from '../services/device/types';
+import type { UIImage } from '../../../../services/device/types';
 
 const UIImageTransformer = {
   fromPayload: ({ src }: UIImage) => ({

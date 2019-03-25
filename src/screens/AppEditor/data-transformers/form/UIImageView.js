@@ -1,5 +1,5 @@
 // @flow
-import type { UIImageView } from '../services/device/types';
+import type { UIImageView } from '../../../../services/device/types';
 import UIViewTransformer from './UIView';
 import UIImageTransformer from './UIImage';
 

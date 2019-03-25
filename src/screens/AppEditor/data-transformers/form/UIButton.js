@@ -1,5 +1,8 @@
 // @flow
-import type { UIButton, UIButtonLabel } from '../services/device/types';
+import type {
+  UIButton,
+  UIButtonLabel,
+} from '../../../../services/device/types';
 
 import UIViewTransformer from './UIView';
 import UIFontTransformer from './UIFont';

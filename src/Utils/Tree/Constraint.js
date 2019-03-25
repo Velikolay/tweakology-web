@@ -5,7 +5,7 @@ import {
   relationSymbols,
 } from '../../services/device/metadata/NSLayoutConstraints';
 import { readPersistedConstraints } from '../../containers/Form/Presistence';
-import NSLayoutConstraintTransformer from '../../transformers/NSLayoutConstraint';
+import NSLayoutConstraintTransformer from '../../screens/AppEditor/data-transformers/form/NSLayoutConstraint';
 
 const numToFixed = num => {
   if (num % 1 !== 0) {

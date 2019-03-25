@@ -1,5 +1,5 @@
 // @flow
-import type { UIView } from '../services/device/types';
+import type { UIView } from '../../../../services/device/types';
 
 const UIViewTransformer = {
   fromPayload: (

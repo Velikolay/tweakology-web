@@ -1,34 +1,22 @@
 import React, { Component } from 'react';
-import Split from 'react-split';
 
-import PersistenceService from './services/persistence';
-import DeviceConnector from './services/device/connector';
+import PersistenceService from '../../services/persistence';
+import DeviceConnector from '../../services/device/connector';
 
-import DeviceContext from './contexts/DeviceContext';
+import DeviceContext from '../../contexts/DeviceContext';
 
-import { buildChangeSet } from './containers/Form/Submit';
+import { buildChangeSet } from '../../containers/Form/Submit';
 
-import { enrichFontsData } from './Utils/Font';
+import { enrichFontsData } from '../../Utils/Font';
 import {
   transformConstraintPayloadToTree,
   addNewConstraintToTreeNode,
   updatedConstraintNodeName,
-} from './Utils/Tree/Constraint';
+} from '../../Utils/Tree/Constraint';
 
-import TreeTransformer from './containers/Scene/transformers/tree';
-import ConstraintTransformer from './containers/Scene/transformers/constraint';
+import AppEditorLayout from './AppEditorLayout';
 
-import Tree from './containers/Tree/Tree';
-import Scene from './containers/Scene/Scene';
-import Form from './containers/Form/Form';
-
-import MainToolbar from './components/MainToolbar/MainToolbar';
-
-import './App.scss';
-
-require('react-ui-tree/dist/react-ui-tree.css');
-
-class App extends Component {
+class AppEditor extends Component {
   constructor(props) {
     super(props);
 
@@ -106,7 +94,6 @@ class App extends Component {
   onFormUpdate = (id, type, values) => {
     const { activeNode } = this.state;
     if (type === 'NSLayoutConstraint') {
-      console.log(activeNode.updatedProperties);
       activeNode.updatedProperties = values;
       activeNode.module = updatedConstraintNodeName(activeNode);
     } else {
@@ -270,51 +257,21 @@ class App extends Component {
 
   render() {
     const { tree, activeNode, onFocusNode } = this.state;
-
-    const constraintIndicators = [];
-    if (activeNode && activeNode.type === 'NSLayoutConstraint') {
-      constraintIndicators.push(ConstraintTransformer.toScene(activeNode));
-    }
     return (
       <DeviceContext.Provider value={this.deviceContext}>
-        <Split
-          className="App"
-          sizes={[20, 60, 20]}
-          minSize={[250, 300, 250]}
-          gutterSize={4}
-          expandToMin
-        >
-          <div className="tree-section">
-            <Tree
-              tree={tree}
-              activeNode={activeNode}
-              onFocusNode={onFocusNode}
-              eventHandler={this.treeEventHandler}
-            />
-          </div>
-          <div className="middle-section">
-            <Scene
-              tree={TreeTransformer.toScene({ tree, activeNode, onFocusNode })}
-              constraintIndicators={constraintIndicators}
-              eventHandler={this.sceneEventHandler}
-            />
-            <MainToolbar onSubmitChanges={this.onSubmitChanges} />
-          </div>
-          <div className="config-section">
-            {activeNode !== null ? (
-              <Form
-                id={activeNode.id}
-                type={activeNode.type}
-                formData={activeNode.properties}
-                onFormUpdate={this.onFormUpdate}
-                onFormSelect={this.onFormSelect}
-              />
-            ) : null}
-          </div>
-        </Split>
+        <AppEditorLayout
+          tree={tree}
+          activeNode={activeNode}
+          onFocusNode={onFocusNode}
+          treeEventHandler={this.treeEventHandler}
+          sceneEventHandler={this.sceneEventHandler}
+          onSubmitChanges={this.onSubmitChanges}
+          onFormUpdate={this.onFormUpdate}
+          onFormSelect={this.onFormSelect}
+        />
       </DeviceContext.Provider>
     );
   }
 }
 
-export default App;
+export default AppEditor;
