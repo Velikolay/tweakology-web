@@ -28,7 +28,7 @@ const toFontStyles = (fontName: string): string => {
   return 'Regular';
 };
 
-const enrichFontsData = (fontsData: DeviceFonts): DeviceFonts => {
+const fontDataEnrichment = (fontsData: DeviceFonts): DeviceFonts => {
   const { system, custom, preffered } = fontsData;
   const families = [];
   families.push(...Object.keys(system).sort((a, b) => a.localeCompare(b)));
@@ -46,4 +46,4 @@ const enrichFontsData = (fontsData: DeviceFonts): DeviceFonts => {
   return Object.assign(fontsData, { families, all });
 };
 
-export { toFontStyles, enrichFontsData };
+export { toFontStyles, fontDataEnrichment };

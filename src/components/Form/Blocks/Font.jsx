@@ -5,7 +5,7 @@ import { withFormikContext } from '../../../contexts/FormikContext';
 import DeviceContext from '../../../contexts/DeviceContext';
 
 import Field from '../Inputs/Field';
-import { toFontStyles } from '../../../Utils/Font';
+import { toFontStyles } from '../../../utils/font';
 import {
   nameWithPrefix,
   titleForField,

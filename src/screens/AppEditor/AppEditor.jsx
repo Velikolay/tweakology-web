@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 
-import PersistenceService from '../../services/persistence';
 import DeviceConnector from '../../services/device/connector';
-
 import DeviceContext from '../../contexts/DeviceContext';
 
+import PayloadTransformer from './data-transformers/tree/payload';
 import { buildChangeSet } from '../../containers/Form/Submit';
 
-import { enrichFontsData } from '../../Utils/Font';
-import {
-  transformConstraintPayloadToTree,
-  addNewConstraintToTreeNode,
-  updatedConstraintNodeName,
-} from '../../Utils/Tree/Constraint';
+import { fontDataEnrichment } from '../../utils/font';
+import { addConstraintToNode, updatedConstraintNodeName } from './tree-manip';
 
 import AppEditorLayout from './AppEditorLayout';
 
@@ -60,7 +55,7 @@ class AppEditor extends Component {
       .fetchSystemData()
       .then(({ fonts }) => {
         this.deviceContext = {
-          fonts: enrichFontsData(fonts),
+          fonts: fontDataEnrichment(fonts),
         };
       })
       .catch(err => console.log(err));
@@ -71,7 +66,11 @@ class AppEditor extends Component {
       .then(payload => {
         const { activeNode } = this.state;
         const revision = Date.now();
-        const tree = this.transformPayloadToTree(payload, revision);
+        const tree = PayloadTransformer.toTree(
+          payload,
+          revision,
+          this.deviceConnector.endpoint,
+        );
         const updatedState = {
           tree,
           activeNode:
@@ -93,11 +92,9 @@ class AppEditor extends Component {
 
   onFormUpdate = (id, type, values) => {
     const { activeNode } = this.state;
+    activeNode.updatedProperties = values;
     if (type === 'NSLayoutConstraint') {
-      activeNode.updatedProperties = values;
       activeNode.module = updatedConstraintNodeName(activeNode);
-    } else {
-      activeNode.updatedProperties = values;
     }
     this.setState({ activeNode });
   };
@@ -117,7 +114,7 @@ class AppEditor extends Component {
         ? children.length - 1
         : children.length;
 
-    const insertNewViewConfig = [
+    const insertItemConfig = [
       {
         operation: 'insert',
         view: {
@@ -130,7 +127,7 @@ class AppEditor extends Component {
       },
     ];
     this.deviceConnector
-      .submitChanges('test', insertNewViewConfig)
+      .submitChanges('test', insertItemConfig)
       .then(() => this.updateTree())
       .catch(err => console.log(err));
   };
@@ -142,7 +139,7 @@ class AppEditor extends Component {
       }
     }
     if (eventName === 'add') {
-      addNewConstraintToTreeNode(node);
+      addConstraintToNode(node);
       this.setState({ activeNode: node });
     }
     if (eventName === 'mouseup') {
@@ -210,49 +207,6 @@ class AppEditor extends Component {
       }
     }
     return null;
-  };
-
-  transformPayloadToTree = (uiElement, revision) => {
-    const {
-      uid: { value: id, kind },
-      name,
-      type,
-      properties,
-      constraints,
-      subviews,
-    } = uiElement;
-
-    const treeNode = {
-      module: kind === 0 ? name : id,
-      id,
-      name,
-      type,
-      revision,
-      imgUrl: `${this.deviceConnector.endpoint}/images/${id}`,
-      properties,
-      updatedProperties: PersistenceService.read(id, 'values'),
-    };
-
-    treeNode.children = [];
-    if (subviews) {
-      for (const subview of subviews) {
-        const subtree = this.transformPayloadToTree(subview, revision);
-        subtree.superview = treeNode;
-        treeNode.children.push(subtree);
-      }
-    }
-
-    if (constraints && constraints.length > 0) {
-      treeNode.children.push(
-        transformConstraintPayloadToTree(treeNode, constraints),
-      );
-    }
-
-    if (treeNode.children.length === 0) {
-      treeNode.leaf = true;
-    }
-
-    return treeNode;
   };
 
   render() {
