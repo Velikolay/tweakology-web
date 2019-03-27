@@ -13,77 +13,54 @@ const numToFixed = num => {
 const isLeaf = ({ type }) =>
   type === 'UILabel' || type === 'UIButton' || type === 'UIImageView';
 
-const newConstraint = () => ({
-  meta: {
-    synced: false,
-    added: true,
-  },
-  first: {
-    attribute: {
-      value: '',
-    },
-    item: {
-      value: '',
-      placeholder: 'Item1',
-    },
-  },
-  second: {
-    attribute: {
-      value: '',
-    },
-    item: {
-      value: '',
-      placeholder: 'Item2',
-    },
-  },
-  isActive: true,
-  relation: '0',
-  multiplier: 1,
-  constant: 0,
-  priority: 1000,
-});
-
 const itemTypeById = (itemId, superview) => {
   if (superview) {
     if (superview.id === itemId) {
       return superview.type;
     }
-    for (const childView of superview.children) {
-      if (childView.type && childView.id === itemId) {
-        return childView.type;
-      }
-    }
+    const item = superview.children.find(c => c.type && c.id === itemId);
+    if (item) return item.type;
   }
   // if the type hasn't been found return id
   return itemId;
 };
 
-const constraintNodeName = (constraint, superview) => {
+const newConstraint = () => ({
+  meta: {
+    synced: false,
+    added: true,
+  },
+  isActive: true,
+  relation: 0,
+  multiplier: 1,
+  constant: 0,
+  priority: 1000,
+});
+
+const constraintNodeName = node => {
+  const { properties, updatedProperties, superview } = node;
+  const constraint = updatedProperties || properties;
   const isFirstInit =
-    constraint.first &&
-    constraint.first.item.value &&
-    constraint.first.attribute.value;
+    constraint.first && constraint.first.item && constraint.first.attribute;
   if (isFirstInit) {
     const relation = relationSymbols[constraint.relation];
-    let name = `${
-      attributeNames[constraint.first.attribute.value]
-    } ${relation} `;
-    if (constraint.first.item.value !== superview.id) {
-      name = `${itemTypeById(constraint.first.item.value, superview)}.${name}`;
+    let name = `${attributeNames[constraint.first.attribute]} ${relation} `;
+    if (constraint.first.item !== superview.id) {
+      name = `${itemTypeById(constraint.first.item, superview)}.${name}`;
     }
 
     const isSecondInit =
       constraint.second &&
-      constraint.second.item.value &&
-      constraint.second.attribute.value;
+      constraint.second.item &&
+      constraint.second.attribute;
     if (isSecondInit) {
       if (constraint.multiplier !== 1) {
         name += `${numToFixed(constraint.multiplier)} * `;
       }
-      let secondItem = `${attributeNames[constraint.second.attribute.value]} `;
-      if (constraint.second.item.value !== superview.id) {
+      let secondItem = `${attributeNames[constraint.second.attribute]} `;
+      if (constraint.second.item !== superview.id) {
         secondItem = `${itemTypeById(
-          constraint.second.item.value,
+          constraint.second.item,
           superview,
         )}.${secondItem}`;
       }
@@ -127,9 +104,6 @@ const getConstraintItemOptions = node => {
   return itemOptions;
 };
 
-const updatedConstraintNodeName = node =>
-  constraintNodeName(node.updatedProperties, node.superview);
-
 const addConstraintToNode = node => {
   const constraintsListNode = node.children[node.children.length - 1];
   if (constraintsListNode.module === 'Constraints') {
@@ -137,7 +111,6 @@ const addConstraintToNode = node => {
     const constraintId = `${node.id}.constraints:${idx}`;
     const constraint = newConstraint();
     const constraintNode = {
-      module: constraintNodeName(constraint, node),
       superview: node,
       type: 'NSLayoutConstraint',
       id: constraintId,
@@ -147,13 +120,9 @@ const addConstraintToNode = node => {
       },
       leaf: true,
     };
+    constraintNode.module = constraintNodeName(constraintNode);
     constraintsListNode.children.push(constraintNode);
   }
 };
 
-export {
-  getConstraintItemOptions,
-  addConstraintToNode,
-  constraintNodeName,
-  updatedConstraintNodeName,
-};
+export { getConstraintItemOptions, addConstraintToNode, constraintNodeName };

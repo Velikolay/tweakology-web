@@ -1,6 +1,20 @@
 import { attributeToModifiers } from '../../../../services/device/metadata/NSLayoutConstraints';
 
+const emptyItem = placeholder => ({
+  attribute: {
+    value: '',
+  },
+  item: {
+    value: '',
+    placeholder,
+  },
+});
+
 const toItem = (payloadItem, placeholder) => {
+  if (!payloadItem) {
+    return emptyItem(placeholder);
+  }
+
   const attrVal = payloadItem.attribute.toString();
   const item = {
     attribute: {
@@ -31,6 +45,7 @@ const NSLayoutConstraintTransformer = {
     priority,
     isActive,
     meta,
+    itemOptions,
   }) => {
     const formikProps = {
       meta: {
@@ -38,26 +53,14 @@ const NSLayoutConstraintTransformer = {
         ...meta,
       },
       first: toItem(first, 'Item1'),
+      second: toItem(second, 'Item2'),
       relation: relation.toString(),
       multiplier,
       constant,
       isActive,
       priority,
+      itemOptions,
     };
-
-    if (second) {
-      formikProps.second = toItem(second, 'Item2');
-    } else {
-      formikProps.second = {
-        attribute: {
-          value: '',
-        },
-        item: {
-          value: '',
-          placeholder: 'Item2',
-        },
-      };
-    }
     return formikProps;
   },
 

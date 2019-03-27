@@ -4,10 +4,11 @@ import DeviceConnector from '../../services/device/connector';
 import DeviceContext from '../../contexts/DeviceContext';
 
 import PayloadTransformer from './data-transformers/tree/payload';
+import getTransformer from './data-transformers/form';
 import { buildChangeSet } from '../../containers/Form/Submit';
 
 import { fontDataEnrichment } from '../../utils/font';
-import { addConstraintToNode, updatedConstraintNodeName } from './tree-manip';
+import { addConstraintToNode, constraintNodeName } from './tree-manip';
 
 import AppEditorLayout from './AppEditorLayout';
 
@@ -43,8 +44,8 @@ class AppEditor extends Component {
       const connected = this.deviceConnector.isConnected();
       this.deviceConnector.updateRemoteDevice(device);
       if (!connected && this.deviceConnector.isConnected()) {
-        this.updateTree();
         this.updateDeviceContext();
+        this.updateTree();
       }
     });
     ipcRenderer.send('app-component-mounted');
@@ -92,9 +93,9 @@ class AppEditor extends Component {
 
   onFormUpdate = (id, type, values) => {
     const { activeNode } = this.state;
-    activeNode.updatedProperties = values;
+    activeNode.updatedProperties = getTransformer(type).toPayload(values);
     if (type === 'NSLayoutConstraint') {
-      activeNode.module = updatedConstraintNodeName(activeNode);
+      activeNode.module = constraintNodeName(activeNode);
     }
     this.setState({ activeNode });
   };

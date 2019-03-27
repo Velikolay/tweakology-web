@@ -1,41 +1,44 @@
 import PersistenceService from '../../../../services/persistence';
-import NSLayoutConstraintTransformer from '../form/NSLayoutConstraint';
+import getTransformer from '../form';
 
 import { readPersistedConstraints } from '../../../../containers/Form/Presistence';
 
 import { getConstraintItemOptions, constraintNodeName } from '../../tree-manip';
 
 const constraintPayloadToTree = (node, constraints) => {
-  const constraintNodes = constraints.map(
-    NSLayoutConstraintTransformer.fromPayload,
-  );
-  const lastIdx = constraintNodes.length - 1;
+  const NSLayoutConstraintTransformer = getTransformer('NSLayoutConstraint');
+  const lastIdx = constraints.length - 1;
   const constraintsByView = readPersistedConstraints();
   if (node.id in constraintsByView) {
     const localOnly = constraintsByView[node.id]
       .filter(
         c => c.values.meta.added && parseInt(c.id.split(':')[1], 10) > lastIdx,
       )
-      .map(c => c.values);
-    constraintNodes.push(...localOnly);
+      .map(c => c.values)
+      .map(NSLayoutConstraintTransformer.toPayload);
+    constraints.push(...localOnly);
   }
 
   const itemOptions = getConstraintItemOptions(node);
-  const children = constraintNodes.map((constraint, idx) => {
-    const constraintId = `${node.id}.constraints:${idx}`;
-    const storedConstraint = PersistenceService.read(constraintId, 'values');
+  const children = constraints.map((properties, idx) => {
+    const id = `${node.id}.constraints:${idx}`;
+    const updatedProperties = NSLayoutConstraintTransformer.toPayload(
+      PersistenceService.read(id, 'values'),
+    );
 
-    return {
-      module: constraintNodeName(storedConstraint || constraint, node),
+    const cNode = {
       superview: node,
       type: 'NSLayoutConstraint',
-      id: constraintId,
+      id,
       properties: {
-        ...constraint,
+        ...properties,
         itemOptions,
       },
+      updatedProperties,
       leaf: true,
     };
+    cNode.module = constraintNodeName(cNode);
+    return cNode;
   });
 
   return {
@@ -65,7 +68,9 @@ const PayloadTransformer = {
       revision,
       imgUrl: `${endpoint}/images/${id}`,
       properties,
-      updatedProperties: PersistenceService.read(id, 'values'),
+      updatedProperties: getTransformer(type).toPayload(
+        PersistenceService.read(id, 'values'),
+      ),
     };
 
     treeNode.children = [];

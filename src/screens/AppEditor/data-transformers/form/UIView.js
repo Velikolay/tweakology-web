@@ -20,7 +20,7 @@ const UIViewTransformer = {
     backgroundColor,
     contentMode: parseInt(contentMode, 10),
     semanticContentAttribute: parseInt(semanticContentAttribute, 10),
-    isHidden: false,
+    // isHidden: false,
   }),
 };
 
