@@ -1,5 +1,6 @@
 // @flow
 import type { UIFont, DeviceFonts } from '../../../../services/device/types';
+import withFalsyGuard from './utils';
 import { toFontStyles } from '../../../../utils/font';
 
 const UIFontTransformer = {
@@ -46,4 +47,4 @@ const UIFontTransformer = {
   }),
 };
 
-export default UIFontTransformer;
+export default withFalsyGuard(UIFontTransformer);

@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import OffsetSlider from '../../components/Scene/OffsetSlider/OffsetSlider';
 import TextureOnOffButton from '../../components/Scene/TextureOnOffButton/TextureOnOffButton';
 
-import { UITreeShape, ConstraintIndicatorShape } from './Shapes';
+import { SceneTreeShape, SceneConstraintShape } from './Shapes';
 import CoordinateTranslator from './coordinate-translator';
 import SceneManager from './manager';
 import SceneControls from './controls';
@@ -51,7 +51,7 @@ class SceneContainer extends Component {
       self.updateCanvasDimensions();
     });
 
-    const { tree, constraintIndicators, eventHandler } = this.props;
+    const { tree, constraints, eventHandler } = this.props;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     const fov = 75;
@@ -105,16 +105,16 @@ class SceneContainer extends Component {
       INITIAL_PLANE_OFFSET,
     );
     this.sceneManager.updateViews(tree);
-    this.sceneManager.updateConstraintIndicators(constraintIndicators);
+    this.sceneManager.updateConstraintIndicators(constraints);
 
     this.container.appendChild(this.renderer.domElement);
     this.start();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { tree, constraintIndicators } = nextProps;
+    const { tree, constraints } = nextProps;
     this.sceneManager.updateViews(tree);
-    this.sceneManager.updateConstraintIndicators(constraintIndicators);
+    this.sceneManager.updateConstraintIndicators(constraints);
     if (this.sceneControls) {
       this.sceneControls.setObjects(this.sceneManager.getMeshGroups());
     }
@@ -196,14 +196,14 @@ class SceneContainer extends Component {
 }
 
 SceneContainer.propTypes = {
-  tree: UITreeShape,
-  constraintIndicators: PropTypes.arrayOf(ConstraintIndicatorShape),
+  tree: SceneTreeShape,
+  constraints: PropTypes.arrayOf(SceneConstraintShape),
   eventHandler: PropTypes.func,
 };
 
 SceneContainer.defaultProps = {
   tree: null,
-  constraintIndicators: [],
+  constraints: [],
   eventHandler: () => {},
 };
 

@@ -1,12 +1,13 @@
-import PersistenceService from '../../../../services/persistence';
-import getTransformer from '../form';
+import PersistenceService from '../../../services/persistence';
 
-import { readPersistedConstraints } from '../../../../containers/Form/Presistence';
+import getTransformer from './form';
+import NSLayoutConstraintTransformer from './form/NSLayoutConstraint';
 
-import { getConstraintItemOptions, constraintNodeName } from '../../tree-manip';
+import { readPersistedConstraints } from '../../../containers/Form/Presistence';
 
-const constraintPayloadToTree = (node, constraints) => {
-  const NSLayoutConstraintTransformer = getTransformer('NSLayoutConstraint');
+import { getConstraintItemOptions, constraintNodeName } from '../tree-manip';
+
+const constraintsNodeFromPayload = (node, constraints) => {
   const lastIdx = constraints.length - 1;
   const constraintsByView = readPersistedConstraints();
   if (node.id in constraintsByView) {
@@ -49,8 +50,8 @@ const constraintPayloadToTree = (node, constraints) => {
   };
 };
 
-const PayloadTransformer = {
-  toTree: (node, revision, endpoint) => {
+const TreeTransformer = {
+  fromPayload: (node, revision, endpoint) => {
     const {
       uid: { value: id, kind },
       name,
@@ -76,14 +77,18 @@ const PayloadTransformer = {
     treeNode.children = [];
     if (subviews) {
       for (const subview of subviews) {
-        const subtree = PayloadTransformer.toTree(subview, revision, endpoint);
+        const subtree = TreeTransformer.fromPayload(
+          subview,
+          revision,
+          endpoint,
+        );
         subtree.superview = treeNode;
         treeNode.children.push(subtree);
       }
     }
 
     if (constraints && constraints.length > 0) {
-      treeNode.children.push(constraintPayloadToTree(treeNode, constraints));
+      treeNode.children.push(constraintsNodeFromPayload(treeNode, constraints));
     }
 
     if (treeNode.children.length === 0) {
@@ -94,4 +99,4 @@ const PayloadTransformer = {
   },
 };
 
-export default PayloadTransformer;
+export default TreeTransformer;

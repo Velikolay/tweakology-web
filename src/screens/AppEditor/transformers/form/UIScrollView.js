@@ -1,5 +1,6 @@
 // @flow
 import type { UIScrollView } from '../../../../services/device/types';
+import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 
 const UIScrollViewTransformer = {
@@ -16,4 +17,4 @@ const UIScrollViewTransformer = {
   }),
 };
 
-export default UIScrollViewTransformer;
+export default withFalsyGuard(UIScrollViewTransformer);

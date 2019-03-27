@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 const lazyPropType = f => (...args) => f().apply(this, args);
 
-const UITreeShape = PropTypes.shape({
+const SceneTreeShape = PropTypes.shape({
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   z: PropTypes.number.isRequired,
@@ -22,10 +22,10 @@ const UITreeShape = PropTypes.shape({
       }),
     ),
   ),
-  children: PropTypes.arrayOf(lazyPropType(() => UITreeShape)),
+  children: PropTypes.arrayOf(lazyPropType(() => SceneTreeShape)),
 });
 
-const ConstraintIndicatorShape = PropTypes.shape({
+const SceneConstraintShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   lineGroup: PropTypes.arrayOf(
     PropTypes.shape({
@@ -39,4 +39,4 @@ const ConstraintIndicatorShape = PropTypes.shape({
   ),
 });
 
-export { UITreeShape, ConstraintIndicatorShape };
+export { SceneTreeShape, SceneConstraintShape };

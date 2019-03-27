@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 
-import { withDeviceContext } from '../../contexts/DeviceContext';
-
 import { withFormikContextProvider } from '../../contexts/FormikContext';
 import { withFormikShell } from './FormikShell';
 
@@ -31,4 +29,4 @@ FormContainer.propTypes = {
   onFormSelect: PropTypes.func.isRequired,
 };
 
-export default withDeviceContext(FormContainer);
+export default FormContainer;

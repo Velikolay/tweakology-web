@@ -75,8 +75,8 @@ const calcRelDepth = (parent, child, testDepth = 1) => {
   return testDepth;
 };
 
-const TreeTransformer = {
-  toScene: (
+const SceneTreeReducer = {
+  mapStateToProps: (
     { tree, activeNode, onFocusNode },
     offset = { x: 0, y: 0 },
     globalOriginBase = { x: 0, y: 0 },
@@ -124,7 +124,7 @@ const TreeTransformer = {
     if (children) {
       children.forEach(childNode => {
         if (childNode.type && childNode.type !== 'NSLayoutConstraint') {
-          const childMeshTree = TreeTransformer.toScene(
+          const childMeshTree = SceneTreeReducer.mapStateToProps(
             { tree: childNode, activeNode, onFocusNode },
             contentOffset,
             globalOrigin,
@@ -143,4 +143,4 @@ const TreeTransformer = {
   },
 };
 
-export default TreeTransformer;
+export default SceneTreeReducer;

@@ -1,3 +1,4 @@
+import withFalsyGuard from './utils';
 import { attributeToModifiers } from '../../../../services/device/metadata/NSLayoutConstraints';
 
 const emptyItem = placeholder => ({
@@ -97,4 +98,4 @@ const NSLayoutConstraintTransformer = {
   },
 };
 
-export default NSLayoutConstraintTransformer;
+export default withFalsyGuard(NSLayoutConstraintTransformer);

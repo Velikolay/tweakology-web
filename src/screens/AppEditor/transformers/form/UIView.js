@@ -1,5 +1,6 @@
 // @flow
 import type { UIView } from '../../../../services/device/types';
+import withFalsyGuard from './utils';
 
 const UIViewTransformer = {
   fromPayload: (
@@ -24,4 +25,4 @@ const UIViewTransformer = {
   }),
 };
 
-export default UIViewTransformer;
+export default withFalsyGuard(UIViewTransformer);

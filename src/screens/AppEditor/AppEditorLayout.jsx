@@ -2,14 +2,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Split from 'react-split';
 
+import { withDeviceContext } from '../../contexts/DeviceContext';
 import { TreeRootNodeShape, TreeNodeShape } from '../../containers/Tree/Shapes';
 
 import Tree from '../../containers/Tree/Tree';
-import Scene from './Adaptors/Scene';
-import Form from './Adaptors/Form';
 import MainToolbar from '../../components/MainToolbar/MainToolbar';
+import SceneComponent from '../../containers/Scene/Scene';
+import FormComponent from '../../containers/Form/Form';
+import SceneReducer from './reducers/scene';
+import FormReducer from './reducers/form';
 
 import './AppEditorLayout.scss';
+
+const componentWithReducer = (Comp, mapStateToProps) => props => (
+  <Comp {...mapStateToProps(props)} />
+);
+
+const Scene = componentWithReducer(
+  SceneComponent,
+  SceneReducer.mapStateToProps,
+);
+const Form = withDeviceContext(
+  React.memo(componentWithReducer(FormComponent, FormReducer.mapStateToProps)),
+);
 
 const AppEditorLayout = props => {
   const {

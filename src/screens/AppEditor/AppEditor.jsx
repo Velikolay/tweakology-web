@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import DeviceConnector from '../../services/device/connector';
 import DeviceContext from '../../contexts/DeviceContext';
 
-import PayloadTransformer from './data-transformers/tree/payload';
-import getTransformer from './data-transformers/form';
+import TreeTransformer from './transformers/tree';
+import getTransformer from './transformers/form';
 import { buildChangeSet } from '../../containers/Form/Submit';
 
 import { fontDataEnrichment } from '../../utils/font';
@@ -67,7 +67,7 @@ class AppEditor extends Component {
       .then(payload => {
         const { activeNode } = this.state;
         const revision = Date.now();
-        const tree = PayloadTransformer.toTree(
+        const tree = TreeTransformer.fromPayload(
           payload,
           revision,
           this.deviceConnector.endpoint,

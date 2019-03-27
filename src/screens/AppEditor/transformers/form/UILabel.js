@@ -1,3 +1,4 @@
+import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 import UIFontTransformer from './UIFont';
 
@@ -25,4 +26,4 @@ const UILabelTransformer = {
   }),
 };
 
-export default UILabelTransformer;
+export default withFalsyGuard(UILabelTransformer);

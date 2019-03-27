@@ -1,7 +1,7 @@
 import PersistenceService from '../../services/persistence';
 import { readPersistedConstraints } from './Presistence';
-import NSLayoutConstraintTransformer from '../../screens/AppEditor/data-transformers/form/NSLayoutConstraint';
-import getTransformer from '../../screens/AppEditor/data-transformers/form';
+import NSLayoutConstraintTransformer from '../../screens/AppEditor/transformers/form/NSLayoutConstraint';
+import getTransformer from '../../screens/AppEditor/transformers/form';
 
 const treeToFormIds = uiElement => {
   const treeNode = [uiElement.id];

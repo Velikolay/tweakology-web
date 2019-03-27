@@ -1,5 +1,6 @@
 // @flow
 import type { UIImageView } from '../../../../services/device/types';
+import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 import UIImageTransformer from './UIImage';
 
@@ -19,4 +20,4 @@ const UIImageViewTransformer = {
   }),
 };
 
-export default UIImageViewTransformer;
+export default withFalsyGuard(UIImageViewTransformer);

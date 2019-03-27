@@ -3,7 +3,7 @@ import type {
   UIButton,
   UIButtonLabel,
 } from '../../../../services/device/types';
-
+import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 import UIFontTransformer from './UIFont';
 
@@ -43,4 +43,4 @@ const UIButtonTransformer = {
   }),
 };
 
-export default UIButtonTransformer;
+export default withFalsyGuard(UIButtonTransformer);

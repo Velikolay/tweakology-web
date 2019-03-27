@@ -19,7 +19,7 @@ const find3DCoordinates = (itemId, superview) => {
   return null;
 };
 
-const toHorizontalIndicatorLines = ({ x1, y1, z1, x2, y2, z2 }) => [
+const toHorizontalLines = ({ x1, y1, z1, x2, y2, z2 }) => [
   {
     x1,
     y1,
@@ -46,7 +46,7 @@ const toHorizontalIndicatorLines = ({ x1, y1, z1, x2, y2, z2 }) => [
   },
 ];
 
-const toVerticalIndicatorLines = ({ x1, y1, z1, x2, y2, z2 }) => [
+const toVerticalLines = ({ x1, y1, z1, x2, y2, z2 }) => [
   {
     x1,
     y1,
@@ -133,7 +133,7 @@ const anchorPoint = (attr, { x, y, z, width, height }) => {
   }
 };
 
-const toSceneConstraintIndicatorLineGroup = node => {
+const toSceneConstraintLineGroup = node => {
   const { properties, updatedProperties, superview } = node;
   const { first, second } = updatedProperties || properties;
 
@@ -146,7 +146,7 @@ const toSceneConstraintIndicatorLineGroup = node => {
         // width
         const x1 = x - width / 2;
         const y1 = y + height / 2 - 10;
-        return toHorizontalIndicatorLines({
+        return toHorizontalLines({
           x1,
           y1,
           z1: z,
@@ -159,7 +159,7 @@ const toSceneConstraintIndicatorLineGroup = node => {
         // height
         const x1 = x - width / 2 + 10;
         const y1 = y + height / 2;
-        return toVerticalIndicatorLines({
+        return toVerticalLines({
           x1,
           y1,
           z1: z,
@@ -177,7 +177,7 @@ const toSceneConstraintIndicatorLineGroup = node => {
           if (p1 && p2) {
             const direction = anchorDirection(firstAttr);
             if (direction === Direction.HORIZONTAL) {
-              return toHorizontalIndicatorLines({
+              return toHorizontalLines({
                 x1: p1.x,
                 y1: p1.y,
                 z1: p1.z,
@@ -187,7 +187,7 @@ const toSceneConstraintIndicatorLineGroup = node => {
               });
             }
             if (direction === Direction.VERTICAL) {
-              return toVerticalIndicatorLines({
+              return toVerticalLines({
                 x1: p1.x,
                 y1: p1.y,
                 z1: p1.z,
@@ -204,11 +204,11 @@ const toSceneConstraintIndicatorLineGroup = node => {
   return [];
 };
 
-const ConstraintTransformer = {
-  toScene: node => ({
-    id: node.id,
-    lineGroup: toSceneConstraintIndicatorLineGroup(node),
+const SceneConstraintReducer = {
+  mapStateToProps: ({ activeNode }) => ({
+    id: activeNode.id,
+    lineGroup: toSceneConstraintLineGroup(activeNode),
   }),
 };
 
-export default ConstraintTransformer;
+export default SceneConstraintReducer;
