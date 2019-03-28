@@ -1,7 +1,16 @@
+// @flow
+import type {
+  NSLayoutConstraint as ConstraintPayload,
+  NSLayoutConstraintAttributeItem as ConstraintItemAttributePayload,
+} from '../../../../services/device/types';
+import type {
+  NSLayoutConstraint as ConstraintForm,
+  NSLayoutConstraintItemAttribute as ConstraintItemAttributeForm,
+} from '../../../../containers/Form/types';
 import withFalsyGuard from './utils';
 import { attributeToModifiers } from '../../../../services/device/metadata/NSLayoutConstraints';
 
-const emptyItem = placeholder => ({
+const emptyItem = (placeholder: string): ConstraintItemAttributeForm => ({
   attribute: {
     value: '',
   },
@@ -11,13 +20,16 @@ const emptyItem = placeholder => ({
   },
 });
 
-const toItem = (payloadItem, placeholder) => {
+const toItem = (
+  payloadItem: ?ConstraintItemAttributePayload,
+  placeholder: string,
+): ConstraintItemAttributeForm => {
   if (!payloadItem) {
     return emptyItem(placeholder);
   }
 
   const attrVal = payloadItem.attribute.toString();
-  const item = {
+  const item: ConstraintItemAttributeForm = {
     attribute: {
       value: attrVal,
     },
@@ -47,7 +59,7 @@ const NSLayoutConstraintTransformer = {
     isActive,
     meta,
     itemOptions,
-  }) => {
+  }: ConstraintPayload): ConstraintForm => {
     const formikProps = {
       meta: {
         synced: true,
@@ -74,8 +86,8 @@ const NSLayoutConstraintTransformer = {
     priority,
     isActive,
     meta,
-  }) => {
-    const payload = {
+  }: ConstraintForm): ConstraintPayload => {
+    const payload: ConstraintPayload = {
       meta,
       first: {
         item: first.item.value,

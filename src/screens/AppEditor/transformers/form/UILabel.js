@@ -1,9 +1,13 @@
+// @flow
+import type { UILabel as UILabelPayload } from '../../../../services/device/types';
+import type { UILabel as UILabelForm } from '../../../../containers/Form/types';
+
 import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 import UIFontTransformer from './UIFont';
 
 const UILabelTransformer = {
-  fromPayload: (props, device) => ({
+  fromPayload: (props: UILabelPayload, device): UILabelForm => ({
     ...UIViewTransformer.fromPayload(props),
     text: props.text,
     textColor: props.textColor,
@@ -14,7 +18,7 @@ const UILabelTransformer = {
     lineBreakMode: props.lineBreakMode.toString(),
   }),
 
-  toPayload: (props, device) => ({
+  toPayload: (props: UILabelForm, device): UILabelPayload => ({
     ...UIViewTransformer.toPayload(props),
     text: props.text,
     textColor: props.textColor,

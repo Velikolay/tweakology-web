@@ -1,16 +1,18 @@
 // @flow
-import type { UIScrollView } from '../../../../services/device/types';
+import type { UIScrollView as UIScrollViewPayload } from '../../../../services/device/types';
+import type { UIScrollView as UIScrollViewForm } from '../../../../containers/Form/types';
+
 import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 
 const UIScrollViewTransformer = {
-  fromPayload: (props: UIScrollView) => ({
+  fromPayload: (props: UIScrollViewPayload): UIScrollViewForm => ({
     ...UIViewTransformer.fromPayload(props),
     contentOffset: props.contentOffset,
     contentSize: props.contentSize,
   }),
 
-  toPayload: (props: any): UIScrollView => ({
+  toPayload: (props: UIScrollViewForm): UIScrollViewPayload => ({
     ...UIViewTransformer.toPayload(props),
     contentOffset: props.contentOffset,
     contentSize: props.contentSize,

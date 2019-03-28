@@ -17,20 +17,19 @@ export type UIColor = {
   alpha: number,
 };
 
-export type UIView = {
-  frame: CGRect,
-  backgroundColor: UIColor,
-  contentMode: number,
-  semanticContentAttribute: number,
-  isHidden?: boolean,
-};
-
 export type UIFont = {
   trait: number,
   pointSize: number,
   familyName: string,
   fontName: string,
-  fontStyle?: string,
+};
+
+export type UIView = {
+  frame: CGRect,
+  backgroundColor: UIColor,
+  contentMode: string,
+  semanticContentAttribute: string,
+  isHidden?: boolean,
 };
 
 export type UILabel = UIView & {
@@ -67,16 +66,16 @@ export type UIScrollView = UIView & {
   contentSize: CGSize,
 };
 
-export type AnyUIView =
-  | UIView
-  | UILabel
-  | UIButton
-  | UIImageView
-  | UIScrollView;
-
-export type NSLayoutConstraintAttributeItem = {
-  item: string,
-  attribute: number,
+export type NSLayoutConstraintItemAttribute = {
+  item: {
+    value: string,
+    placeholder: string,
+  },
+  attribute: {
+    value: string,
+    relativeToMargin?: boolean,
+    respectLanguageDirection?: boolean,
+  },
 };
 
 export type NSLayoutConstraint = {
@@ -84,43 +83,12 @@ export type NSLayoutConstraint = {
     synced?: boolean,
     added: boolean,
   },
-  first: NSLayoutConstraintAttributeItem,
-  second?: NSLayoutConstraintAttributeItem,
-  relation: number,
+  first: NSLayoutConstraintItemAttribute,
+  second?: NSLayoutConstraintItemAttribute,
+  relation: string,
   constant: number,
   multiplier: number,
   priority: number,
   isActive: boolean,
   itemOptions?: any, // TODO: ideally should not be here
-};
-
-export type UIViewNode<T: AnyUIView> = {
-  uid: {
-    value: string,
-    kind: number,
-  },
-  properties: T,
-  constraints: NSLayoutConstraint[],
-  subviews: UIViewNode<T>[],
-};
-
-export type UITree = UIViewNode<AnyUIView>;
-
-export type DeviceFonts = {
-  families?: string[],
-  all?: { [fontFamily: string]: string[] },
-  system: { [fontFamily: string]: string[] },
-  custom: { [fontFamily: string]: string[] },
-  preffered: {
-    [presetGroup: string]: {
-      [presetOption: string]: {
-        fontName: string,
-        pointSize: number,
-      },
-    },
-  },
-};
-
-export type DeviceSystemData = {
-  fonts: DeviceFonts,
 };

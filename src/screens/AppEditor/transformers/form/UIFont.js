@@ -1,10 +1,18 @@
 // @flow
-import type { UIFont, DeviceFonts } from '../../../../services/device/types';
+import type {
+  UIFont as UIFontPayload,
+  DeviceFonts,
+} from '../../../../services/device/types';
+import type { UIFont as UIFontForm } from '../../../../containers/Form/types';
+
 import withFalsyGuard from './utils';
 import { toFontStyles } from '../../../../utils/font';
 
 const UIFontTransformer = {
-  fromPayload: (font: UIFont, device: { fonts: DeviceFonts }) => {
+  fromPayload: (
+    font: UIFontPayload,
+    device: { fonts: DeviceFonts },
+  ): UIFontForm => {
     const { trait, fontName, pointSize } = font;
     const { system, preffered } = device.fonts;
 
@@ -38,12 +46,12 @@ const UIFontTransformer = {
     return font;
   },
 
-  toPayload: ({ trait, familyName, fontName, pointSize }: any): UIFont => ({
-    trait,
-    familyName,
-    fontName,
-    fontStyle: toFontStyles(fontName),
-    pointSize,
+  toPayload: (font: UIFontForm): UIFontPayload => ({
+    trait: font.trait,
+    familyName: font.familyName,
+    fontName: font.fontName,
+    fontStyle: toFontStyles(font.fontName),
+    pointSize: font.pointSize,
   }),
 };
 

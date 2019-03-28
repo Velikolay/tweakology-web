@@ -1,14 +1,22 @@
 // @flow
 import type {
-  UIButton,
-  UIButtonLabel,
+  UIButton as UIButtonPayload,
+  UIButtonLabel as UIButtonLabelPayload,
 } from '../../../../services/device/types';
+
+import type {
+  UIButton as UIButtonForm,
+  UIButtonLabel as UIButtonLabelForm,
+} from '../../../../containers/Form/types';
 import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 import UIFontTransformer from './UIFont';
 
 const UIButtonLabelTransformer = {
-  fromPayload: (props: UIButtonLabel, device: any) => ({
+  fromPayload: (
+    props: UIButtonLabelPayload,
+    device: any,
+  ): UIButtonLabelForm => ({
     ...UIViewTransformer.fromPayload(props),
     text: props.text,
     textColor: props.textColor,
@@ -19,7 +27,7 @@ const UIButtonLabelTransformer = {
     lineBreakMode: props.lineBreakMode.toString(),
   }),
 
-  toPayload: (props: any, device): UIButtonLabel => ({
+  toPayload: (props: UIButtonLabelForm, device): UIButtonLabelPayload => ({
     ...UIViewTransformer.toPayload(props),
     text: props.text,
     textColor: props.textColor,
@@ -32,12 +40,12 @@ const UIButtonLabelTransformer = {
 };
 
 const UIButtonTransformer = {
-  fromPayload: (props: UIButton, device: any) => ({
+  fromPayload: (props: UIButtonPayload, device: any): UIButtonForm => ({
     ...UIViewTransformer.fromPayload(props),
     title: UIButtonLabelTransformer.fromPayload(props.title, device),
   }),
 
-  toPayload: (props: any, device: any): UIButton => ({
+  toPayload: (props: UIButtonForm, device: any): UIButtonPayload => ({
     ...UIViewTransformer.toPayload(props),
     title: UIButtonLabelTransformer.toPayload(props.title, device),
   }),
