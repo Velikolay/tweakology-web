@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import DeviceConnector from '../../services/device/connector';
+import DeviceConnector, { RemoteDevice } from '../../services/device/connector';
+import APIClient from '../../services/device/api-client';
 import DeviceContext from '../../contexts/DeviceContext';
 
 import TreeTransformer from './transformers/tree';
@@ -17,6 +18,7 @@ class AppEditor extends Component {
     super(props);
 
     this.deviceConnector = new DeviceConnector();
+    this.apiClient = new APIClient(this.deviceConnector);
 
     this.state = {
       tree: {
@@ -42,7 +44,7 @@ class AppEditor extends Component {
     const { ipcRenderer } = window.require('electron');
     ipcRenderer.on('agent-update', (event, device) => {
       const connected = this.deviceConnector.isConnected();
-      this.deviceConnector.updateRemoteDevice(device);
+      this.deviceConnector.updateRemoteDevice(new RemoteDevice(device));
       if (!connected && this.deviceConnector.isConnected()) {
         this.updateDeviceContext();
         this.updateTree();
@@ -52,7 +54,7 @@ class AppEditor extends Component {
   }
 
   updateDeviceContext = () =>
-    this.deviceConnector
+    this.apiClient
       .fetchSystemData()
       .then(({ fonts }) => {
         this.deviceContext = {
@@ -62,7 +64,7 @@ class AppEditor extends Component {
       .catch(err => console.log(err));
 
   updateTree = () =>
-    this.deviceConnector
+    this.apiClient
       .fetchTree()
       .then(payload => {
         const { activeNode } = this.state;
@@ -70,7 +72,7 @@ class AppEditor extends Component {
         const tree = TreeTransformer.fromPayload(
           payload,
           revision,
-          this.deviceConnector.endpoint,
+          this.deviceConnector.getRemoteDevice().getEndpoint(),
         );
         const updatedState = {
           tree,
@@ -84,7 +86,7 @@ class AppEditor extends Component {
   onSubmitChanges = () => {
     const { tree } = this.state;
     const changeSet = buildChangeSet(tree, this.deviceContext);
-    this.deviceConnector
+    this.apiClient
       .submitChanges('test', changeSet)
       .then(() => this.updateTree())
       .then(() => localStorage.clear())
@@ -127,7 +129,7 @@ class AppEditor extends Component {
         },
       },
     ];
-    this.deviceConnector
+    this.apiClient
       .submitChanges('test', insertItemConfig)
       .then(() => this.updateTree())
       .catch(err => console.log(err));

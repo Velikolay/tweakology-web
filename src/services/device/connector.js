@@ -1,12 +1,32 @@
 // @flow
-import type { DeviceFonts, DeviceSystemData, UITree } from './types';
 
-export type RemoteDevice = {
+type RemoteDeviceData = {
   online: boolean,
   name: string,
   host: string,
   port: number,
 };
+
+export class RemoteDevice {
+  online: boolean;
+
+  name: string;
+
+  host: string;
+
+  port: number;
+
+  constructor({ name, host, port, online }: RemoteDeviceData) {
+    this.name = name;
+    this.host = host;
+    this.port = port;
+    this.online = online;
+  }
+
+  getEndpoint(): string {
+    return `http://${this.host}:${this.port}`;
+  }
+}
 
 const genId = ({ name, host, port }: RemoteDevice): string =>
   `${name}-${host}-${port}`;
@@ -15,8 +35,6 @@ class DeviceConnector {
   devices: { [id: string]: RemoteDevice };
 
   device: ?RemoteDevice;
-
-  endpoint: ?string;
 
   constructor() {
     this.devices = {};
@@ -28,9 +46,7 @@ class DeviceConnector {
 
   updateRemoteDevice(device: RemoteDevice) {
     if (!this.device) {
-      const { host, port } = device;
       this.device = device;
-      this.endpoint = `http://${host}:${port}`;
     }
 
     const id = genId(device);
@@ -41,31 +57,8 @@ class DeviceConnector {
     }
   }
 
-  fetchTree(): Promise<UITree> {
-    if (this.endpoint) {
-      return fetch(this.endpoint).then(response => response.json());
-    }
-    return Promise.reject(new Error('No connection to device'));
-  }
-
-  fetchSystemData(): Promise<DeviceSystemData> {
-    if (this.endpoint) {
-      return fetch(`${this.endpoint}/fonts`)
-        .then(response => response.json())
-        .then((fonts: DeviceFonts) => ({ fonts }));
-    }
-    return Promise.reject(new Error('No connection to device'));
-  }
-
-  submitChanges(name: string, changes: any) {
-    if (this.endpoint) {
-      return fetch(`${this.endpoint}/tweaks/${name}`, {
-        method: 'put',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(changes),
-      });
-    }
-    return Promise.reject(new Error('No connection to device'));
+  getRemoteDevice(): ?RemoteDevice {
+    return this.device;
   }
 }
 
