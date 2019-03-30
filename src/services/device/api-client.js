@@ -1,5 +1,5 @@
 // @flow
-import type { DeviceFonts, DeviceSystemData, UITree } from './types';
+import type { DeviceFonts, DeviceSystemData, DeviceUITreeData } from './types';
 import DeviceConnector, { RemoteDevice } from './connector';
 
 class APIClient {
@@ -9,16 +9,19 @@ class APIClient {
     this.deviceConnector = deviceConnector;
   }
 
-  remoteCall(invoke: any): any {
+  getEndpoint(): ?string {
     const device: ?RemoteDevice = this.deviceConnector.getRemoteDevice();
-    if (device) {
-      const endpoint = device.getEndpoint();
-      return invoke(endpoint);
-    }
-    return Promise.reject(new Error('No connection to device'));
+    return device ? device.getEndpoint() : null;
   }
 
-  fetchTree(): Promise<UITree> {
+  remoteCall(invoke: any): any {
+    const endpoint = this.getEndpoint();
+    return endpoint
+      ? invoke(endpoint)
+      : Promise.reject(new Error('No connection to device'));
+  }
+
+  fetchTree(): Promise<DeviceUITreeData> {
     return this.remoteCall(endpoint =>
       fetch(endpoint).then(response => response.json()),
     );

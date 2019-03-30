@@ -78,36 +78,6 @@ class FormikPersistence extends Component {
   }
 }
 
-export const readPersistedConstraints = () => {
-  const constraints = {};
-  for (let i = 0; i < window.localStorage.length; i += 1) {
-    const id = window.localStorage.key(i);
-    const formState = window.localStorage.getItem(id);
-    if (formState) {
-      const state = JSON.parse(formState);
-      if (
-        state.type === 'NSLayoutConstraint' &&
-        (state.dirty || state.values.meta.added)
-      ) {
-        const viewId = id.split('.')[0];
-        if (!(viewId in constraints)) {
-          constraints[viewId] = [];
-        }
-        constraints[viewId].push(state);
-      }
-    }
-  }
-
-  Object.values(constraints).forEach(constraint =>
-    constraint.sort(
-      (a, b) =>
-        parseInt(a.id.split(':')[1], 10) > parseInt(b.id.split(':')[1], 10),
-    ),
-  );
-
-  return constraints;
-};
-
 FormikPersistence.propTypes = {
   name: PropTypes.string.isRequired,
   formik: PropTypes.object.isRequired,

@@ -99,12 +99,14 @@ export type UIViewNode<T: AnyUIView> = {
     value: string,
     kind: number,
   },
+  name: string,
+  type: string,
   properties: T,
   constraints: NSLayoutConstraint[],
   subviews: UIViewNode<T>[],
 };
 
-export type UITree = UIViewNode<AnyUIView>;
+export type DeviceUITreeData = UIViewNode<AnyUIView>;
 
 export type DeviceFonts = {
   families?: string[],

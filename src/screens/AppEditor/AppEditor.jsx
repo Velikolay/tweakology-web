@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 
 import DeviceConnector, { RemoteDevice } from '../../services/device/connector';
-import APIClient from '../../services/device/api-client';
+import PersistenceService from '../../services/persistence';
+import APIClient from './api-client-adapter';
 import DeviceContext from '../../contexts/DeviceContext';
 
-import TreeTransformer from './transformers/tree';
 import getTransformer from './transformers/form';
-import { buildChangeSet } from '../../containers/Form/Submit';
 
 import { fontDataEnrichment } from '../../utils/font';
 import { addConstraintToNode, constraintNodeName } from './tree-manip';
@@ -66,14 +65,8 @@ class AppEditor extends Component {
   updateTree = () =>
     this.apiClient
       .fetchTree()
-      .then(payload => {
+      .then(tree => {
         const { activeNode } = this.state;
-        const revision = Date.now();
-        const tree = TreeTransformer.fromPayload(
-          payload,
-          revision,
-          this.deviceConnector.getRemoteDevice().getEndpoint(),
-        );
         const updatedState = {
           tree,
           activeNode:
@@ -85,11 +78,10 @@ class AppEditor extends Component {
 
   onSubmitChanges = () => {
     const { tree } = this.state;
-    const changeSet = buildChangeSet(tree, this.deviceContext);
     this.apiClient
-      .submitChanges('test', changeSet)
+      .submitChanges('test', tree)
       .then(() => this.updateTree())
-      .then(() => localStorage.clear())
+      .then(() => PersistenceService.clear())
       .catch(err => console.log(err));
   };
 

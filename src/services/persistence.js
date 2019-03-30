@@ -17,7 +17,7 @@ export default {
     }
     return obj;
   },
-  write: (key: string, obj: any) => {
-    window.localStorage.setItem(key, JSON.stringify(obj));
-  },
+  write: (key: string, obj: any) =>
+    window.localStorage.setItem(key, JSON.stringify(obj)),
+  clear: () => window.localStorage.clear(),
 };
