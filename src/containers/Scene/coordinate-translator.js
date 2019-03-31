@@ -1,39 +1,50 @@
 import * as THREE from 'three';
 
-class CoordinateTranslator {
-  constructor(scene) {
-    this.scene = scene;
-  }
+const CoordinateTranslator = {
+  calcScenePoint: ({ x, y, z }, parent) => {
+    const {
+      userData: { width: parentWidth, height: parentHeight },
+    } = parent;
+    return {
+      x: x - parentWidth / 2,
+      y: -(y - parentHeight / 2),
+      z,
+    };
+  },
 
-  calc3DSceneCoord(obj) {
-    const { userData: viewProps, parent } = obj;
-    const v = new THREE.Vector3();
-    if (parent !== this.scene) {
-      const { y, width, height } = viewProps;
-      const {
-        userData: { width: parentWidth, height: parentHeight },
-      } = parent;
-      v.set(-(parentWidth - width) / 2, (parentHeight - height) / 2 - 2 * y, 0);
-    }
-    return v;
-  }
+  calcSceneRect: obj => {
+    const {
+      userData: viewProps,
+      position: { x, y, z },
+      parent,
+    } = obj;
+    const { width, height } = viewProps;
+    const {
+      userData: { width: parentWidth, height: parentHeight },
+    } = parent;
+    return {
+      x: x - (parentWidth - width) / 2,
+      y: (parentHeight - height) / 2 - y,
+      z,
+    };
+  },
 
-  calcDeviceCoord(obj) {
+  calcDeviceRect: obj => {
     const {
       userData: viewProps,
       parent,
-      position: { y },
+      position: { x, y, z },
     } = obj;
-    const v = new THREE.Vector3();
-    if (parent !== this.scene) {
-      const { width, height } = viewProps;
-      const {
-        userData: { width: parentWidth, height: parentHeight },
-      } = parent;
-      v.set((parentWidth - width) / 2, (parentHeight - height) / 2 - 2 * y, 0);
-    }
-    return v;
-  }
-}
+    const { width, height } = viewProps;
+    const {
+      userData: { width: parentWidth, height: parentHeight },
+    } = parent;
+    return {
+      x: x + (parentWidth - width) / 2,
+      y: (parentHeight - height) / 2 - y,
+      z,
+    };
+  },
+};
 
 export default CoordinateTranslator;

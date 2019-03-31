@@ -68,8 +68,6 @@ class SceneContainer extends Component {
     this.camera = camera;
     this.renderer = renderer;
 
-    this.coordTranslator = new CoordinateTranslator(scene);
-
     this.orbitControls = initOrbitControls(camera, this.renderer.domElement);
     this.sceneControls = new SceneControls(camera, this.renderer.domElement);
     this.sceneControls.addEventListener('dragstart', this.dragStart);
@@ -77,11 +75,15 @@ class SceneContainer extends Component {
     this.sceneControls.addEventListener('drag', event => {
       const {
         userData: { id },
-        position: coord3DScene,
+        position: { x, y, z },
+        parent,
       } = event.object;
-      const v = this.coordTranslator.calcDeviceCoord(event.object);
-      const position = new THREE.Vector3();
-      position.addVectors(coord3DScene, v);
+      let position;
+      if (parent !== this.scene) {
+        position = CoordinateTranslator.calcDeviceRect(event.object);
+      } else {
+        position = { x, y, z };
+      }
       eventHandler('drag', { id, position });
     });
     this.sceneControls.addEventListener('select', event => {
@@ -99,11 +101,7 @@ class SceneContainer extends Component {
         eventHandler('hoveron', { id });
       }
     });
-    this.sceneManager = new SceneManager(
-      this.scene,
-      this.coordTranslator,
-      INITIAL_PLANE_OFFSET,
-    );
+    this.sceneManager = new SceneManager(this.scene, INITIAL_PLANE_OFFSET);
     this.sceneManager.updateViews(tree);
     this.sceneManager.updateConstraintIndicators(constraints);
 

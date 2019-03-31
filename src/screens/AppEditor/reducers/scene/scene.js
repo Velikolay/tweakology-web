@@ -9,7 +9,12 @@ export default {
       ...other,
     };
     if (activeNode && activeNode.type === 'NSLayoutConstraint') {
-      props.constraints = [SceneConstraintReducer.mapStateToProps(state)];
+      props.constraints = [
+        SceneConstraintReducer.mapStateToProps({
+          tree: props.tree,
+          activeNode,
+        }),
+      ];
     }
     return props;
   },

@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 import isEqual from 'lodash.isequal';
 import * as THREE from 'three';
+import CoordinateTranslator from './coordinate-translator';
 
 const _createMesh = props => {
   const { width, height, imgUrl } = props;
@@ -109,9 +110,8 @@ const _getMeshGroup = nodeGroup => {
 };
 
 class SceneManager {
-  constructor(scene, coordTranslator, planeOffset) {
+  constructor(scene, planeOffset) {
     this.scene = scene;
-    this.coordTranslator = coordTranslator;
     this.planeOffset = planeOffset;
     this.viewsMap = {};
     this.constraintIndicatorsMap = {};
@@ -142,31 +142,36 @@ class SceneManager {
     });
     Object.values(this.constraintIndicatorsMap).forEach(
       ({ lineGroup: { children }, indicatorProps }) =>
-        indicatorProps.lineGroup.forEach(({ z1, z2 }, idx) => {
+        indicatorProps.lines.forEach(({ p1, p2 }, idx) => {
           const line = children[idx];
-          line.geometry.vertices[0].z = z1 * this.planeOffset + 1;
-          line.geometry.vertices[1].z = z2 * this.planeOffset + 1;
+          line.geometry.vertices[0].z = p1.z * this.planeOffset + 1;
+          line.geometry.vertices[1].z = p2.z * this.planeOffset + 1;
           line.geometry.verticesNeedUpdate = true;
         }),
     );
   }
 
   updateConstraintIndicators(indicators) {
+    const findNodeGroup = id => this.viewsMap[id.split('.')[0]];
     Object.entries(this.constraintIndicatorsMap).forEach(([key, value]) => {
       const { lineGroup } = value;
-      this.scene.remove(lineGroup);
+      const nodeGroup = findNodeGroup(key);
+      nodeGroup.remove(lineGroup);
       delete this.constraintIndicatorsMap[key];
     });
 
     indicators.forEach(nextIndicatorProps => {
-      const lineGroup = this._createConstraintIndicator(
-        nextIndicatorProps.lineGroup,
-      );
+      const nodeGroup = findNodeGroup(nextIndicatorProps.id);
+      const lines = nextIndicatorProps.lines.map(({ p1, p2 }) => ({
+        p1: CoordinateTranslator.calcScenePoint(p1, nodeGroup),
+        p2: CoordinateTranslator.calcScenePoint(p2, nodeGroup),
+      }));
+      const lineGroup = this._createConstraintIndicator(lines);
       this.constraintIndicatorsMap[nextIndicatorProps.id] = {
         lineGroup,
         indicatorProps: nextIndicatorProps,
       };
-      this.scene.add(lineGroup);
+      nodeGroup.add(lineGroup);
     });
   }
 
@@ -174,7 +179,7 @@ class SceneManager {
     this._updateViews(treeNode, this.scene);
   }
 
-  _updateViews(treeNode, parent3DObject) {
+  _updateViews(treeNode, parentObject) {
     if (treeNode) {
       const { children: subtrees, ...nextViewProps } = treeNode;
       if (treeNode.id in this.viewsMap) {
@@ -182,7 +187,7 @@ class SceneManager {
         const { userData: viewProps } = nodeGroup;
         if (!isEqual(viewProps, nextViewProps)) {
           this._updateViewNode(nodeGroup, viewProps, nextViewProps);
-          this._translate3DObject(nodeGroup);
+          this._translateObject(nodeGroup);
           this.viewsMap[nextViewProps.id].viewProps = nextViewProps;
         }
         subtrees.forEach(childTreeNode =>
@@ -190,8 +195,8 @@ class SceneManager {
         );
       } else {
         const nodeGroup = this._createViewNode(nextViewProps);
-        parent3DObject.add(nodeGroup);
-        this._translate3DObject(nodeGroup);
+        parentObject.add(nodeGroup);
+        this._translateObject(nodeGroup);
         this.viewsMap[nextViewProps.id] = nodeGroup;
         subtrees.forEach(childTreeNode =>
           this._updateViews(childTreeNode, nodeGroup),
@@ -200,13 +205,10 @@ class SceneManager {
     }
   }
 
-  _translate3DObject(obj) {
-    const {
-      x: translateX,
-      y: translateY,
-    } = this.coordTranslator.calc3DSceneCoord(obj);
-    obj.translateX(translateX);
-    obj.translateY(translateY);
+  _translateObject(obj) {
+    if (obj.parent !== this.scene) {
+      obj.position.copy(CoordinateTranslator.calcSceneRect(obj));
+    }
   }
 
   _createViewNode(viewProps) {
@@ -261,7 +263,10 @@ class SceneManager {
   }
 
   _createLine(props) {
-    const { x1, y1, z1, x2, y2, z2 } = props;
+    const {
+      p1: { x: x1, y: y1, z: z1 },
+      p2: { x: x2, y: y2, z: z2 },
+    } = props;
 
     const p1 = new THREE.Vector3(x1, y1, z1 * this.planeOffset + 1);
     const p2 = new THREE.Vector3(x2, y2, z2 * this.planeOffset + 1);

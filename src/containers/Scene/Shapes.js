@@ -25,18 +25,20 @@ const SceneTreeShape = PropTypes.shape({
   children: PropTypes.arrayOf(lazyPropType(() => SceneTreeShape)),
 });
 
+const PointShape = PropTypes.shape({
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  z: PropTypes.number.isRequired,
+});
+
+const LineShape = PropTypes.shape({
+  p1: PointShape.isRequired,
+  p2: PointShape.isRequired,
+});
+
 const SceneConstraintShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
-  lineGroup: PropTypes.arrayOf(
-    PropTypes.shape({
-      x1: PropTypes.number.isRequired,
-      y1: PropTypes.number.isRequired,
-      z1: PropTypes.number.isRequired,
-      x2: PropTypes.number.isRequired,
-      y2: PropTypes.number.isRequired,
-      z2: PropTypes.number.isRequired,
-    }),
-  ),
+  lines: PropTypes.arrayOf(LineShape).isRequired,
 });
 
 export { SceneTreeShape, SceneConstraintShape };

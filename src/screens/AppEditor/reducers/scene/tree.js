@@ -2,13 +2,10 @@ const isSelected = (node, activeNode) => {
   let selected = activeNode && activeNode.id === node.id;
   if (!selected && activeNode.type === 'NSLayoutConstraint') {
     const constraint = activeNode.updatedProperties || activeNode.properties;
-    if (constraint.first && constraint.first.item.value === node.id) {
-      selected = true;
-    }
-
-    if (constraint.second && constraint.second.item.value === node.id) {
-      selected = true;
-    }
+    selected = !!(
+      (constraint.first && constraint.first.item === node.id) ||
+      (constraint.second && constraint.second.item === node.id)
+    );
   }
   return selected;
 };
