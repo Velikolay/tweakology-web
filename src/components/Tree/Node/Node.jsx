@@ -16,7 +16,10 @@ const Node = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
     onKeyPress={() => !isActive && eventHandler('select')}
     onMouseEnter={() => eventHandler('hoveron')}
     onMouseLeave={() => eventHandler('hoveroff')}
-    onMouseDown={() => eventHandler('mousedown')}
+    onMouseDown={e => {
+      eventHandler('mousedown');
+      e.stopPropagation();
+    }}
     onMouseUp={() => eventHandler('mouseup')}
   >
     {isActive && !isLeaf ? (
