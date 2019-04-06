@@ -224,9 +224,34 @@ class APIClientAdapter {
     return this.apiClient.fetchSystemData();
   }
 
-  submitChanges(name: string, tree: UITree) {
+  modifyTree(name: string, tree: UITree) {
     const changes = treeToPayload(tree);
     return this.apiClient.submitChanges(name, changes);
+  }
+
+  insertNode(name: string, activeNode: UIViewNode, { id, type, ...rest }) {
+    const { children, id: superview } =
+      ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1
+        ? activeNode
+        : activeNode.superview;
+    const index =
+      children && children[children.length - 1].module === 'Constraints'
+        ? children.length - 1
+        : children.length;
+
+    const payload = [
+      {
+        operation: 'insert',
+        view: {
+          id,
+          superview,
+          index,
+          type,
+          ...rest,
+        },
+      },
+    ];
+    return this.apiClient.submitChanges(name, payload);
   }
 }
 

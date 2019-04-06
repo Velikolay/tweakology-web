@@ -79,7 +79,7 @@ class AppEditor extends Component {
   onSubmitChanges = () => {
     const { tree } = this.state;
     this.apiClient
-      .submitChanges('test', tree)
+      .modifyTree('test', tree)
       .then(() => this.updateTree())
       .then(() => PersistenceService.clear())
       .catch(err => console.log(err));
@@ -98,31 +98,10 @@ class AppEditor extends Component {
     this.formikBag = formik;
   };
 
-  onItemAdded = ({ id, type, ...rest }) => {
+  onItemAdded = node => {
     const { activeNode } = this.state;
-    const { children, id: superview } =
-      ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1
-        ? activeNode
-        : activeNode.superview;
-    const index =
-      children && children[children.length - 1].module === 'Constraints'
-        ? children.length - 1
-        : children.length;
-
-    const insertItemConfig = [
-      {
-        operation: 'insert',
-        view: {
-          id,
-          superview,
-          index,
-          type,
-          ...rest,
-        },
-      },
-    ];
     this.apiClient
-      .submitChanges('test', insertItemConfig)
+      .insertNode('test', activeNode, node)
       .then(() => this.updateTree())
       .catch(err => console.log(err));
   };
