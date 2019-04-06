@@ -146,7 +146,9 @@ const uiTreeFromPayload = (
 const viewConstraintsChanges = (tree: UITree): ?any => {
   let changes = [];
   const bottomNode =
-    tree.children.length > 0 ? tree.children[tree.children.length - 1] : null;
+    tree.children && tree.children.length > 0
+      ? tree.children[tree.children.length - 1]
+      : null;
 
   if (bottomNode && bottomNode.module === 'Constraints') {
     changes = bottomNode.children

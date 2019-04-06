@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-
 const CoordinateTranslator = {
   calcScenePoint: ({ x, y, z }, parent) => {
     const {

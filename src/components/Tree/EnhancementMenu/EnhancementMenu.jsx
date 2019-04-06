@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import { IconContext } from 'react-icons';
 import { FaPlusCircle } from 'react-icons/fa';
 
@@ -96,18 +97,29 @@ const initProperties = (id, type) => {
   return item.init(id);
 };
 
+const ValidationSchema = Yup.object().shape({
+  id: Yup.string()
+    .max(30, 'Identifier too long')
+    .required('Identifier required'),
+});
+
 const EnhancementMenu = ({ onItemAdded }) => (
   <Formik
     initialValues={{ id: '', type: '' }}
+    validationSchema={ValidationSchema}
     onSubmit={({ id, type }, { setSubmitting, resetForm }) => {
       onItemAdded({ id, type, ...initProperties(id, type) });
       setSubmitting(false);
       resetForm();
     }}
   >
-    {({ values: { id }, isSubmitting, setFieldValue }) => (
+    {({ errors, isSubmitting, setFieldValue }) => (
       <Form className="TreeEnhancementMenu">
-        <div className="TreeEnhancementMenu__itemId">
+        <div
+          className={cx('TreeEnhancementMenu__itemId', {
+            error: !!errors.id,
+          })}
+        >
           <Field
             className="TreeEnhancementMenu__itemId__input"
             type="text"
@@ -117,7 +129,7 @@ const EnhancementMenu = ({ onItemAdded }) => (
           <IconContext.Provider
             value={{
               className: cx('TreeEnhancementMenu__itemId__icon', {
-                disabled: !id,
+                error: !!errors.id,
               }),
             }}
           >
@@ -130,7 +142,7 @@ const EnhancementMenu = ({ onItemAdded }) => (
               className="TreeEnhancementMenu__item"
               key={viewInfo.type}
               type="submit"
-              disabled={!id || isSubmitting}
+              disabled={isSubmitting}
               onClick={() => setFieldValue('type', viewInfo.type)}
             >
               <span className="TreeEnhancementMenu__item__name">
