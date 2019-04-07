@@ -4,7 +4,7 @@
   display: flex;
   flex-flow: column nowrap;
   width: 100%;
-  height: 210px;
+  height: 232px;
   background-color: #2b2b2be6;
   border-top: 2px solid rgb(58, 58, 58);
 
@@ -40,7 +40,6 @@
   }
 
   &__itemList {
-    flex: 1;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -82,12 +81,12 @@
 }
 
 .TreeEnhancementMenu-enter.TreeEnhancementMenu-enter-active {
-  height: 210px;
+  height: 232px;
   transition: height 100ms ease-in;
 }
 
 .TreeEnhancementMenu-exit {
-  height: 210px;
+  height: 232px;
 }
 
 .TreeEnhancementMenu-exit.TreeEnhancementMenu-exit-active {

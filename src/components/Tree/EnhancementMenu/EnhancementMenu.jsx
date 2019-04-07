@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 import { IconContext } from 'react-icons';
 import { FaPlusCircle } from 'react-icons/fa';
 
+import TabMenu, { Tab } from '../../../containers/TabMenu';
+
 import './EnhancementMenu.scss';
 
 const initFrame = id => ({
@@ -31,7 +33,17 @@ const font = {
   pointSize: 14,
 };
 
-const listItems = [
+const LAYOUT_ITEMS = [
+  {
+    type: 'NSLayoutConstraint',
+    name: 'Constraint',
+    description:
+      ' - The relationship between two user interface objects that must be satisfied by the constraint-based layout system',
+    init: () => ({}),
+  },
+];
+
+const VIEW_ITEMS = [
   {
     type: 'UIButton',
     name: 'Button',
@@ -92,10 +104,29 @@ const listItems = [
   },
 ];
 
-const initProperties = (id, type) => {
-  const item = listItems.find(el => el.type === type);
+const initProperties = (items, id, type) => {
+  const item = items.find(el => el.type === type);
   return item.init(id);
 };
+
+const itemListDOM = (items, { isSubmitting, setFieldValue }) => (
+  <div className="TreeEnhancementMenu__itemList">
+    {items.map(item => (
+      <button
+        className="TreeEnhancementMenu__item"
+        key={item.type}
+        type="submit"
+        disabled={isSubmitting}
+        onClick={() => setFieldValue('type', item.type)}
+      >
+        <span className="TreeEnhancementMenu__item__name">{item.name}</span>
+        <span className="TreeEnhancementMenu__item__description">
+          {item.description}
+        </span>
+      </button>
+    ))}
+  </div>
+);
 
 const ValidationSchema = Yup.object().shape({
   id: Yup.string()
@@ -108,7 +139,7 @@ const EnhancementMenu = ({ onItemAdded }) => (
     initialValues={{ id: '', type: '' }}
     validationSchema={ValidationSchema}
     onSubmit={({ id, type }, { setSubmitting, resetForm }) => {
-      onItemAdded({ id, type, ...initProperties(id, type) });
+      onItemAdded({ id, type, ...initProperties(VIEW_ITEMS, id, type) });
       setSubmitting(false);
       resetForm();
     }}
@@ -136,24 +167,14 @@ const EnhancementMenu = ({ onItemAdded }) => (
             <FaPlusCircle />
           </IconContext.Provider>
         </div>
-        <div className="TreeEnhancementMenu__itemList">
-          {listItems.map(viewInfo => (
-            <button
-              className="TreeEnhancementMenu__item"
-              key={viewInfo.type}
-              type="submit"
-              disabled={isSubmitting}
-              onClick={() => setFieldValue('type', viewInfo.type)}
-            >
-              <span className="TreeEnhancementMenu__item__name">
-                {viewInfo.name}
-              </span>
-              <span className="TreeEnhancementMenu__item__description">
-                {viewInfo.description}
-              </span>
-            </button>
-          ))}
-        </div>
+        <TabMenu>
+          <Tab name="Views">
+            {itemListDOM(VIEW_ITEMS, { isSubmitting, setFieldValue })}
+          </Tab>
+          <Tab name="Layout">
+            {itemListDOM(LAYOUT_ITEMS, { isSubmitting, setFieldValue })}
+          </Tab>
+        </TabMenu>
       </Form>
     )}
   </Formik>
