@@ -100,10 +100,14 @@ class AppEditor extends Component {
 
   onItemAdded = node => {
     const { activeNode } = this.state;
-    this.apiClient
-      .insertNode('test', activeNode, node)
-      .then(() => this.updateTree())
-      .catch(err => console.log(err));
+    if (node.type === 'NSLayoutConstraint') {
+      addConstraintToNode(activeNode);
+    } else {
+      this.apiClient
+        .insertNode('test', activeNode, node)
+        .then(() => this.updateTree())
+        .catch(err => console.log(err));
+    }
   };
 
   treeEventHandler = (eventName, node) => {

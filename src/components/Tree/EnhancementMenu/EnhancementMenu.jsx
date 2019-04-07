@@ -104,8 +104,10 @@ const VIEW_ITEMS = [
   },
 ];
 
-const initProperties = (items, id, type) => {
-  const item = items.find(el => el.type === type);
+const ALL_ITEMS = [...VIEW_ITEMS, ...LAYOUT_ITEMS];
+
+const initProperties = (id, type) => {
+  const item = ALL_ITEMS.find(el => el.type === type);
   return item.init(id);
 };
 
@@ -139,7 +141,7 @@ const EnhancementMenu = ({ onItemAdded }) => (
     initialValues={{ id: '', type: '' }}
     validationSchema={ValidationSchema}
     onSubmit={({ id, type }, { setSubmitting, resetForm }) => {
-      onItemAdded({ id, type, ...initProperties(VIEW_ITEMS, id, type) });
+      onItemAdded({ id, type, ...initProperties(id, type) });
       setSubmitting(false);
       resetForm();
     }}

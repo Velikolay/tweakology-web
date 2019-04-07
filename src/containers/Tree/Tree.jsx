@@ -28,7 +28,12 @@ class TreeContainer extends Component {
         isActive={this.isActive(node)}
         isOnFocus={this.isOnFocus(node)}
         isLeaf={this.isLeaf(node)}
-        eventHandler={event => eventHandler(event, node)}
+        eventHandler={event => {
+          if (event === 'enhancementclick') {
+            this.toolbarEventHandler(event);
+          }
+          eventHandler(event, node);
+        }}
       />
     );
   };

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FaPlus } from 'react-icons/fa';
 import cx from 'classnames';
 
 import './Node.scss';
@@ -26,9 +27,9 @@ const Node = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
       <button
         className="TreeNode__addButton"
         type="button"
-        onClick={() => eventHandler('add')}
+        onClick={() => eventHandler('enhancementclick')}
       >
-        add
+        <FaPlus />
       </button>
     ) : (
       ''

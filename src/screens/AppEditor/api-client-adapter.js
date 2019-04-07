@@ -155,7 +155,7 @@ const viewConstraintsChanges = (tree: UITree): ?any => {
       .filter(constraint => constraint.updatedProperties)
       .map(constraint => ({
         idx: parseInt(constraint.id.split(':')[1], 10),
-        ...constraint,
+        ...constraint.updatedProperties,
       }));
   }
 
