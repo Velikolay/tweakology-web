@@ -14,7 +14,7 @@ class APIClient {
     return device ? device.getEndpoint() : null;
   }
 
-  remoteCall(invoke: any): any {
+  remoteCall(invoke: string => Promise<any>): Promise<any> {
     const endpoint = this.getEndpoint();
     return endpoint
       ? invoke(endpoint)
@@ -35,7 +35,7 @@ class APIClient {
     );
   }
 
-  submitChanges(name: string, changes: any) {
+  submitChanges(name: string, changes: any): Promise<any> {
     return this.remoteCall(endpoint =>
       fetch(`${endpoint}/tweaks/${name}`, {
         method: 'put',

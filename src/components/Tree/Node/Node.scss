@@ -1,5 +1,8 @@
+@import '../../../assets/styles/colors';
+
 .TreeNode {
   width: 100%;
+  display: flex;
 
   &.is-active {
     background-color: #0071b899;
@@ -10,6 +13,7 @@
   }
 
   &__text {
+    flex: 1;
     padding: 4px 10px;
     text-align: left;
     white-space: nowrap;
@@ -18,11 +22,10 @@
   }
 
   &__addButton {
-    float: right;
+    display: flex;
+    color: $text-color;
     background: none !important;
-    color: rgb(200, 150, 55);
     border: none;
-    padding: 4px;
     font: inherit;
     cursor: pointer;
   }

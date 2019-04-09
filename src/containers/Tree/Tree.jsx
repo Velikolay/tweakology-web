@@ -20,23 +20,15 @@ class TreeContainer extends Component {
     this.setState(nextProps);
   }
 
-  renderNode = node => {
-    const { eventHandler } = this.props;
-    return (
-      <TreeNode
-        text={node.module}
-        isActive={this.isActive(node)}
-        isOnFocus={this.isOnFocus(node)}
-        isLeaf={this.isLeaf(node)}
-        eventHandler={event => {
-          if (event === 'enhancementclick') {
-            this.toolbarEventHandler(event);
-          }
-          eventHandler(event, node);
-        }}
-      />
-    );
-  };
+  renderNode = node => (
+    <TreeNode
+      text={node.module}
+      isActive={this.isActive(node)}
+      isOnFocus={this.isOnFocus(node)}
+      isLeaf={this.isLeaf(node)}
+      eventHandler={event => this.internalEventHandler(event, node)}
+    />
+  );
 
   isLeaf = node => 'leaf' in node;
 
@@ -56,10 +48,13 @@ class TreeContainer extends Component {
     });
   };
 
-  toolbarEventHandler = eventName => {
-    if (eventName === 'enhancementclick') {
+  internalEventHandler = (event, node) => {
+    if (event === 'enhancementclick') {
       const { showTreeEnhancementMenu } = this.state;
       this.setState({ showTreeEnhancementMenu: !showTreeEnhancementMenu });
+    } else {
+      const { eventHandler } = this.props;
+      eventHandler(event, node);
     }
   };
 
@@ -85,7 +80,7 @@ class TreeContainer extends Component {
             </CSSTransition>
           ) : null}
         </TransitionGroup>
-        <TreeToolbar eventHandler={this.toolbarEventHandler} />
+        <TreeToolbar eventHandler={this.internalEventHandler} />
       </React.Fragment>
     );
   }

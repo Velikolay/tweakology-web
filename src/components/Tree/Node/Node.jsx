@@ -23,6 +23,7 @@ const Node = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
     }}
     onMouseUp={() => eventHandler('mouseup')}
   >
+    <div className="TreeNode__text">{text}</div>
     {isActive && !isLeaf ? (
       <button
         className="TreeNode__addButton"
@@ -34,7 +35,6 @@ const Node = ({ text, isActive, isOnFocus, isLeaf, eventHandler }) => (
     ) : (
       ''
     )}
-    <div className="TreeNode__text">{text}</div>
   </div>
 );
 

@@ -224,34 +224,43 @@ class APIClientAdapter {
     return this.apiClient.fetchSystemData();
   }
 
-  modifyTree(name: string, tree: UITree) {
+  modifyTree(name: string, tree: UITree): Promise<any> {
     const changes = treeToPayload(tree);
     return this.apiClient.submitChanges(name, changes);
   }
 
-  insertNode(name: string, activeNode: UIViewNode, { id, type, ...rest }) {
-    const { children, id: superview } =
+  insertNode(
+    name: string,
+    activeNode: UIViewNode<AnyUIView>,
+    { id, type, ...props }: any,
+  ): Promise<any> {
+    const containerNode =
       ['UIButton', 'UILabel', 'UIImageView'].indexOf(activeNode.type) === -1
         ? activeNode
         : activeNode.superview;
-    const index =
-      children && children[children.length - 1].module === 'Constraints'
-        ? children.length - 1
-        : children.length;
 
-    const payload = [
-      {
-        operation: 'insert',
-        view: {
-          id,
-          superview,
-          index,
-          type,
-          ...rest,
+    if (containerNode) {
+      const { children, id: superview } = containerNode;
+      const index =
+        children && children[children.length - 1].module === 'Constraints'
+          ? children.length - 1
+          : children.length;
+
+      const payload = [
+        {
+          operation: 'insert',
+          view: {
+            id,
+            superview,
+            index,
+            type,
+            ...props,
+          },
         },
-      },
-    ];
-    return this.apiClient.submitChanges(name, payload);
+      ];
+      return this.apiClient.submitChanges(name, payload);
+    }
+    return Promise.reject(new Error('Inserting a node requires a container'));
   }
 }
 
