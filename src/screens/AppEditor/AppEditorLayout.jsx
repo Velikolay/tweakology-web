@@ -33,9 +33,8 @@ const AppEditorLayout = props => {
     onFocusNode,
     treeEventHandler,
     sceneEventHandler,
+    formEventHandler,
     onSubmitChanges,
-    onFormUpdate,
-    onFormSelect,
   } = props;
 
   return (
@@ -65,11 +64,7 @@ const AppEditorLayout = props => {
       </div>
       <div className="config-section">
         {activeNode !== null ? (
-          <Form
-            activeNode={activeNode}
-            onFormUpdate={onFormUpdate}
-            onFormSelect={onFormSelect}
-          />
+          <Form activeNode={activeNode} eventHandler={formEventHandler} />
         ) : null}
       </div>
     </Split>
@@ -82,9 +77,8 @@ AppEditorLayout.propTypes = {
   onFocusNode: TreeNodeShape,
   treeEventHandler: PropTypes.func.isRequired,
   sceneEventHandler: PropTypes.func.isRequired,
+  formEventHandler: PropTypes.func.isRequired,
   onSubmitChanges: PropTypes.func.isRequired,
-  onFormUpdate: PropTypes.func.isRequired,
-  onFormSelect: PropTypes.func.isRequired,
 };
 
 AppEditorLayout.defaultProps = {

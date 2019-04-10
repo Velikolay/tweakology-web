@@ -6,12 +6,12 @@ import FormikObserver from './Observer';
 
 // eslint-disable-next-line import/prefer-default-export
 export const withFormikShell = Component => props => {
-  const { id, type, handleSubmit, onFormUpdate } = props;
+  const { id, type, handleSubmit, eventHandler } = props;
   return (
     <form onSubmit={handleSubmit}>
       <Component {...props} />
       <FormikObserver
-        onChange={({ values }) => onFormUpdate(id, type, values)}
+        onChange={({ values }) => eventHandler('update', { id, type, values })}
       />
       <FormikPersistence name={id} />
     </form>

@@ -31,12 +31,11 @@ class AppEditor extends Component {
     this.formikBag = null;
     this.nodeDragging = false;
 
-    this.onFormUpdate = this.onFormUpdate.bind(this);
-    this.onFormSelect = this.onFormSelect.bind(this);
     this.onSubmitChanges = this.onSubmitChanges.bind(this);
     this.onItemAdded = this.onItemAdded.bind(this);
     this.treeEventHandler = this.treeEventHandler.bind(this);
     this.sceneEventHandler = this.sceneEventHandler.bind(this);
+    this.formEventHandler = this.formEventHandler.bind(this);
   }
 
   componentDidMount() {
@@ -85,19 +84,6 @@ class AppEditor extends Component {
       .catch(err => console.log(err));
   };
 
-  onFormUpdate = (id, type, values) => {
-    const { activeNode } = this.state;
-    activeNode.updatedProperties = getTransformer(type).toPayload(values);
-    if (type === 'NSLayoutConstraint') {
-      activeNode.module = constraintNodeName(activeNode);
-    }
-    this.setState({ activeNode });
-  };
-
-  onFormSelect = formik => {
-    this.formikBag = formik;
-  };
-
   onItemAdded = node => {
     const { activeNode } = this.state;
     if (node.type === 'NSLayoutConstraint') {
@@ -115,10 +101,6 @@ class AppEditor extends Component {
       if (node.id) {
         this.setState({ activeNode: node });
       }
-    }
-    if (eventName === 'add') {
-      addConstraintToNode(node);
-      this.setState({ activeNode: node });
     }
     if (eventName === 'mouseup') {
       this.nodeDragging = false;
@@ -171,6 +153,21 @@ class AppEditor extends Component {
     }
   };
 
+  formEventHandler = (eventName, obj) => {
+    if (eventName === 'update') {
+      const { type, values } = obj;
+      const { activeNode } = this.state;
+      activeNode.updatedProperties = getTransformer(type).toPayload(values);
+      if (type === 'NSLayoutConstraint') {
+        activeNode.module = constraintNodeName(activeNode);
+      }
+      this.setState({ activeNode });
+    }
+    if (eventName === 'select') {
+      this.formikBag = obj;
+    }
+  };
+
   findNode = (tree, id) => {
     if (id) {
       const { id: nodeId, children } = tree;
@@ -197,9 +194,8 @@ class AppEditor extends Component {
           onFocusNode={onFocusNode}
           treeEventHandler={this.treeEventHandler}
           sceneEventHandler={this.sceneEventHandler}
+          formEventHandler={this.formEventHandler}
           onSubmitChanges={this.onSubmitChanges}
-          onFormUpdate={this.onFormUpdate}
-          onFormSelect={this.onFormSelect}
         />
       </DeviceContext.Provider>
     );

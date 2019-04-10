@@ -25,8 +25,7 @@ FormContainer.propTypes = {
   id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   formData: PropTypes.object.isRequired,
-  onFormUpdate: PropTypes.func.isRequired,
-  onFormSelect: PropTypes.func.isRequired,
+  eventHandler: PropTypes.func.isRequired,
 };
 
 export default FormContainer;

@@ -7,7 +7,7 @@ import PersistenceService from '../../services/persistence';
 
 import { withFormikContext } from '../../contexts/FormikContext';
 
-const dispatchFormikBag = ({ formik }) => formik.onFormSelect(formik);
+const dispatchFormikBag = ({ formik }) => formik.eventHandler('select', formik);
 
 class FormikPersistence extends Component {
   saveForm = debounce((name, data) => {

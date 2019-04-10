@@ -40,14 +40,11 @@
   }
 
   &__itemList {
+    flex: 1;
     margin: 0;
     padding: 0;
     list-style: none;
-    overflow-y: hidden;
-
-    &:hover {
-      overflow-y: auto;
-    }
+    overflow-y: auto;
   }
 
   &__item {
