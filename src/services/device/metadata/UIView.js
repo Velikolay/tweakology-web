@@ -1,10 +1,26 @@
+import CGRect from './CGRect';
+import { BackgroundColor } from './UIColor';
+
+const UIView = {
+  name: 'View',
+  type: 'UIView',
+  description:
+    'Represents a rectangular region in which it draws and receives events',
+  init: id => ({
+    frame: CGRect.init(),
+    properties: {
+      backgroundColor: BackgroundColor.init(id),
+    },
+  }),
+};
+
 const convert = options =>
   Object.entries(options).map(([key, val]) => ({
     value: key,
     text: val,
   }));
 
-const ContentModeOptions = convert({
+export const ContentModeOptions = convert({
   0: 'Scale To Fill',
   1: 'Scale Aspect Fit',
   2: 'Scale Aspect Fill',
@@ -20,7 +36,7 @@ const ContentModeOptions = convert({
   12: 'Bottom Right',
 });
 
-const SemanticContentAttributeOptions = convert({
+export const SemanticContentAttributeOptions = convert({
   0: 'Unspecified',
   1: 'Playback',
   2: 'Spatial',
@@ -28,4 +44,4 @@ const SemanticContentAttributeOptions = convert({
   4: 'Force Right-To-Left',
 });
 
-export { ContentModeOptions, SemanticContentAttributeOptions };
+export default UIView;

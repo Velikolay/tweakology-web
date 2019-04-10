@@ -1,7 +1,7 @@
 import {
   attributeNames,
   relationSymbols,
-} from '../../services/device/metadata/NSLayoutConstraints';
+} from '../../services/device/metadata/NSLayoutConstraint';
 
 const numToFixed = num => {
   if (num % 1 !== 0) {

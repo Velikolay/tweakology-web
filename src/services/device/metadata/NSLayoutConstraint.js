@@ -1,6 +1,14 @@
 /* eslint-disable quote-props */
 // @flow
 
+const NSLayoutConstraint = {
+  name: 'Constraint',
+  type: 'NSLayoutConstraint',
+  description:
+    'The relationship between two user interface objects that must be satisfied by the constraint-based layout system',
+  init: () => ({}),
+};
+
 // case noAttribute 0
 // case left 1
 // case right 2
@@ -201,3 +209,5 @@ export {
   attributeToModifiers,
   constraintAttributes,
 };
+
+export default NSLayoutConstraint;

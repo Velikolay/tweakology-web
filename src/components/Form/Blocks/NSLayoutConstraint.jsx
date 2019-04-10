@@ -6,7 +6,7 @@ import { withFormikContext } from '../../../contexts/FormikContext';
 import Field from '../Inputs/Field';
 import ConstraintItemSelector from '../Inputs/ConstraintItemSelector/ConstraintItemSelector';
 import { nameWithPrefix, formikValueWithPrefix } from '../FormikHelpers';
-import { constraintAttributes } from '../../../services/device/metadata/NSLayoutConstraints';
+import { constraintAttributes } from '../../../services/device/metadata/NSLayoutConstraint';
 
 import './Blocks.scss';
 

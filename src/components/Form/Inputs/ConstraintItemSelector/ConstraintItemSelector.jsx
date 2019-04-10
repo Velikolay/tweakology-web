@@ -10,7 +10,7 @@ import { nameWithPrefix, formikValueWithPrefix } from '../../FormikHelpers';
 import {
   attributeToModifiers,
   valueSwitch,
-} from '../../../../services/device/metadata/NSLayoutConstraints';
+} from '../../../../services/device/metadata/NSLayoutConstraint';
 
 import './ConstraintItemSelector.scss';
 

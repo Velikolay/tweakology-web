@@ -8,7 +8,7 @@ import type {
   NSLayoutConstraintItemAttribute as ConstraintItemAttributeForm,
 } from '../../../../containers/Form/types';
 import withFalsyGuard from './utils';
-import { attributeToModifiers } from '../../../../services/device/metadata/NSLayoutConstraints';
+import { attributeToModifiers } from '../../../../services/device/metadata/NSLayoutConstraint';
 
 const emptyItem = (placeholder: string): ConstraintItemAttributeForm => ({
   attribute: {

@@ -59,7 +59,6 @@ class TreeContainer extends Component {
   };
 
   render() {
-    const { eventHandler } = this.props;
     const { tree, showTreeEnhancementMenu } = this.state;
     return (
       <React.Fragment>
@@ -74,9 +73,7 @@ class TreeContainer extends Component {
               classNames="TreeEnhancementMenu"
               timeout={{ enter: 100, exit: 100 }}
             >
-              <TreeEnhancementMenu
-                onItemAdded={item => eventHandler('additem', item)}
-              />
+              <TreeEnhancementMenu eventHandler={this.internalEventHandler} />
             </CSSTransition>
           ) : null}
         </TransitionGroup>
