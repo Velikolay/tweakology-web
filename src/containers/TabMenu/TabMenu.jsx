@@ -26,6 +26,7 @@ class TabMenu extends Component {
         className={cx('TabMenu__tab', {
           'is-active': this.isActive(name, defaultTab),
         })}
+        key={name}
         type="button"
         onClick={() => this.setState({ activeTab: name })}
       >

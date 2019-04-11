@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import { AttributeFormikShape } from '../Shapes';
 import { withFormikContext } from '../../../contexts/FormikContext';
 import DeviceContext from '../../../contexts/DeviceContext';
 
@@ -80,7 +80,7 @@ const Font = props => {
 };
 
 Font.propTypes = {
-  formik: PropTypes.object.isRequired,
+  formik: AttributeFormikShape.isRequired,
 };
 
 export default withFormikContext(Font);

@@ -79,6 +79,7 @@ ToggleButtonMenu.propTypes = {
   name: PropTypes.string,
   exclusiveMode: PropTypes.bool,
   onSwitch: PropTypes.func.isRequired,
+  children: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
 
 ToggleButtonMenu.defaultProps = {
@@ -93,6 +94,7 @@ ToggleButton.propTypes = {
   width: PropTypes.number.isRequired,
   isOn: PropTypes.bool.isRequired,
   onSwitch: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 ToggleButton.defaultProps = {

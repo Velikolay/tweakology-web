@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
+import { AttributeFormikShape } from '../../Shapes';
+
 import Field from '../Field';
 import ToggleButtonMenu from '../ToggleButtonMenu/ToggleButtonMenu';
 
@@ -153,8 +155,7 @@ const ConstraintItemSelector = props => {
       >
         {itemsDOM}
       </Field>
-      {/* <label>{'\u2024'}</label> */}
-      <label>.</label>
+      <span className="inline-text">.</span>
       <Field
         className={cx('cis-attribute', {
           'with-modifiers': hasModifiers,
@@ -192,8 +193,22 @@ ConstraintItemSelector.defaultProps = {
 ConstraintItemSelector.propTypes = {
   prefix: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  formik: PropTypes.object.isRequired,
-  attributes: PropTypes.array.isRequired,
+  formik: AttributeFormikShape.isRequired,
+  attributes: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      variants: PropTypes.arrayOf(
+        PropTypes.shape({
+          options: PropTypes.arrayOf(
+            PropTypes.shape({
+              label: PropTypes.string.isRequired,
+              value: PropTypes.string.isRequired,
+            }),
+          ).isRequired,
+        }),
+      ).isRequired,
+    }),
+  ).isRequired,
   onAttributeChange: PropTypes.func,
 };
 

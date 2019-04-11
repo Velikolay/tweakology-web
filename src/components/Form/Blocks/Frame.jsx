@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import { AttributeFormikShape } from '../Shapes';
 import { withFormikContext } from '../../../contexts/FormikContext';
 
 import Field from '../Inputs/Field';
@@ -12,41 +12,37 @@ const Frame = props => {
   const {
     formik: { touched, errors },
   } = props;
+  const x = nameWithPrefix(props, 'x');
+  const y = nameWithPrefix(props, 'y');
+  const width = nameWithPrefix(props, 'width');
+  const height = nameWithPrefix(props, 'height');
   return (
     <div className="form-group">
       <div className="form-row">
-        <label className="input-title">
+        <div className="input-title">
           {titleForField(props, 'frame', 'Frame')}
-        </label>
+        </div>
         <div className="half-width-input-container">
-          <Field
-            name={nameWithPrefix(props, 'x')}
-            type="number"
-            className="half-width-input"
-          />
+          <Field id={x} name={x} type="number" className="half-width-input" />
           {errors.x && touched.x && (
             <div className="input-feedback">{errors.x}</div>
           )}
           <label
             className="input-name"
-            htmlFor="coord"
+            htmlFor={x}
             style={{ display: 'block' }}
           >
             X
           </label>
         </div>
         <div className="half-width-input-container">
-          <Field
-            name={nameWithPrefix(props, 'y')}
-            type="number"
-            className="half-width-input"
-          />
+          <Field id={y} name={y} type="number" className="half-width-input" />
           {errors.y && touched.y && (
             <div className="input-feedback">{errors.y}</div>
           )}
           <label
             className="input-name"
-            htmlFor="coord"
+            htmlFor={y}
             style={{ display: 'block' }}
           >
             Y
@@ -54,10 +50,11 @@ const Frame = props => {
         </div>
       </div>
       <div className="form-row">
-        <label className="input-title" />
+        <div className="input-title" />
         <div className="half-width-input-container">
           <Field
-            name={nameWithPrefix(props, 'width')}
+            id={width}
+            name={width}
             type="number"
             className="half-width-input"
           />
@@ -65,8 +62,9 @@ const Frame = props => {
             <div className="input-feedback">{errors.width}</div>
           )}
           <label
+            id="frameWidth"
             className="input-name"
-            htmlFor="coord"
+            htmlFor={width}
             style={{ display: 'block' }}
           >
             Width
@@ -74,7 +72,8 @@ const Frame = props => {
         </div>
         <div className="half-width-input-container">
           <Field
-            name={nameWithPrefix(props, 'height')}
+            id={height}
+            name={height}
             type="number"
             className="half-width-input"
           />
@@ -83,7 +82,7 @@ const Frame = props => {
           )}
           <label
             className="input-name"
-            htmlFor="coord"
+            htmlFor={height}
             style={{ display: 'block' }}
           >
             Height
@@ -95,7 +94,7 @@ const Frame = props => {
 };
 
 Frame.propTypes = {
-  formik: PropTypes.object.isRequired,
+  formik: AttributeFormikShape.isRequired,
 };
 
 export default withFormikContext(Frame);

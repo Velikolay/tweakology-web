@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
+import { AttributeFormikShape } from '../../components/Form/Shapes';
 import PersistenceService from '../../services/persistence';
 
 import { withFormikContext } from '../../contexts/FormikContext';
@@ -18,8 +19,7 @@ class FormikPersistence extends Component {
     } else {
       PersistenceService.write(name, data);
     }
-    console.log('Form saved');
-  }, this.props.debounce);
+  }, this.props.debounce); // eslint-disable-line react/destructuring-assignment
 
   componentDidMount() {
     this.setForm(this.props);
@@ -69,7 +69,6 @@ class FormikPersistence extends Component {
       if (status) {
         formik.setStatus(status);
       }
-      // console.log('Form Loaded');
     }
   };
 
@@ -80,7 +79,7 @@ class FormikPersistence extends Component {
 
 FormikPersistence.propTypes = {
   name: PropTypes.string.isRequired,
-  formik: PropTypes.object.isRequired,
+  formik: AttributeFormikShape.isRequired,
   debounce: PropTypes.number,
   excludeDeviceContext: PropTypes.bool,
 };

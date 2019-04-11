@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import { AttributeFormikShape } from '../../Shapes';
 import { withFormikContext } from '../../../../contexts/FormikContext';
 
 import Field from '../../Inputs/Field';
@@ -51,7 +51,7 @@ const Color = props => {
 };
 
 Color.propTypes = {
-  formik: PropTypes.object.isRequired,
+  formik: AttributeFormikShape.isRequired,
 };
 
 export default withFormikContext(Color);

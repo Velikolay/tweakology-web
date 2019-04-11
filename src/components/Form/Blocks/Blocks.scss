@@ -11,16 +11,6 @@
   height: 26px;
 }
 
-.input-title {
-  display: inline-block;
-  width: calc(40% - 8px);
-  vertical-align: top;
-  text-align: right;
-  margin-right: 8px;
-  line-height: 22px;
-  font-size: 11px;
-}
-
 .full-width-input {
   box-sizing: border-box;
   display: inline-block;
@@ -41,13 +31,25 @@
   width: 100%;
 }
 
-.input-name {
-  padding-top: 2px;
+.inline-text {
+  color: $text-color;
+}
+
+.input-title {
+  display: inline-block;
+  width: calc(40% - 8px);
+  margin-right: 8px;
+  vertical-align: top;
+  text-align: right;
+  color: $text-color;
+  line-height: 22px;
   font-size: 11px;
 }
 
-label {
+.input-name {
+  padding-top: 2px;
   color: $text-color;
+  font-size: 11px;
 }
 
 input[type=text],

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { AttributeFormikShape } from '../Shapes';
 import { withFormikContext } from '../../../contexts/FormikContext';
 
 import Field from '../Inputs/Field';
@@ -180,8 +181,13 @@ const NSLayoutConstraint = props => {
 };
 
 NSLayoutConstraint.propTypes = {
-  formik: PropTypes.object.isRequired,
-  itemOptions: PropTypes.array.isRequired,
+  formik: AttributeFormikShape.isRequired,
+  itemOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default withFormikContext(NSLayoutConstraint);

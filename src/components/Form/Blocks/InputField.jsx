@@ -7,16 +7,19 @@ import Field from '../Inputs/Field';
 
 import './Blocks.scss';
 
-const InputField = ({ title, ...rest }) => (
+const InputField = ({ title, name, ...rest }) => (
   <div className="form-group">
     <div className="form-row">
-      <label className="input-title">{title}</label>
-      <Field {...rest} className="full-width-input" />
+      <label className="input-title" htmlFor={name}>
+        {title}
+      </label>
+      <Field id={name} name={name} className="full-width-input" {...rest} />
     </div>
   </div>
 );
 
 InputField.propTypes = {
+  name: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };
 

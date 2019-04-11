@@ -12,24 +12,27 @@
   ],
   "rules": {
     "prettier/prettier": "error",
-    "quote-props": [1, "consistent-as-needed"],
-    "no-cond-assign": [2, "except-parens"],
-    "no-unused-vars": [1, {"vars": "local", "args": "none"}],
+    "quote-props": [ 1, "consistent-as-needed" ],
+    "no-cond-assign": [ 2, "except-parens" ],
+    "no-unused-vars": [ 1, {"vars": "local", "args": "none"} ],
     "no-restricted-syntax": [
       "error",
       "LabeledStatement",
       "WithStatement"
     ],
-    "jsx-a11y/label-has-for": [ 2, {
-      "components": [ "label" ],
+    "jsx-a11y/label-has-associated-control": [ 2, {
       "required": {
-        "some": [ "nesting", "id" ]
-      },
-      "allowChildren": false
+        "some": [ "nesting", "id"  ]
+      }
     }],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "jsx-a11y/label-has-for": [ 2, {
+      "required": {
+        "some": [ "nesting", "id"  ]
+      }
+    }],
+    "react/jsx-filename-extension": [ 1, { "extensions": [".js", ".jsx"] } ],
     "import/no-extraneous-dependencies": [
-      "error",
+      2,
       {
         "devDependencies": ["src/electron-starter.js"]
       }

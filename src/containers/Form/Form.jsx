@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 
+import { FormDataShape } from '../../components/Form/Shapes';
 import { withFormikContextProvider } from '../../contexts/FormikContext';
 import { withFormikShell } from './FormikShell';
 
@@ -24,7 +25,7 @@ const FormContainer = props => {
 FormContainer.propTypes = {
   id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  formData: PropTypes.object.isRequired,
+  formData: FormDataShape.isRequired,
   eventHandler: PropTypes.func.isRequired,
 };
 

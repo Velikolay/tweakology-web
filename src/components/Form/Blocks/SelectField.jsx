@@ -10,8 +10,15 @@ import './Blocks.scss';
 const SelectField = ({ name, options, title }) => (
   <div className="form-group">
     <div className="form-row">
-      <label className="input-title">{title}</label>
-      <Field name={name} component="select" className="full-width-input">
+      <label className="input-title" htmlFor={name}>
+        {title}
+      </label>
+      <Field
+        id={name}
+        name={name}
+        component="select"
+        className="full-width-input"
+      >
         {options.map(({ value, text }) => (
           <option key={value} value={value}>
             {text}

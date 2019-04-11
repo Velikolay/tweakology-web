@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons';
 import {
   FaAlignLeft,
@@ -8,6 +7,7 @@ import {
   FaAlignJustify,
 } from 'react-icons/fa';
 
+import { AttributeFormikShape } from '../Shapes';
 import { withFormikContext } from '../../../contexts/FormikContext';
 
 import ToggleButtonMenu from '../Inputs/ToggleButtonMenu/ToggleButtonMenu';
@@ -27,19 +27,21 @@ const TextAlignment = props => {
   const {
     formik: { setFieldValue },
   } = props;
+  const textAlignment = nameWithPrefix(props, 'textAlignment');
   return (
     <div className="form-group">
       <div className="form-row">
-        <label className="input-title">
+        <label className="input-title" htmlFor={textAlignment}>
           {titleForField(props, 'textAlignment', 'Alignment')}
         </label>
         <IconContext.Provider
           value={{ className: 'text-alignment-button-icon' }}
         >
           <ToggleButtonMenu
+            id={textAlignment}
+            name={textAlignment}
             className="full-width-input"
             exclusiveMode
-            name={nameWithPrefix(props, 'textAlignment')}
             onSwitch={(name, value) => setFieldValue(name, value)}
           >
             {alignmentOptions.map(({ value, icon }) => (
@@ -55,7 +57,7 @@ const TextAlignment = props => {
 };
 
 TextAlignment.propTypes = {
-  formik: PropTypes.object.isRequired,
+  formik: AttributeFormikShape.isRequired,
 };
 
 export default withFormikContext(TextAlignment);

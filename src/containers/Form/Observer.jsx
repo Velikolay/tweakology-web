@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
+import { AttributeFormikShape } from '../../components/Form/Shapes';
 import { withFormikContext } from '../../contexts/FormikContext';
 
 class FormikObserver extends Component {
+  // eslint-disable-next-line react/destructuring-assignment
   onChange = debounce(next => this.props.onChange(next), this.props.debounce);
 
   componentWillReceiveProps(nextProps) {
@@ -21,7 +23,7 @@ class FormikObserver extends Component {
 }
 
 FormikObserver.propTypes = {
-  formik: PropTypes.object.isRequired,
+  formik: AttributeFormikShape.isRequired,
   debounce: PropTypes.number,
   onChange: PropTypes.func,
 };

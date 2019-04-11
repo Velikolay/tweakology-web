@@ -54,12 +54,8 @@ export type UIImage = {
 };
 
 export type UIImageView = UIView & {
-  image: {
-    src: string,
-  },
-  highlightedImage?: {
-    src: string,
-  },
+  image: UIImage,
+  highlightedImage?: UIImage,
 };
 
 export type UIScrollView = UIView & {

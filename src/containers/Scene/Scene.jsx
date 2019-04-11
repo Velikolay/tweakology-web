@@ -136,8 +136,6 @@ class SceneContainer extends Component {
 
       this.renderer.setSize(offsetWidth, offsetHeight);
       this.renderer.render(this.scene, this.camera);
-    } else {
-      console.log('No container for scene view');
     }
   }
 
