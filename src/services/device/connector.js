@@ -1,6 +1,6 @@
 // @flow
 
-type RemoteDeviceData = {
+export type RemoteDeviceData = {
   online: boolean,
   name: string,
   host: string,

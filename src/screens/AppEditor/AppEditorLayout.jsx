@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Split from 'react-split';
 
 import { withDeviceContext } from '../../contexts/DeviceContext';
+import { DevicesShape } from '../../components/Tree/DeviceMenu/Shapes';
 import { TreeRootNodeShape, TreeNodeShape } from '../../containers/Tree/Shapes';
 
 import Tree from '../../containers/Tree/Tree';
@@ -28,6 +29,7 @@ const Form = withDeviceContext(
 
 const AppEditorLayout = props => {
   const {
+    devices,
     tree,
     activeNode,
     onFocusNode,
@@ -42,11 +44,12 @@ const AppEditorLayout = props => {
       className="App"
       sizes={[20, 60, 20]}
       minSize={[250, 300, 250]}
-      gutterSize={4}
+      gutterSize={2}
       expandToMin
     >
       <div className="tree-section">
         <Tree
+          devices={devices}
           tree={tree}
           activeNode={activeNode}
           onFocusNode={onFocusNode}
@@ -72,6 +75,7 @@ const AppEditorLayout = props => {
 };
 
 AppEditorLayout.propTypes = {
+  devices: DevicesShape,
   tree: TreeRootNodeShape.isRequired,
   activeNode: TreeNodeShape,
   onFocusNode: TreeNodeShape,
@@ -82,6 +86,7 @@ AppEditorLayout.propTypes = {
 };
 
 AppEditorLayout.defaultProps = {
+  devices: [],
   activeNode: null,
   onFocusNode: null,
 };

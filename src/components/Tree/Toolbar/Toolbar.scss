@@ -4,13 +4,13 @@
   display: flex;
   flex: 0 0 28px;
   width: 100%;
-  background-color: #2b2b2be6;
-  border-top: 2px solid rgb(58, 58, 58);
+  background-color: $menu-color;
+  border-top: 2px solid $frame-color;
 
   &__button {
     flex: 1;
     width: 24px;
-    background-color: #2b2b2be6;
+    background-color: $menu-color;
     border: none;
   }
 

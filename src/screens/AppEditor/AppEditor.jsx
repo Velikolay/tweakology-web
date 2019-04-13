@@ -186,9 +186,15 @@ class AppEditor extends Component {
 
   render() {
     const { tree, activeNode, onFocusNode } = this.state;
+    const devices = [];
+    const remoteDevice = this.deviceConnector.getRemoteDevice();
+    if (remoteDevice) {
+      devices.push(remoteDevice);
+    }
     return (
       <DeviceContext.Provider value={this.deviceContext}>
         <AppEditorLayout
+          devices={devices}
           tree={tree}
           activeNode={activeNode}
           onFocusNode={onFocusNode}
