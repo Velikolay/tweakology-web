@@ -1,7 +1,7 @@
 @import '../../assets/styles/colors';
 
 .Tree {
-  flex-grow: 1;
+  flex: 1;
   overflow-y: auto;
 }
 
@@ -20,7 +20,7 @@
 
   .inner {
     padding-left: 0 !important;
-    color: $text-color;
+    color: $content-color;
     font-size: 12px;
   }
 

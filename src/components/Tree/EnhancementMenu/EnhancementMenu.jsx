@@ -11,7 +11,7 @@ import {
   layoutCatalogue,
   combinedCatalogue,
 } from '../../../services/device/metadata';
-import TabMenu, { Tab } from '../../../containers/TabMenu';
+import TabBar, { Tab } from '../../../containers/TabBar';
 
 import './EnhancementMenu.scss';
 
@@ -77,20 +77,20 @@ const EnhancementMenu = ({ eventHandler }) => (
             <FaPlusCircle />
           </IconContext.Provider>
         </div>
-        <TabMenu>
-          <Tab name="Views">
+        <TabBar>
+          <Tab id="views" title="Views">
             {itemListDOM(viewCatalogue, {
               disabled: isSubmitting,
               setFieldValue,
             })}
           </Tab>
-          <Tab name="Layout">
+          <Tab id="layout" title="Layout">
             {itemListDOM(layoutCatalogue, {
               disabled: isSubmitting,
               setFieldValue,
             })}
           </Tab>
-        </TabMenu>
+        </TabBar>
       </Form>
     )}
   </Formik>

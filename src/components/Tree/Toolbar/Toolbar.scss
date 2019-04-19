@@ -2,20 +2,19 @@
 
 .TreeToolbar {
   display: flex;
-  flex: 0 0 28px;
+  flex: 0 0 $bar-height;
   width: 100%;
-  background-color: $menu-color;
-  border-top: 2px solid $frame-color;
+  background-color: $dark-background-color;
+  border-top: 2px solid $input-border-color;
 
   &__button {
     flex: 1;
-    width: 24px;
-    background-color: $menu-color;
+    background-color: $dark-background-color;
     border: none;
   }
 
   &__buttonIcon {
-    color: $text-color;
+    color: $content-color;
     height: 12px;
     width: 12px;
     display: block;

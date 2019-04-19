@@ -7,10 +7,15 @@ $offline-color: gray;
   display: flex;
   align-items: center;
   flex-flow: row nowrap;
-  flex: 0 0 28px;
+  flex: 0 0 24px;
   width: 100%;
-  background-color: $menu-color;
-  border-bottom: 2px solid $frame-color;
+  background-color: $light-background-color;
+  border-bottom: 2px solid $input-border-color;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #34343499;
+  }
 
   &__status {
     flex: 0 0 12px;
@@ -28,7 +33,7 @@ $offline-color: gray;
     flex: 1 1;
     font-size: 12px;
     font-weight: bold;
-    color: $text-color;
+    color: $content-color;
     margin-left: 8px;
     text-align: left;
     white-space: nowrap;

@@ -8,28 +8,28 @@
   overflow-y: hidden;
 }
 
-.tree-section {
+.left-section {
   position: relative;
   display: flex;
   flex-flow: column nowrap;
   height: 100%;
-  background-color: $input-color;
+  background-color: $light-background-color;
 }
 
 .middle-section {
   position: relative;
   height: 100%;
-  background-color: $input-color;
+  background-color: $light-background-color;
 }
 
-.config-section {
+.right-section {
   height: 100%;
-  background-color: $menu-color;
+  background-color: $dark-background-color;
   overflow-y: auto;
 }
 
 .gutter {
-  background-color: $frame-color;
+  background-color: $input-border-color;
   background-repeat: no-repeat;
   background-position: 50%;
 }

@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-import DeviceMenu from '../../components/Tree/DeviceMenu/DeviceMenu';
 import Tree from '../../components/Tree/Tree';
 import TreeNode from '../../components/Tree/Node/Node';
 import TreeEnhancementMenu from '../../components/Tree/EnhancementMenu/EnhancementMenu';
 import TreeToolbar from '../../components/Tree/Toolbar/Toolbar';
 
-import { DevicesShape } from '../../components/Tree/DeviceMenu/Shapes';
 import { TreeRootNodeShape, TreeNodeShape } from './Shapes';
 
 class TreeContainer extends Component {
@@ -61,11 +59,9 @@ class TreeContainer extends Component {
   };
 
   render() {
-    const { devices } = this.props;
     const { tree, showTreeEnhancementMenu } = this.state;
     return (
       <React.Fragment>
-        <DeviceMenu devices={devices} />
         <Tree
           tree={tree}
           onChange={this.onChange}
@@ -88,7 +84,6 @@ class TreeContainer extends Component {
 }
 
 TreeContainer.propTypes = {
-  devices: DevicesShape.isRequired,
   tree: TreeRootNodeShape.isRequired,
   activeNode: TreeNodeShape,
   onFocusNode: TreeNodeShape,

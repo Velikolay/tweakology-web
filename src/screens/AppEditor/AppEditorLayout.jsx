@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Split from 'react-split';
+import { FaProjectDiagram, FaMobileAlt, FaFolder } from 'react-icons/fa';
+
+import TabBar, { Tab } from '../../containers/TabBar';
 
 import { withDeviceContext } from '../../contexts/DeviceContext';
-import { DevicesShape } from '../../components/Tree/DeviceMenu/Shapes';
+import { DevicesShape } from '../../components/Tree/Project/Shapes';
 import { TreeRootNodeShape, TreeNodeShape } from '../../containers/Tree/Shapes';
 
 import Tree from '../../containers/Tree/Tree';
@@ -47,14 +50,23 @@ const AppEditorLayout = props => {
       gutterSize={2}
       expandToMin
     >
-      <div className="tree-section">
-        <Tree
-          devices={devices}
-          tree={tree}
-          activeNode={activeNode}
-          onFocusNode={onFocusNode}
-          eventHandler={treeEventHandler}
-        />
+      <div className="left-section">
+        <TabBar light>
+          <Tab id="tree" title={<FaProjectDiagram />}>
+            <Tree
+              tree={tree}
+              activeNode={activeNode}
+              onFocusNode={onFocusNode}
+              eventHandler={treeEventHandler}
+            />
+          </Tab>
+          <Tab id="devices" title={<FaMobileAlt />}>
+            <div>devices</div>
+          </Tab>
+          <Tab id="tweaks" title={<FaFolder />}>
+            <div>tweaks</div>
+          </Tab>
+        </TabBar>
       </div>
       <div className="middle-section">
         <Scene
@@ -65,7 +77,7 @@ const AppEditorLayout = props => {
         />
         <MainToolbar onSubmitChanges={onSubmitChanges} />
       </div>
-      <div className="config-section">
+      <div className="right-section">
         {activeNode !== null ? (
           <Form activeNode={activeNode} eventHandler={formEventHandler} />
         ) : null}
