@@ -4,7 +4,7 @@
   height: 18px;
   color: $content-color;
   background-color: $light-background-color;
-  border: 1px solid #846937;
+  border: 1px solid $input-border-color;
   border-radius: 2px;
 }
 
@@ -24,7 +24,7 @@
 }
 
 .toggle-button.is-active {
-  background-color: #846937;
+  background-color: $input-border-color;
 }
 
 .toggle-button:disabled {
@@ -33,5 +33,5 @@
 }
 
 .toggle-button.is-active:disabled {
-  background-color: #846937;
+  background-color: $input-border-color;
 }

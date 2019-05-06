@@ -5,8 +5,10 @@ import { FaProjectDiagram, FaMobileAlt, FaFolder } from 'react-icons/fa';
 
 import TabBar, { Tab } from '../../containers/TabBar';
 
+import DeviceSelector from '../../containers/Project/DeviceSelector';
+
 import { withDeviceContext } from '../../contexts/DeviceContext';
-import { DevicesShape } from '../../components/Tree/Project/Shapes';
+import { DevicesShape, DeviceShape } from '../../components/Project/Shapes';
 import { TreeRootNodeShape, TreeNodeShape } from '../../containers/Tree/Shapes';
 
 import Tree from '../../containers/Tree/Tree';
@@ -32,6 +34,7 @@ const Form = withDeviceContext(
 
 const AppEditorLayout = props => {
   const {
+    connectedDevice,
     devices,
     tree,
     activeNode,
@@ -39,6 +42,7 @@ const AppEditorLayout = props => {
     treeEventHandler,
     sceneEventHandler,
     formEventHandler,
+    deviceEventHandler,
     onSubmitChanges,
   } = props;
 
@@ -61,11 +65,13 @@ const AppEditorLayout = props => {
             />
           </Tab>
           <Tab id="devices" title={<FaMobileAlt />}>
-            <div>devices</div>
+            <DeviceSelector
+              connectedDevice={connectedDevice}
+              devices={devices}
+              eventHandler={deviceEventHandler}
+            />
           </Tab>
-          <Tab id="tweaks" title={<FaFolder />}>
-            <div>tweaks</div>
-          </Tab>
+          <Tab id="tweaks" title={<FaFolder />} />
         </TabBar>
       </div>
       <div className="middle-section">
@@ -87,6 +93,7 @@ const AppEditorLayout = props => {
 };
 
 AppEditorLayout.propTypes = {
+  connectedDevice: DeviceShape,
   devices: DevicesShape,
   tree: TreeRootNodeShape.isRequired,
   activeNode: TreeNodeShape,
@@ -94,10 +101,12 @@ AppEditorLayout.propTypes = {
   treeEventHandler: PropTypes.func.isRequired,
   sceneEventHandler: PropTypes.func.isRequired,
   formEventHandler: PropTypes.func.isRequired,
+  deviceEventHandler: PropTypes.func.isRequired,
   onSubmitChanges: PropTypes.func.isRequired,
 };
 
 AppEditorLayout.defaultProps = {
+  connectedDevice: null,
   devices: [],
   activeNode: null,
   onFocusNode: null,

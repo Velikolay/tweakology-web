@@ -5,11 +5,11 @@
   display: flex;
 
   &.is-active {
-    background-color: #0071b899;
+    background-color: $selected-light-background-color;
   }
 
   &.is-onfocus {
-    background-color: #34343499;
+    background-color: $highlighted-light-background-color;
   }
 
   &__text {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import isEqual from 'lodash.isequal';
 
-import DeviceConnector, { RemoteDevice } from '../../services/device/connector';
+import DeviceConnector from '../../services/device/connector';
 import PersistenceService from '../../services/persistence';
 import APIClient from './api-client-adapter';
 import DeviceContext from '../../contexts/DeviceContext';
@@ -20,6 +21,8 @@ class AppEditor extends Component {
     this.apiClient = new APIClient(this.deviceConnector);
 
     this.state = {
+      connectedDevice: null,
+      devices: [],
       tree: {
         module: 'Loading...',
         leaf: true,
@@ -35,21 +38,34 @@ class AppEditor extends Component {
     this.onItemAdded = this.onItemAdded.bind(this);
     this.treeEventHandler = this.treeEventHandler.bind(this);
     this.sceneEventHandler = this.sceneEventHandler.bind(this);
+    this.deviceEventHandler = this.deviceEventHandler.bind(this);
     this.formEventHandler = this.formEventHandler.bind(this);
   }
 
   componentDidMount() {
     const { ipcRenderer } = window.require('electron');
     ipcRenderer.on('agent-update', (event, device) => {
-      const connected = this.deviceConnector.isConnected();
-      this.deviceConnector.updateRemoteDevice(new RemoteDevice(device));
-      if (!connected && this.deviceConnector.isConnected()) {
-        this.updateDeviceContext();
-        this.updateTree();
-      }
+      this.deviceConnector.update(device, true);
+      this.updateDevices();
     });
     ipcRenderer.send('app-component-mounted');
   }
+
+  updateDevices = () => {
+    const { connectedDevice } = this.state;
+    const newConnectedDevice = this.deviceConnector.getConnectedDeviceData();
+    if (
+      this.deviceConnector.isConnected() &&
+      !isEqual(newConnectedDevice, connectedDevice)
+    ) {
+      this.updateDeviceContext();
+      this.updateTree();
+    }
+    this.setState({
+      connectedDevice: newConnectedDevice,
+      devices: this.deviceConnector.getDevices(),
+    });
+  };
 
   updateDeviceContext = () =>
     this.apiClient
@@ -168,6 +184,15 @@ class AppEditor extends Component {
     }
   };
 
+  deviceEventHandler = (eventName, device) => {
+    if (eventName === 'connect') {
+      this.deviceConnector.connect(device);
+    } else if (eventName === 'disconnect') {
+      this.deviceConnector.disconnect();
+    }
+    this.updateDevices();
+  };
+
   findNode = (tree, id) => {
     if (id) {
       const { id: nodeId, children } = tree;
@@ -185,15 +210,17 @@ class AppEditor extends Component {
   };
 
   render() {
-    const { tree, activeNode, onFocusNode } = this.state;
-    const devices = [];
-    const remoteDevice = this.deviceConnector.getRemoteDevice();
-    if (remoteDevice) {
-      devices.push(remoteDevice);
-    }
+    const {
+      connectedDevice,
+      devices,
+      tree,
+      activeNode,
+      onFocusNode,
+    } = this.state;
     return (
       <DeviceContext.Provider value={this.deviceContext}>
         <AppEditorLayout
+          connectedDevice={connectedDevice}
           devices={devices}
           tree={tree}
           activeNode={activeNode}
@@ -201,6 +228,7 @@ class AppEditor extends Component {
           treeEventHandler={this.treeEventHandler}
           sceneEventHandler={this.sceneEventHandler}
           formEventHandler={this.formEventHandler}
+          deviceEventHandler={this.deviceEventHandler}
           onSubmitChanges={this.onSubmitChanges}
         />
       </DeviceContext.Provider>

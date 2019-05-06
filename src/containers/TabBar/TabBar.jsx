@@ -64,7 +64,11 @@ TabBar.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
-  light: PropTypes.bool.isRequired,
+  light: PropTypes.bool,
+};
+
+TabBar.defaultProps = {
+  light: false,
 };
 
 export default TabBar;

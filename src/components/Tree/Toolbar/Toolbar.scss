@@ -5,7 +5,7 @@
   flex: 0 0 $bar-height;
   width: 100%;
   background-color: $dark-background-color;
-  border-top: 2px solid $input-border-color;
+  border-top: 2px solid $dark-separator-color;
 
   &__button {
     flex: 1;

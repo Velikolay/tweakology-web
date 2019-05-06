@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
-const Tab = ({ isActive, children }) => (isActive ? children : null);
+const Tab = ({ isActive, children }) =>
+  isActive && children !== null ? children : null;
 
 Tab.propTypes = {
   id: PropTypes.string.isRequired,
@@ -9,7 +10,11 @@ Tab.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
-  ]).isRequired,
+  ]),
+};
+
+Tab.defaultProps = {
+  children: null,
 };
 
 export default Tab;

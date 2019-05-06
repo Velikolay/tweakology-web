@@ -28,37 +28,60 @@ export class RemoteDevice {
   }
 }
 
-const genId = ({ name, host, port }: RemoteDevice): string =>
+const genId = ({ name, host, port }: RemoteDeviceData): string =>
   `${name}-${host}-${port}`;
 
 class DeviceConnector {
-  devices: { [id: string]: RemoteDevice };
+  devices: Map<string, RemoteDeviceData>;
 
-  device: ?RemoteDevice;
+  device: ?RemoteDeviceData;
 
   constructor() {
-    this.devices = {};
+    this.devices = new Map();
   }
 
   isConnected() {
     return this.device ? this.device.online : false;
   }
 
-  updateRemoteDevice(device: RemoteDevice) {
-    if (!this.device) {
-      this.device = device;
-    }
-
+  connect(device: RemoteDeviceData) {
     const id = genId(device);
-    if (id in this.devices) {
-      this.devices[id].online = device.online;
-    } else {
-      this.devices[id] = device;
+    const stored = this.devices.get(id);
+    if (stored && stored.online) {
+      this.device = device;
     }
   }
 
-  getRemoteDevice(): ?RemoteDevice {
+  disconnect() {
+    this.device = null;
+  }
+
+  update(device: RemoteDeviceData, autoconnect: boolean) {
+    const id = genId(device);
+    const stored = this.devices.get(id);
+    if (stored) {
+      stored.online = device.online;
+    } else {
+      this.devices.set(id, device);
+    }
+    if (!this.device && autoconnect) {
+      this.device = device;
+    }
+    if (this.device && id === genId(this.device) && !device.online) {
+      this.disconnect();
+    }
+  }
+
+  getConnectedDevice(): ?RemoteDevice {
+    return this.device ? new RemoteDevice(this.device) : null;
+  }
+
+  getConnectedDeviceData(): ?RemoteDeviceData {
     return this.device;
+  }
+
+  getDevices(): RemoteDeviceData[] {
+    return Array.from(this.devices.values());
   }
 }
 

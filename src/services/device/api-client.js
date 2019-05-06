@@ -10,7 +10,7 @@ class APIClient {
   }
 
   getEndpoint(): ?string {
-    const device: ?RemoteDevice = this.deviceConnector.getRemoteDevice();
+    const device: ?RemoteDevice = this.deviceConnector.getConnectedDevice();
     return device ? device.getEndpoint() : null;
   }
 

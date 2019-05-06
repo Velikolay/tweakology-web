@@ -68,7 +68,7 @@ select {
   background-color: $light-background-color;
   color: $content-color;
   border-radius: 2px;
-  border: 1px solid #846937;
+  border: 1px solid $input-border-color;
 }
 
 select:not([multiple]) {
@@ -87,7 +87,7 @@ select:disabled {
 
 input.is-dirty,
 select.is-dirty {
-  color: #f0e155;
+  color: $dirty-color;
 }
 
 input[type=number] {
@@ -109,6 +109,6 @@ hr {
   width: 85%;
   height: 1px;
   border: 0;
-  border-top: 1px solid #846937;
+  border-top: 1px solid $input-border-color;
   margin: 2px 6px 6px 0;
 }
