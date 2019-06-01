@@ -17,7 +17,10 @@ class AppEditor extends Component {
   constructor(props) {
     super(props);
 
-    this.deviceConnector = new DeviceConnector();
+    this.deviceConnector = new DeviceConnector({
+      autoconnect: true,
+      autoconnectHandler: () => this.updateDevices(),
+    });
     this.apiClient = new APIClient(this.deviceConnector);
 
     this.state = {
@@ -45,7 +48,7 @@ class AppEditor extends Component {
   componentDidMount() {
     const { ipcRenderer } = window.require('electron');
     ipcRenderer.on('agent-update', (event, device) => {
-      this.deviceConnector.update(device, true);
+      this.deviceConnector.update(device);
       this.updateDevices();
     });
     ipcRenderer.send('app-component-mounted');

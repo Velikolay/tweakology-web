@@ -1,4 +1,9 @@
 // @flow
+import debounce from 'lodash.debounce';
+import PersistenceService from '../persistence';
+
+const DEVICE_HISTORY_PERSISTENCE_KEY = 'DeviceHistory';
+const AUTOCONNECT_MAX_WAIT_MILLIS = 3 * 1000;
 
 export type RemoteDeviceData = {
   online: boolean,
@@ -28,16 +33,81 @@ export class RemoteDevice {
   }
 }
 
+export type AutoconnectHandlerFunc = (device: RemoteDevice) => void;
+
+export type DeviceConnectorSettings = {
+  autoconnect?: boolean,
+  autoconnectHandler?: AutoconnectHandlerFunc,
+};
+
 const genId = ({ name, host, port }: RemoteDeviceData): string =>
   `${name}-${host}-${port}`;
 
 class DeviceConnector {
-  devices: Map<string, RemoteDeviceData>;
+  devices: Map<string, RemoteDeviceData> = new Map();
 
   device: ?RemoteDeviceData;
 
-  constructor() {
-    this.devices = new Map();
+  autoconnect: boolean = false;
+
+  autoconnectHandler: ?AutoconnectHandlerFunc;
+
+  autoconnectDevicePool: RemoteDeviceData[];
+
+  autoconnectCurrentDeviceIdx: number = -1;
+
+  constructor(settings?: DeviceConnectorSettings) {
+    if (settings) {
+      const { autoconnect, autoconnectHandler } = settings;
+      if (autoconnect && autoconnectHandler) {
+        this.autoconnect = autoconnect;
+        this.autoconnectHandler = autoconnectHandler;
+        this.autoconnectDevicePool =
+          PersistenceService.read(DEVICE_HISTORY_PERSISTENCE_KEY) || [];
+      }
+    }
+  }
+
+  setConnected(device: ?RemoteDeviceData) {
+    this.device = device;
+  }
+
+  tryAutoconnect(device: RemoteDeviceData) {
+    if (this.autoconnect && !this.isConnected() && device.online) {
+      const doAutoconnect = () => {
+        this.setConnected(device);
+        if (this.autoconnectHandler) {
+          this.autoconnectHandler(new RemoteDevice(device));
+        }
+      };
+      if (this.autoconnectDevicePool.length === 0) {
+        doAutoconnect();
+      } else {
+        const idx = this.autoconnectDevicePool.findIndex(
+          saved => genId(saved) === genId(device),
+        );
+        if (
+          idx !== -1 &&
+          (idx < this.autoconnectCurrentDeviceIdx ||
+            this.autoconnectCurrentDeviceIdx === -1)
+        ) {
+          this.autoconnectCurrentDeviceIdx = idx;
+        }
+
+        if (
+          (idx === -1 && this.autoconnectCurrentDeviceIdx === -1) ||
+          (idx !== -1 &&
+            this.autoconnectCurrentDeviceIdx !== -1 &&
+            idx < this.autoconnectCurrentDeviceIdx)
+        ) {
+          if (idx === 0) {
+            doAutoconnect();
+          } else {
+            debounce(doAutoconnect, AUTOCONNECT_MAX_WAIT_MILLIS)();
+          }
+        }
+      }
+    }
   }
 
   isConnected() {
@@ -48,15 +118,20 @@ class DeviceConnector {
     const id = genId(device);
     const stored = this.devices.get(id);
     if (stored && stored.online) {
-      this.device = device;
+      this.setConnected(device);
+      this.autoconnectDevicePool.unshift(device);
+      PersistenceService.write(
+        DEVICE_HISTORY_PERSISTENCE_KEY,
+        this.autoconnectDevicePool,
+      );
     }
   }
 
   disconnect() {
-    this.device = null;
+    this.setConnected(null);
   }
 
-  update(device: RemoteDeviceData, autoconnect: boolean) {
+  update(device: RemoteDeviceData) {
     const id = genId(device);
     const stored = this.devices.get(id);
     if (stored) {
@@ -64,9 +139,7 @@ class DeviceConnector {
     } else {
       this.devices.set(id, device);
     }
-    if (!this.device && autoconnect) {
-      this.device = device;
-    }
+    this.tryAutoconnect(device);
     if (this.device && id === genId(this.device) && !device.online) {
       this.disconnect();
     }
