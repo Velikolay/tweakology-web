@@ -98,7 +98,7 @@ class DeviceConnector {
           (idx === -1 && this.autoconnectCurrentDeviceIdx === -1) ||
           (idx !== -1 &&
             this.autoconnectCurrentDeviceIdx !== -1 &&
-            idx < this.autoconnectCurrentDeviceIdx)
+            idx <= this.autoconnectCurrentDeviceIdx)
         ) {
           if (idx === 0) {
             doAutoconnect();
