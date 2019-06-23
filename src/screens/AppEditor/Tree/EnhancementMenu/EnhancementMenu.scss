@@ -1,4 +1,4 @@
-@import '../../../assets/styles/colors';
+@import '../../../../assets/styles/colors';
 
 .TreeEnhancementMenu {
   display: flex;
@@ -58,7 +58,7 @@
     border-color: $dark-separator-color;
 
     &:hover {
-      background-color: #0071b899;
+      background-color: $selected-light-background-color;
     }
 
     &__name {

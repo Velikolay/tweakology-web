@@ -9,9 +9,9 @@ import DeviceSelector from '../../containers/Project/DeviceSelector';
 
 import { withDeviceContext } from '../../contexts/DeviceContext';
 import { DevicesShape, DeviceShape } from '../../components/Project/Shapes';
-import { TreeRootNodeShape, TreeNodeShape } from '../../containers/Tree/Shapes';
+import { TreeRootNodeShape, TreeNodeShape } from './Tree/Shapes';
 
-import Tree from '../../containers/Tree/Tree';
+import Tree from './Tree';
 import MainToolbar from '../../components/MainToolbar/MainToolbar';
 import SceneComponent from '../../containers/Scene/Scene';
 import FormComponent from '../../containers/Form/Form';

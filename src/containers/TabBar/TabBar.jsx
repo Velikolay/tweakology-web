@@ -48,7 +48,7 @@ const TabBar = props => {
       {content}
     </div>
   );
-}
+};
 
 TabBar.propTypes = {
   children: PropTypes.oneOfType([

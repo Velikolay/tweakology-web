@@ -10,8 +10,8 @@ import {
   viewCatalogue,
   layoutCatalogue,
   combinedCatalogue,
-} from '../../../services/device/metadata';
-import TabBar, { Tab } from '../../../containers/TabBar';
+} from '../../../../services/device/metadata';
+import TabBar, { Tab } from '../../../../containers/TabBar';
 
 import './EnhancementMenu.scss';
 
