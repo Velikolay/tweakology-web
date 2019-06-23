@@ -73,19 +73,19 @@
 }
 
 .TreeEnhancementMenu-enter {
-  height: 0;
+  transform: translateY(100%);
 }
 
 .TreeEnhancementMenu-enter.TreeEnhancementMenu-enter-active {
-  height: 232px;
-  transition: height 100ms ease-in;
+  transform: translateY(0);
+  transition: transform 100ms ease-in;
 }
 
 .TreeEnhancementMenu-exit {
-  height: 232px;
+  transform: translateY(0);
 }
 
 .TreeEnhancementMenu-exit.TreeEnhancementMenu-exit-active {
-  height: 0;
-  transition: height 100ms ease-in;
+  transform: translateY(100%);
+  transition: transform 100ms ease-in;
 }

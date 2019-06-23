@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import Tree from 'react-ui-tree';
 
 import TreeNode from './Node/Node';
@@ -46,16 +46,14 @@ const TreeContainer = props => {
       <div className="Tree">
         <Tree tree={tree} renderNode={renderNode} />
       </div>
-      <TransitionGroup>
-        {showTreeEnhancementMenu ? (
-          <CSSTransition
-            classNames="TreeEnhancementMenu"
-            timeout={{ enter: 100, exit: 100 }}
-          >
-            <TreeEnhancementMenu eventHandler={internalEventHandler} />
-          </CSSTransition>
-        ) : null}
-      </TransitionGroup>
+      <CSSTransition
+        in={showTreeEnhancementMenu}
+        classNames="TreeEnhancementMenu"
+        unmountOnExit
+        timeout={{ enter: 100, exit: 100 }}
+      >
+        <TreeEnhancementMenu eventHandler={internalEventHandler} />
+      </CSSTransition>
       <TreeToolbar eventHandler={internalEventHandler} />
     </React.Fragment>
   );
