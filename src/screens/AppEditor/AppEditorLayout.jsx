@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Split from 'react-split';
 import { FaProjectDiagram, FaMobileAlt, FaFolder } from 'react-icons/fa';
 
 import TabBar, { Tab } from '../../components/TabBar';
 
-import { withDeviceContext } from '../../contexts/DeviceContext';
+import DeviceContext from './contexts/DeviceContext';
 import { DevicesShape, DeviceShape } from './components/DeviceMenu/Shapes';
 import { TreeRootNodeShape, TreeNodeShape } from './components/Tree/Shapes';
 
@@ -20,15 +20,15 @@ import FormReducer from './reducers/form';
 import './AppEditorLayout.scss';
 
 const componentWithReducer = (Comp, mapStateToProps) => props => (
-  <Comp {...mapStateToProps(props)} />
+  <Comp {...mapStateToProps(props, useContext(DeviceContext))} />
 );
 
 const Scene = componentWithReducer(
   SceneComponent,
   SceneReducer.mapStateToProps,
 );
-const Form = withDeviceContext(
-  React.memo(componentWithReducer(FormComponent, FormReducer.mapStateToProps)),
+const Form = React.memo(
+  componentWithReducer(FormComponent, FormReducer.mapStateToProps),
 );
 
 const AppEditorLayout = props => {

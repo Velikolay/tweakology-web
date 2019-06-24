@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { IconContext } from 'react-icons';
 import {
   FaAlignLeft,
@@ -7,8 +7,7 @@ import {
   FaAlignJustify,
 } from 'react-icons/fa';
 
-import { AttributeFormikShape } from '../Shapes';
-import { withFormikContext } from '../../../../../contexts/FormikContext';
+import FormikContext from '../../../contexts/FormikContext';
 
 import ToggleButtonMenu from '../Inputs/ToggleButtonMenu/ToggleButtonMenu';
 import { nameWithPrefix, titleForField } from '../FormikHelpers';
@@ -24,9 +23,7 @@ const alignmentOptions = [
 ];
 
 const TextAlignment = props => {
-  const {
-    formik: { setFieldValue },
-  } = props;
+  const { setFieldValue } = useContext(FormikContext);
   const textAlignment = nameWithPrefix(props, 'textAlignment');
   return (
     <div className="form-group">
@@ -56,8 +53,4 @@ const TextAlignment = props => {
   );
 };
 
-TextAlignment.propTypes = {
-  formik: AttributeFormikShape.isRequired,
-};
-
-export default withFormikContext(TextAlignment);
+export default TextAlignment;

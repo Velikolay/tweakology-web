@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withFormikContext } from '../../../../../contexts/FormikContext';
-
 import Field from '../Inputs/Field';
 
 import './Blocks.scss';
@@ -23,4 +21,4 @@ InputField.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export default withFormikContext(InputField);
+export default InputField;

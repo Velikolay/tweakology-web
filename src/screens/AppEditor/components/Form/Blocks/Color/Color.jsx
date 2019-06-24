@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { AttributeFormikShape } from '../../Shapes';
-import { withFormikContext } from '../../../../../../contexts/FormikContext';
+import FormikContext from '../../../../contexts/FormikContext';
 
 import Field from '../../Inputs/Field';
 import {
@@ -14,9 +13,8 @@ import '../Blocks.scss';
 import './Color.scss';
 
 const Color = props => {
-  const {
-    formik: { setFieldValue },
-  } = props;
+  const formik = useContext(FormikContext);
+  const { setFieldValue } = formik;
   const alpha = nameWithPrefix(props, 'alpha');
   const color = nameWithPrefix(props, 'hexValue');
   return (
@@ -41,7 +39,7 @@ const Color = props => {
         <Field name={color} type="text" className="Color__textInput" />
         <input
           type="color"
-          value={formikValueWithPrefix(props, 'hexValue')}
+          value={formikValueWithPrefix(formik, props, 'hexValue')}
           className="Color__pickerInput"
           onChange={event => setFieldValue(color, event.target.value)}
         />
@@ -50,8 +48,4 @@ const Color = props => {
   );
 };
 
-Color.propTypes = {
-  formik: AttributeFormikShape.isRequired,
-};
-
-export default withFormikContext(Color);
+export default Color;

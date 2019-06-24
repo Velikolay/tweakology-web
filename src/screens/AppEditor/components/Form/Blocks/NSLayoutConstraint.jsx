@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { AttributeFormikShape } from '../Shapes';
-import { withFormikContext } from '../../../../../contexts/FormikContext';
+import FormikContext from '../../../contexts/FormikContext';
 
 import Field from '../Inputs/Field';
 import ConstraintItemSelector from '../Inputs/ConstraintItemSelector/ConstraintItemSelector';
@@ -44,13 +43,13 @@ const getItems2 = (itemOptions, item1) =>
   itemOptions.filter(item => item.value !== item1.value);
 
 const NSLayoutConstraint = props => {
-  const {
-    formik: { values, formData, errors, touched, setFieldValue },
-    itemOptions,
-  } = props;
+  const { itemOptions } = props;
+  const formik = useContext(FormikContext);
+  const { values, formData, errors, touched, setFieldValue } = formik;
 
   const onFirstAttributeChange = firstAttribute => {
     const secondAttribute = formikValueWithPrefix(
+      formik,
       props,
       'second.attribute.value',
     );
@@ -64,8 +63,8 @@ const NSLayoutConstraint = props => {
     }
   };
 
-  const attribute1 = formikValueWithPrefix(props, 'first.attribute');
-  const item1 = formikValueWithPrefix(props, 'first.item');
+  const attribute1 = formikValueWithPrefix(formik, props, 'first.attribute');
+  const item1 = formikValueWithPrefix(formik, props, 'first.item');
 
   const attributes1 = getAttributes1(itemOptions);
   const attributes2 = getAttributes2(attribute1);
@@ -168,7 +167,7 @@ const NSLayoutConstraint = props => {
         <Field
           name={isActive}
           type="checkbox"
-          checked={formikValueWithPrefix(props, 'isActive')}
+          checked={formikValueWithPrefix(formik, props, 'isActive')}
           className={
             errors.isActive && touched.isActive
               ? 'full-width-input error'
@@ -181,7 +180,6 @@ const NSLayoutConstraint = props => {
 };
 
 NSLayoutConstraint.propTypes = {
-  formik: AttributeFormikShape.isRequired,
   itemOptions: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
@@ -190,4 +188,4 @@ NSLayoutConstraint.propTypes = {
   ).isRequired,
 };
 
-export default withFormikContext(NSLayoutConstraint);
+export default NSLayoutConstraint;

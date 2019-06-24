@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-
-import { AttributeFormikShape } from '../../Shapes';
 
 import Field from '../Field';
 import ToggleButtonMenu from '../ToggleButtonMenu/ToggleButtonMenu';
 
-import { withFormikContext } from '../../../../../../contexts/FormikContext';
+import FormikContext from '../../../../contexts/FormikContext';
 import { nameWithPrefix, formikValueWithPrefix } from '../../FormikHelpers';
 import {
   attributeToModifiers,
@@ -97,13 +95,10 @@ const getModifiers = (attribute, attributeGroups) => {
 };
 
 const ConstraintItemSelector = props => {
-  const {
-    prefix,
-    disabled,
-    attributes,
-    onAttributeChange,
-    formik: { setFieldValue, handleChange },
-  } = props;
+  const { prefix, disabled, attributes, onAttributeChange } = props;
+
+  const formik = useContext(FormikContext);
+  const { setFieldValue, handleChange } = formik;
 
   const handleAttributeChange = e => {
     const attrVal = e.target.value;
@@ -124,8 +119,8 @@ const ConstraintItemSelector = props => {
     onAttributeChange(attrVal);
   };
 
-  const item = formikValueWithPrefix(props, 'item');
-  const attribute = formikValueWithPrefix(props, 'attribute');
+  const item = formikValueWithPrefix(formik, props, 'item');
+  const attribute = formikValueWithPrefix(formik, props, 'attribute');
 
   const handleSwitchModifier = (modifier, isOn) => {
     setFieldValue(nameWithPrefix(props, `attribute.${modifier}`), isOn);
@@ -193,7 +188,6 @@ ConstraintItemSelector.defaultProps = {
 ConstraintItemSelector.propTypes = {
   prefix: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  formik: AttributeFormikShape.isRequired,
   attributes: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
@@ -212,4 +206,4 @@ ConstraintItemSelector.propTypes = {
   onAttributeChange: PropTypes.func,
 };
 
-export default withFormikContext(ConstraintItemSelector);
+export default ConstraintItemSelector;

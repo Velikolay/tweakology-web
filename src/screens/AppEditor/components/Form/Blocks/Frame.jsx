@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { AttributeFormikShape } from '../Shapes';
-import { withFormikContext } from '../../../../../contexts/FormikContext';
+import FormikContext from '../../../contexts/FormikContext';
 
 import Field from '../Inputs/Field';
 import { nameWithPrefix, titleForField } from '../FormikHelpers';
@@ -9,9 +8,7 @@ import { nameWithPrefix, titleForField } from '../FormikHelpers';
 import './Blocks.scss';
 
 const Frame = props => {
-  const {
-    formik: { touched, errors },
-  } = props;
+  const { touched, errors } = useContext(FormikContext);
   const x = nameWithPrefix(props, 'x');
   const y = nameWithPrefix(props, 'y');
   const width = nameWithPrefix(props, 'width');
@@ -93,8 +90,4 @@ const Frame = props => {
   );
 };
 
-Frame.propTypes = {
-  formik: AttributeFormikShape.isRequired,
-};
-
-export default withFormikContext(Frame);
+export default Frame;

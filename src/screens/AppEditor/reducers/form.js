@@ -1,10 +1,9 @@
 import getTransformer from '../transformers/form';
 
 export default {
-  mapStateToProps: state => {
+  mapStateToProps: (state, device) => {
     const {
       activeNode: { id, type, properties },
-      device,
       ...other
     } = state;
     const formData = getTransformer(type).fromPayload(properties, device);

@@ -4,7 +4,7 @@ import isEqual from 'lodash.isequal';
 import DeviceConnector from '../../services/device/connector';
 import PersistenceService from '../../services/persistence';
 import APIClient from './api-client-adapter';
-import DeviceContext from '../../contexts/DeviceContext';
+import DeviceContext from './contexts/DeviceContext';
 
 import getTransformer from './transformers/form';
 

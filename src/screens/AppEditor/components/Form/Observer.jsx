@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
 import { AttributeFormikShape } from './Shapes';
-import { withFormikContext } from '../../../../contexts/FormikContext';
+import { withFormikContext } from '../../contexts/FormikContext';
 
 class FormikObserver extends Component {
   // eslint-disable-next-line react/destructuring-assignment

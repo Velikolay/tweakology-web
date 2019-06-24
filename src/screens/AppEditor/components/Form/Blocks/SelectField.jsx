@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withFormikContext } from '../../../../../contexts/FormikContext';
-
 import Field from '../Inputs/Field';
 
 import './Blocks.scss';
@@ -40,4 +38,4 @@ SelectField.propTypes = {
   ).isRequired,
 };
 
-export default withFormikContext(SelectField);
+export default SelectField;

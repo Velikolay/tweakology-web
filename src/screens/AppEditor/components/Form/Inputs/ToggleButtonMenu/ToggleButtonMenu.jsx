@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-import { withFormikContext } from '../../../../../../contexts/FormikContext';
+import FormikContext from '../../../../contexts/FormikContext';
 import { formikValueWithPrefix } from '../../FormikHelpers';
 
 import './ToggleButtonMenu.scss';
@@ -17,8 +17,9 @@ const ToggleButtonMenu = props => {
     children,
   } = props;
   if (children.length) {
+    const formik = useContext(FormikContext);
     const exclusiveValue = exclusiveMode
-      ? formikValueWithPrefix(props, globalName)
+      ? formikValueWithPrefix(formik, props, globalName)
       : null;
     const width = 100 / children.length;
     const buttons = children.map(
@@ -31,7 +32,7 @@ const ToggleButtonMenu = props => {
       }) => {
         const isOn = exclusiveMode
           ? exclusiveValue === optionValue
-          : formikValueWithPrefix(props, optionName);
+          : formikValueWithPrefix(formik, props, optionName);
         const name = exclusiveMode ? globalName : optionName;
         const value = exclusiveMode ? optionValue : !isOn;
         const key = exclusiveMode ? `${globalName}-${optionValue}` : optionName;
@@ -101,4 +102,4 @@ ToggleButton.defaultProps = {
   disabled: false,
 };
 
-export default withFormikContext(ToggleButtonMenu);
+export default ToggleButtonMenu;

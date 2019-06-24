@@ -6,19 +6,13 @@ import isEqual from 'lodash.isequal';
 import { AttributeFormikShape } from './Shapes';
 import PersistenceService from '../../../../services/persistence';
 
-import { withFormikContext } from '../../../../contexts/FormikContext';
+import { withFormikContext } from '../../contexts/FormikContext';
 
 const dispatchFormikBag = ({ formik }) => formik.eventHandler('select', formik);
 
 class FormikPersistence extends Component {
   saveForm = debounce((name, data) => {
-    const { excludeDeviceContext } = this.props;
-    if (excludeDeviceContext) {
-      const { device, ...other } = data;
-      PersistenceService.write(name, other);
-    } else {
-      PersistenceService.write(name, data);
-    }
+    PersistenceService.write(name, data);
   }, this.props.debounce); // eslint-disable-line react/destructuring-assignment
 
   componentDidMount() {
@@ -81,12 +75,10 @@ FormikPersistence.propTypes = {
   name: PropTypes.string.isRequired,
   formik: AttributeFormikShape.isRequired,
   debounce: PropTypes.number,
-  excludeDeviceContext: PropTypes.bool,
 };
 
 FormikPersistence.defaultProps = {
   debounce: 300,
-  excludeDeviceContext: true,
 };
 
 export default withFormikContext(FormikPersistence);
