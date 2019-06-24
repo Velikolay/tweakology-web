@@ -1,6 +1,6 @@
 // @flow
 import type { UIView as UIViewPayload } from '../../../../services/device/types';
-import type { UIView as UIViewForm } from '../../../../containers/Form/types';
+import type { UIView as UIViewForm } from '../../components/Form/types';
 
 import withFalsyGuard from './utils';
 

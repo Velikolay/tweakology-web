@@ -1,6 +1,6 @@
 // @flow
 import type { UILabel as UILabelPayload } from '../../../../services/device/types';
-import type { UILabel as UILabelForm } from '../../../../containers/Form/types';
+import type { UILabel as UILabelForm } from '../../components/Form/types';
 
 import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';

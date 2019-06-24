@@ -1,6 +1,6 @@
 // @flow
 import type { UIImage as UIImagePayload } from '../../../../services/device/types';
-import type { UIImage as UIImageForm } from '../../../../containers/Form/types';
+import type { UIImage as UIImageForm } from '../../components/Form/types';
 
 import withFalsyGuard from './utils';
 

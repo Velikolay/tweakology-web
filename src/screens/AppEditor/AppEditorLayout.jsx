@@ -3,18 +3,17 @@ import PropTypes from 'prop-types';
 import Split from 'react-split';
 import { FaProjectDiagram, FaMobileAlt, FaFolder } from 'react-icons/fa';
 
-import TabBar, { Tab } from '../../containers/TabBar';
-
-import DeviceSelector from '../../containers/Project/DeviceSelector';
+import TabBar, { Tab } from '../../components/TabBar';
 
 import { withDeviceContext } from '../../contexts/DeviceContext';
-import { DevicesShape, DeviceShape } from '../../components/Project/Shapes';
-import { TreeRootNodeShape, TreeNodeShape } from './Tree/Shapes';
+import { DevicesShape, DeviceShape } from './components/DeviceMenu/Shapes';
+import { TreeRootNodeShape, TreeNodeShape } from './components/Tree/Shapes';
 
-import Tree from './Tree';
-import MainToolbar from '../../components/MainToolbar/MainToolbar';
-import SceneComponent from '../../containers/Scene/Scene';
-import FormComponent from '../../containers/Form/Form';
+import Tree from './components/Tree';
+import DeviceMenu from './components/DeviceMenu';
+import MainToolbar from './components/MainToolbar';
+import SceneComponent from './components/Scene';
+import FormComponent from './components/Form';
 import SceneReducer from './reducers/scene';
 import FormReducer from './reducers/form';
 
@@ -65,7 +64,7 @@ const AppEditorLayout = props => {
             />
           </Tab>
           <Tab id="devices" title={<FaMobileAlt />}>
-            <DeviceSelector
+            <DeviceMenu
               connectedDevice={connectedDevice}
               devices={devices}
               eventHandler={deviceEventHandler}

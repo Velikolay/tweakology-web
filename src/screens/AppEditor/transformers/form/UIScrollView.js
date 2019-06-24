@@ -1,6 +1,6 @@
 // @flow
 import type { UIScrollView as UIScrollViewPayload } from '../../../../services/device/types';
-import type { UIScrollView as UIScrollViewForm } from '../../../../containers/Form/types';
+import type { UIScrollView as UIScrollViewForm } from '../../components/Form/types';
 
 import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';

@@ -6,7 +6,7 @@ import type {
 import type {
   NSLayoutConstraint as ConstraintForm,
   NSLayoutConstraintItemAttribute as ConstraintItemAttributeForm,
-} from '../../../../containers/Form/types';
+} from '../../components/Form/types';
 import withFalsyGuard from './utils';
 import { attributeToModifiers } from '../../../../services/device/metadata/NSLayoutConstraint';
 

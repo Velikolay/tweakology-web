@@ -7,7 +7,7 @@ import type {
 import type {
   UIButton as UIButtonForm,
   UIButtonLabel as UIButtonLabelForm,
-} from '../../../../containers/Form/types';
+} from '../../components/Form/types';
 import withFalsyGuard from './utils';
 import UIViewTransformer from './UIView';
 import UIFontTransformer from './UIFont';

@@ -3,7 +3,7 @@ import type {
   UIFont as UIFontPayload,
   DeviceFonts,
 } from '../../../../services/device/types';
-import type { UIFont as UIFontForm } from '../../../../containers/Form/types';
+import type { UIFont as UIFontForm } from '../../components/Form/types';
 
 import withFalsyGuard from './utils';
 import { toFontStyles } from '../../../../utils/font';

@@ -1,0 +1,37 @@
+@import '../../../../../../assets/styles/colors';
+
+.toggle-button {
+  height: 18px;
+  color: $content-color;
+  background-color: $light-background-color;
+  border: 1px solid $input-border-color;
+  border-radius: 2px;
+}
+
+.toggle-button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.toggle-button:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.toggle-button:focus {
+  outline: 0;
+}
+
+.toggle-button.is-active {
+  background-color: $input-border-color;
+}
+
+.toggle-button:disabled {
+  background-color: rgb(45, 45, 45);
+  color: rgb(160, 160, 160);
+}
+
+.toggle-button.is-active:disabled {
+  background-color: $input-border-color;
+}

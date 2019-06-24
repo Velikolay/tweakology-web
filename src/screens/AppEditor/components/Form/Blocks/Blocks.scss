@@ -1,0 +1,114 @@
+@import '../../../../../assets/styles/colors';
+
+.form-group {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.form-row {
+  display: inline-block;
+  width: 100%;
+  height: 26px;
+}
+
+.full-width-input {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 60%;
+}
+
+.half-width-input-container {
+  width: calc(30% - 6px);
+  display: inline-block;
+}
+
+.half-width-input-container:nth-child(2) {
+  margin-right: 12px;
+}
+
+.half-width-input {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.inline-text {
+  color: $content-color;
+}
+
+.input-title {
+  display: inline-block;
+  width: calc(40% - 8px);
+  margin-right: 8px;
+  vertical-align: top;
+  text-align: right;
+  color: $content-color;
+  line-height: 22px;
+  font-size: 11px;
+}
+
+.input-name {
+  padding-top: 2px;
+  color: $content-color;
+  font-size: 11px;
+}
+
+input[type=text],
+select {
+  padding-left: 4px;
+}
+
+input[type="checkbox"] {
+  margin: 0;
+}
+
+input,
+select {
+  width: 100%;
+  height: 18px;
+  background-color: $light-background-color;
+  color: $content-color;
+  border-radius: 2px;
+  border: 1px solid $input-border-color;
+}
+
+select:not([multiple]) {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-position: calc(100% - 6px) 75%;
+  background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' fill='%23B4B4B4'><polygon points='0,0 8,0 4,4'/></svg>");
+}
+
+input:disabled,
+select:disabled {
+  background-color: rgb(45, 45, 45);
+  color: rgb(160, 160, 160);
+}
+
+input.is-dirty,
+select.is-dirty {
+  color: $dirty-color;
+}
+
+input[type=number] {
+  text-align: right;
+}
+
+input:focus,
+select:focus {
+  border-color: #007eff;
+  box-shadow:
+    inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 0 3px rgba(0, 126, 255, 0.1);
+  outline: none;
+}
+
+hr {
+  display: block;
+  float: right;
+  width: 85%;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid $input-border-color;
+  margin: 2px 6px 6px 0;
+}

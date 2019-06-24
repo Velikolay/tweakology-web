@@ -1,0 +1,36 @@
+@import '../../../../assets/styles/colors';
+
+.MainToolbar {
+  display: table;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: $bar-height;
+  background-color: #2b2b2be6;
+  border-top: 2px solid $dark-separator-color;
+
+  &__submitContainer {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  &__submitButton {
+    height: 24px;
+    width: 64px;
+    background: $light-background-color;
+    border-radius: 4px;
+    border: 1px solid #666;
+
+    &:hover {
+      border: 1px solid #ccc;
+    }
+
+    &__icon {
+      color: $content-color;
+      height: 12px;
+      width: 12px;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}

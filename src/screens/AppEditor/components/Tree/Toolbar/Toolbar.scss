@@ -1,0 +1,23 @@
+@import '../../../../../assets/styles/colors';
+
+.TreeToolbar {
+  display: flex;
+  flex: 0 0 $bar-height;
+  width: 100%;
+  background-color: $dark-background-color;
+  border-top: 2px solid $dark-separator-color;
+
+  &__button {
+    flex: 1;
+    background-color: $dark-background-color;
+    border: none;
+  }
+
+  &__buttonIcon {
+    color: $content-color;
+    height: 12px;
+    width: 12px;
+    display: block;
+    margin: 0 auto;
+  }
+}
