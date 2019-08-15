@@ -1,3 +1,7 @@
 .SceneContainer {
   height: 100%;
+
+  &.hidden {
+    visibility: hidden;
+  }
 }

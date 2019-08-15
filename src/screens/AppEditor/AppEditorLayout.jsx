@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import Split from 'react-split';
 import { FaProjectDiagram, FaMobileAlt, FaFolder } from 'react-icons/fa';
@@ -13,6 +13,7 @@ import Tree from './components/Tree';
 import DeviceMenu from './components/DeviceMenu';
 import MainToolbar from './components/MainToolbar';
 import SceneComponent from './components/Scene';
+import Workflow from './components/Workflow';
 import FormComponent from './components/Form';
 import SceneReducer from './reducers/scene';
 import FormReducer from './reducers/form';
@@ -45,6 +46,8 @@ const AppEditorLayout = props => {
     onSubmitChanges,
   } = props;
 
+  const [showWorkflow, setShowWorkflow] = useState(false);
+
   return (
     <Split
       className="App"
@@ -75,12 +78,17 @@ const AppEditorLayout = props => {
       </div>
       <div className="middle-section">
         <Scene
+          hidden={showWorkflow}
           tree={tree}
           activeNode={activeNode}
           onFocusNode={onFocusNode}
           eventHandler={sceneEventHandler}
         />
-        <MainToolbar onSubmitChanges={onSubmitChanges} />
+        {showWorkflow ? <Workflow /> : null}
+        <MainToolbar
+          onSubmitChanges={onSubmitChanges}
+          onShowWorkflow={() => setShowWorkflow(!showWorkflow)}
+        />
       </div>
       <div className="right-section">
         {activeNode !== null ? (

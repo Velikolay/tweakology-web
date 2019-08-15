@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
+import cx from 'classnames';
 
 import OffsetSlider from './OffsetSlider/OffsetSlider';
 import TextureOnOffButton from './TextureOnOffButton/TextureOnOffButton';
@@ -36,6 +37,7 @@ const initOrbitControls = (camera, constainer) => {
 class SceneContainer extends Component {
   constructor(props) {
     super(props);
+    this.state = { hidden: props.hidden };
     this.cameraPosition = new THREE.Vector3();
 
     this.start = this.start.bind(this);
@@ -110,12 +112,13 @@ class SceneContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { tree, constraints } = nextProps;
+    const { hidden, tree, constraints } = nextProps;
     this.sceneManager.updateViews(tree);
     this.sceneManager.updateConstraintIndicators(constraints);
     if (this.sceneControls) {
       this.sceneControls.setObjects(this.sceneManager.getMeshGroups());
     }
+    this.setState({ hidden });
   }
 
   componentWillUnmount() {
@@ -171,13 +174,14 @@ class SceneContainer extends Component {
   }
 
   render() {
+    const { hidden } = this.state;
     return (
       <React.Fragment>
         <div
           ref={el => {
             this.container = el;
           }}
-          className="SceneContainer"
+          className={cx('SceneContainer', { hidden })}
         />
         <OffsetSlider
           initial={INITIAL_PLANE_OFFSET}
@@ -192,12 +196,14 @@ class SceneContainer extends Component {
 }
 
 SceneContainer.propTypes = {
+  hidden: PropTypes.bool,
   tree: SceneTreeShape,
   constraints: PropTypes.arrayOf(SceneConstraintShape),
   eventHandler: PropTypes.func,
 };
 
 SceneContainer.defaultProps = {
+  hidden: false,
   tree: null,
   constraints: [],
   eventHandler: () => {},

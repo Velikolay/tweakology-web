@@ -119,6 +119,13 @@ export type DeviceFonts = {
   },
 };
 
+export type DeviceEvents = {
+  [eventType: string]: number,
+};
+
 export type DeviceSystemData = {
   fonts: DeviceFonts,
+  events: DeviceEvents,
 };
+
+export type DeviceAttributes = { [attr_name: string]: any };

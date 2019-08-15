@@ -1,5 +1,9 @@
 // @flow
-import type { DeviceFonts, DeviceSystemData, DeviceUITreeData } from './types';
+import type {
+  DeviceSystemData,
+  DeviceUITreeData,
+  DeviceAttributes,
+} from './types';
 import DeviceConnector, { RemoteDevice } from './connector';
 
 class APIClient {
@@ -27,11 +31,15 @@ class APIClient {
     );
   }
 
+  fetchAttributes(): Promise<DeviceAttributes> {
+    return this.remoteCall(endpoint =>
+      fetch(`${endpoint}/attributes`).then(response => response.json()),
+    );
+  }
+
   fetchSystemData(): Promise<DeviceSystemData> {
     return this.remoteCall(endpoint =>
-      fetch(`${endpoint}/fonts`)
-        .then(response => response.json())
-        .then((fonts: DeviceFonts) => ({ fonts })),
+      fetch(`${endpoint}/system`).then(response => response.json()),
     );
   }
 

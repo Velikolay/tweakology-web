@@ -1,0 +1,28 @@
+@import '../../../../assets/styles/colors';
+
+.Workflow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: $dark-background-color;
+}
+
+.Workflow-enter {
+  transform: translateY(100%);
+}
+
+.Workflow-enter.Workflow-enter-active {
+  transform: translateY(0);
+  transition: transform 100ms ease-in;
+}
+
+.Workflow-exit {
+  transform: translateY(0);
+}
+
+.Workflow-exit.Workflow-exit-active {
+  transform: translateY(100%);
+  transition: transform 100ms ease-in;
+}

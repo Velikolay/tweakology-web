@@ -1,7 +1,7 @@
+@import '../../../../assets/styles/dim';
 @import '../../../../assets/styles/colors';
 
 .MainToolbar {
-  display: table;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -9,9 +9,41 @@
   background-color: #2b2b2be6;
   border-top: 2px solid $dark-separator-color;
 
-  &__submitContainer {
-    display: table-cell;
-    vertical-align: middle;
+  &__flexContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+  }
+
+  &__section {
+    display: flex;
+    flex: 1 0 auto;
+    flex-wrap: nowrap;
+    justify-content: center;
+
+    &.left {
+      justify-content: flex-start;
+    }
+
+    &.right {
+      justify-content: flex-end;
+    }
+  }
+
+  &__buttonIcon {
+    color: $content-color;
+    height: 16px;
+    width: 16px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  &__iconButton {
+    flex-basis: 48px;
+    color: $content-color;
+    background-color: transparent;
+    border: none;
   }
 
   &__submitButton {
