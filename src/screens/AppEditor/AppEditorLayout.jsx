@@ -84,7 +84,7 @@ const AppEditorLayout = props => {
           onFocusNode={onFocusNode}
           eventHandler={sceneEventHandler}
         />
-        {showWorkflow ? <Workflow /> : null}
+        {showWorkflow ? <Workflow activeNode={activeNode} /> : null}
         <MainToolbar
           onSubmitChanges={onSubmitChanges}
           onShowWorkflow={() => setShowWorkflow(!showWorkflow)}

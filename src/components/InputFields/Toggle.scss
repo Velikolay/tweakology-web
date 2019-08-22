@@ -1,0 +1,12 @@
+@import '../../assets/styles/colors';
+
+.Toggle {
+    display: flex;
+    align-items: center;
+
+    &__title {
+        color: $content-color;
+        font-size: 14px;
+        margin-right: 4px;
+    }
+}

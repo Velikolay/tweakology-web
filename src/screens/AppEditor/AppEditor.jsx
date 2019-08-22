@@ -73,9 +73,10 @@ class AppEditor extends Component {
   updateDeviceContext = () =>
     this.apiClient
       .fetchSystemData()
-      .then(({ fonts }) => {
+      .then(({ fonts, events }) => {
         this.deviceContext = {
           fonts: fontDataEnrichment(fonts),
+          events,
         };
       })
       .catch(err => console.log(err));
