@@ -29,13 +29,13 @@ const Toggle = (props: ToggleProps) => {
   } = props;
   return (
     <div className={cx('Toggle', className)}>
-      {title !== null ? <div className="Toggle__title">{title}</div> : null}
       <ReactToggle
         defaultChecked={defaultChecked}
         checked={values[name]}
         onChange={e => setFieldValue(name, e.target.checked)}
         {...rest}
       />
+      {title !== null ? <div className="Toggle__title">{title}</div> : null}
     </div>
   );
 };

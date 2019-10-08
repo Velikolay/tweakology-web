@@ -1,0 +1,45 @@
+@import '../../../../../assets/styles/colors';
+
+.ActionContainer {
+  border-radius: 4px;
+  background: $light-background-color;
+
+  &__header {
+    display: flex;
+    padding: 4px;
+    min-width: 0;
+
+    &__buffer {
+      flex: 1;
+    }
+
+    &__title {
+      display: flex;
+      justify-content: flex-start;
+      font-size: 16px;
+      line-height: 22px;
+      color: $content-color;
+      overflow: hidden;
+
+      & > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &__buttons {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+
+      &__trashIcon {
+        color: $alert-color;
+      }
+    }
+  }
+
+  &__content {
+    padding: 4px;
+  }
+}

@@ -7,3 +7,20 @@
   border-radius: 4px;
   border: 1px solid $input-border-color;
 }
+
+.IconButton {
+  background-color: transparent;
+  border: none;
+
+  &__icon {
+    height: 16px;
+    width: 16px;
+    margin: 0 auto;
+    color: $content-color;
+
+    &:hover {
+      color: $highlighted-content-color;
+      cursor: pointer;
+    }
+  }
+}
