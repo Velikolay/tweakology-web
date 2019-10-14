@@ -3,15 +3,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 
+import withAction, { ActionMode } from './Action';
+import type { ActionContentProps } from './Action';
+
 import Toggle from '../../../../../components/InputFields/Toggle';
 import Select from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
 
 import './UpdateAttribute.scss';
-
-type UpdateAttributeActionProps = {
-  id: string,
-};
 
 const options = [
   { value: 'Chocolate', label: 'Chocolate' },
@@ -19,7 +18,7 @@ const options = [
   { value: 'Vanilla', label: 'Vanilla' },
 ];
 
-const UpdateAttributeAction = ({ id }: UpdateAttributeActionProps) => {
+const UpdateAttributeAction = ({ id, mode }: ActionContentProps) => {
   return (
     <Formik
       initialValues={{
@@ -32,12 +31,14 @@ const UpdateAttributeAction = ({ id }: UpdateAttributeActionProps) => {
         return (
           <Form className="UpdateAttributeForm">
             <Toggle
+              disabled={mode !== ActionMode.EDIT}
               className="UpdateAttributeForm__rerenderToggle"
               name="rerenderToggle"
               title="Rerender"
               formik={{ values, setFieldValue }}
             />
             <Select
+              disabled={mode !== ActionMode.EDIT}
               className="UpdateAttributeForm__attribute"
               name="attributeName"
               placeholder="Attribute Name"
@@ -47,6 +48,7 @@ const UpdateAttributeAction = ({ id }: UpdateAttributeActionProps) => {
               creatable
             />
             <TextArea
+              disabled={mode !== ActionMode.EDIT}
               className="UpdateAttributeForm__expression"
               name="attributeExpression"
               placeholder="Attribute Expression"
@@ -62,6 +64,7 @@ const UpdateAttributeAction = ({ id }: UpdateAttributeActionProps) => {
 
 UpdateAttributeAction.propTypes = {
   id: PropTypes.string.isRequired,
+  mode: PropTypes.symbol.isRequired,
 };
 
-export default UpdateAttributeAction;
+export default withAction(UpdateAttributeAction);

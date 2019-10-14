@@ -27,11 +27,10 @@ const TextArea = (props: TextAreaProps) => {
     <textarea
       className={cx('TextArea', className)}
       placeholder={placeholder}
+      value={values[name]}
       onChange={e => setFieldValue(name, e.target.value)}
       {...rest}
-    >
-      {values[name]}
-    </textarea>
+    />
   );
 };
 

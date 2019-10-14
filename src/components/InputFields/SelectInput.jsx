@@ -47,6 +47,7 @@ const customStyles = {
 type SelectInputProps = {
   name: string,
   placeholder?: string,
+  disabled?: boolean,
   creatable?: boolean,
   options: { value: string, label: string }[],
   formik: {
@@ -59,6 +60,7 @@ const SelectInput = (props: SelectInputProps) => {
   const {
     name,
     placeholder,
+    disabled,
     creatable,
     formik: { setFieldValue, values },
     options,
@@ -67,6 +69,7 @@ const SelectInput = (props: SelectInputProps) => {
   const SelectComponent = creatable ? Creatable : Select;
   return (
     <SelectComponent
+      isDisabled={disabled}
       styles={customStyles}
       value={values[name]}
       placeholder={placeholder}
@@ -115,6 +118,7 @@ const SelectInput = (props: SelectInputProps) => {
 
 SelectInput.propTypes = {
   placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
   creatable: PropTypes.bool,
   name: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(
@@ -127,6 +131,7 @@ SelectInput.propTypes = {
 
 SelectInput.defaultProps = {
   placeholder: '',
+  disabled: false,
   creatable: false,
   options: [],
 };

@@ -23,4 +23,11 @@
       cursor: pointer;
     }
   }
+
+  &:disabled &__icon {
+    &:hover {
+      color: $content-color;
+      cursor: not-allowed;
+    }
+  }
 }

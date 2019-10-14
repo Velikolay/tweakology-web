@@ -10,7 +10,6 @@ import './Toggle.scss';
 type ToggleProps = {
   name: string,
   title?: string,
-  defaultChecked?: boolean,
   className?: string,
   formik: {
     setFieldValue: (string, { value: string, label: string }) => void,
@@ -23,14 +22,12 @@ const Toggle = (props: ToggleProps) => {
     name,
     title,
     className,
-    defaultChecked,
     formik: { setFieldValue, values },
     ...rest
   } = props;
   return (
     <div className={cx('Toggle', className)}>
       <ReactToggle
-        defaultChecked={defaultChecked}
         checked={values[name]}
         onChange={e => setFieldValue(name, e.target.checked)}
         {...rest}
@@ -44,13 +41,11 @@ Toggle.propTypes = {
   name: PropTypes.string.isRequired,
   title: PropTypes.string,
   className: PropTypes.string,
-  defaultChecked: PropTypes.bool,
 };
 
 Toggle.defaultProps = {
   title: null,
   className: '',
-  defaultChecked: false,
 };
 
 export default Toggle;
