@@ -50,7 +50,7 @@ const Events = ({ activeNode }: EventsProps) => {
     <div className="Events">
       <div className="Events__title">{`${activeNode.module} Events`}</div>
       <EventListenerSetupFrom />
-      <UpdateAttributeAction id="test" initMode={ActionMode.EDIT} />
+      <UpdateAttributeAction id="test" initMode={ActionMode.SUMMARY} />
     </div>
   );
 };

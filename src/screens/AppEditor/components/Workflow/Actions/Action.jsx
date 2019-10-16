@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FaTrashAlt, FaEdit, FaSave } from 'react-icons/fa';
+import { FaTrashAlt, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 
 import { IconButton } from '../../../../../components/InputFields/Button';
 
@@ -33,21 +33,18 @@ type ActionHeaderProps = {
 
 const ActionHeader = (props: ActionHeaderProps) => {
   const { actionName, mode, onModeChange, showButtons } = props;
-  const saveDisabled =
-    mode === ActionMode.SUMMARY || mode === ActionMode.EXPANDED;
-
-  const editDisabled = mode === ActionMode.EDIT;
-
   return (
     <div className="ActionContainer__header">
       <div className="ActionContainer__header__buffer" />
       <div className="ActionContainer__header__title">
         <span>{actionName}</span>
       </div>
-      {showButtons ? (
+      {showButtons && mode === ActionMode.EDIT ? (
         <div className="ActionContainer__header__buttons">
+          <IconButton iconClassName="ActionContainer__header__buttons__trashIcon">
+            <FaTrashAlt />
+          </IconButton>
           <IconButton
-            disabled={saveDisabled}
             onClick={() => {
               if (mode === ActionMode.EDIT) {
                 onModeChange(ActionMode.SUMMARY);
@@ -57,17 +54,13 @@ const ActionHeader = (props: ActionHeaderProps) => {
             <FaSave />
           </IconButton>
           <IconButton
-            disabled={editDisabled}
             onClick={() => {
-              if (mode !== ActionMode.EDIT) {
-                onModeChange(ActionMode.EDIT);
+              if (mode === ActionMode.EDIT) {
+                onModeChange(ActionMode.SUMMARY);
               }
             }}
           >
-            <FaEdit />
-          </IconButton>
-          <IconButton iconClassName="ActionContainer__header__buttons__trashIcon">
-            <FaTrashAlt />
+            <FaTimes />
           </IconButton>
         </div>
       ) : (
@@ -90,14 +83,31 @@ const withAction = (
         onMouseEnter={() => setOnFocus(true)}
         onMouseLeave={() => setOnFocus(false)}
       >
-        <ActionHeader
-          actionName={actionName}
-          showButtons={onFocus}
-          mode={mode}
-          onModeChange={newMode => setMode(newMode)}
-        />
+        {mode === ActionMode.SUMMARY ? null : (
+          <ActionHeader
+            actionName={actionName}
+            showButtons={onFocus}
+            mode={mode}
+            onModeChange={newMode => setMode(newMode)}
+          />
+        )}
         <div className="ActionContainer__content">
-          <ActionComponent id={id} mode={mode} />
+          <div className="ActionContainer__content__frame">
+            <ActionComponent id={id} mode={mode} />
+          </div>
+          {mode === ActionMode.SUMMARY ? (
+            <IconButton
+              className="ActionContainer__content__summary__expand"
+              iconClassName="ActionContainer__content__summary__expandIcon"
+              onClick={() => {
+                if (mode === ActionMode.SUMMARY) {
+                  setMode(ActionMode.EDIT);
+                }
+              }}
+            >
+              <FaEdit />
+            </IconButton>
+          ) : null}
         </div>
       </div>
     );
@@ -109,7 +119,7 @@ const withAction = (
   };
 
   comp.defaultProps = {
-    actionName: 'Inline',
+    actionName: '',
     initMode: ActionMode.SUMMARY,
   };
   return comp;

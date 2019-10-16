@@ -1,12 +1,13 @@
+@import '../../../../../assets/styles/colors';
+
 .UpdateAttributeForm {
   &__rerenderToggle {
     margin-bottom: 8px;
   }
 
-  &__attribute {
+  &__attributes {
     margin-bottom: 8px;
     min-width: 200px;
-    // max-width: 400px;
   }
 
   &__expression {
@@ -14,5 +15,37 @@
     min-width: 100%;
     max-width: 100%;
     min-height: 38px;
+  }
+}
+
+.UpdateAttributeSummary {
+  display: flex;
+  // justify-content: center;
+  margin: 8px;
+
+  &__actionIcon {
+    height: 20px;
+    width: 20px;
+    margin: 0 4px;
+    color: $content-color;
+  }
+
+  &__text {
+    margin: 0 4px;
+    color: $content-color;
+  }
+
+  &__attributes {
+    margin: 0 4px;
+    color: $content-color;
+
+    &__label {
+      padding: 2px;
+      background: $dark-background-color;
+    }
+  }
+
+  &__expression {
+    resize: none;
   }
 }

@@ -2,6 +2,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
+import { IconContext } from 'react-icons';
+import { FaCode } from 'react-icons/fa';
 
 import withAction, { ActionMode } from './Action';
 import type { ActionContentProps } from './Action';
@@ -18,17 +20,55 @@ const options = [
   { value: 'Vanilla', label: 'Vanilla' },
 ];
 
+type UpdateAttributeActionSummaryProps = {
+  rerenderToggle: boolean,
+  attributes: { value: string, label: string }[],
+  attributeExpression: string,
+};
+
+const UpdateAttributeActionSummary = ({
+  rerenderToggle,
+  attributes,
+  attributeExpression,
+}: UpdateAttributeActionSummaryProps) => {
+  return (
+    <div className="UpdateAttributeSummary">
+      <IconContext.Provider
+        value={{ className: 'UpdateAttributeSummary__actionIcon' }}
+      >
+        <FaCode />
+      </IconContext.Provider>
+      <div className="UpdateAttributeSummary__text">Update attributes</div>
+      <div className="UpdateAttributeSummary__attributes">
+        {attributes.map(({ label }, idx) => (
+          <React.Fragment>
+            {idx > 0 ? <span> , </span> : null}
+            <span className="UpdateAttributeSummary__attributes__label">
+              {label}
+            </span>
+          </React.Fragment>
+        ))}
+      </div>
+      {rerenderToggle ? (
+        <div className="UpdateAttributeSummary__text">and rerender</div>
+      ) : null}
+    </div>
+  );
+};
+
 const UpdateAttributeAction = ({ id, mode }: ActionContentProps) => {
   return (
     <Formik
       initialValues={{
         rerenderToggle: false,
-        attributeName: '',
+        attributes: [],
         attributeExpression: '',
       }}
     >
       {({ values, setFieldValue }) => {
-        return (
+        return mode === ActionMode.SUMMARY ? (
+          <UpdateAttributeActionSummary {...values} />
+        ) : (
           <Form className="UpdateAttributeForm">
             <Toggle
               disabled={mode !== ActionMode.EDIT}
@@ -39,8 +79,8 @@ const UpdateAttributeAction = ({ id, mode }: ActionContentProps) => {
             />
             <Select
               disabled={mode !== ActionMode.EDIT}
-              className="UpdateAttributeForm__attribute"
-              name="attributeName"
+              className="UpdateAttributeForm__attributes"
+              name="attributes"
               placeholder="Attribute Name"
               options={options}
               formik={{ values, setFieldValue }}

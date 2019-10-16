@@ -5,28 +5,30 @@ import cx from 'classnames';
 
 import './TextArea.scss';
 
-type TextAreaProps = {
+type TextAreaControlledProps = {
   name: string,
   className?: string,
-  placeholder?: string,
   formik: {
     setFieldValue: (string, { value: string, label: string }) => void,
     values: any,
   },
 };
 
-const TextArea = (props: TextAreaProps) => {
+type TextAreaUncontrolledProps = {
+  className?: string,
+  defaultValue: string,
+};
+
+const TextAreaControlled = (props: TextAreaControlledProps) => {
   const {
     name,
     className,
-    placeholder,
     formik: { setFieldValue, values },
     ...rest
   } = props;
   return (
     <textarea
       className={cx('TextArea', className)}
-      placeholder={placeholder}
       value={values[name]}
       onChange={e => setFieldValue(name, e.target.value)}
       {...rest}
@@ -34,15 +36,33 @@ const TextArea = (props: TextAreaProps) => {
   );
 };
 
-TextArea.propTypes = {
+export const TextAreaUncontrolled = (props: TextAreaUncontrolledProps) => {
+  const { className, defaultValue, ...rest } = props;
+  return (
+    <textarea
+      className={cx('TextArea', className)}
+      defaultValue={defaultValue}
+      {...rest}
+    />
+  );
+};
+
+TextAreaUncontrolled.propTypes = {
+  defaultValue: PropTypes.string.isRequired,
+  className: PropTypes.string,
+};
+
+TextAreaUncontrolled.defaultProps = {
+  className: '',
+};
+
+TextAreaControlled.propTypes = {
   name: PropTypes.string.isRequired,
   className: PropTypes.string,
-  placeholder: PropTypes.string,
 };
 
-TextArea.defaultProps = {
+TextAreaControlled.defaultProps = {
   className: '',
-  placeholder: '',
 };
 
-export default TextArea;
+export default TextAreaControlled;
