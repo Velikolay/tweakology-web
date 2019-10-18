@@ -1,21 +1,27 @@
 // @flow
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { Formik } from 'formik';
 import { FaTrashAlt, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 
 import { IconButton } from '../../../../../components/InputFields/Button';
+
+import PersistenceService from '../../../../../services/persistence';
 
 import './Action.scss';
 
 export const ActionMode = Object.freeze({
   SUMMARY: Symbol('summary'),
-  EXPANDED: Symbol('expanded'),
   EDIT: Symbol('edit'),
 });
 
 export type ActionContentProps = {
   id: string,
   mode: Symbol,
+  formik: {
+    values: any,
+    setFieldValue: (string, any) => void,
+  },
 };
 
 type ActionProps = {
@@ -26,13 +32,15 @@ type ActionProps = {
 
 type ActionHeaderProps = {
   actionName: string,
-  mode: Symbol,
-  onModeChange: Symbol => void,
   showButtons: boolean,
+  mode: Symbol,
+  onSave: () => void,
+  onDiscard: () => void,
+  onDelete: () => void,
 };
 
 const ActionHeader = (props: ActionHeaderProps) => {
-  const { actionName, mode, onModeChange, showButtons } = props;
+  const { actionName, showButtons, mode, onSave, onDiscard, onDelete } = props;
   return (
     <div className="ActionContainer__header">
       <div className="ActionContainer__header__buffer" />
@@ -41,25 +49,16 @@ const ActionHeader = (props: ActionHeaderProps) => {
       </div>
       {showButtons && mode === ActionMode.EDIT ? (
         <div className="ActionContainer__header__buttons">
-          <IconButton iconClassName="ActionContainer__header__buttons__trashIcon">
+          <IconButton
+            iconClassName="ActionContainer__header__buttons__trashIcon"
+            onClick={onDelete}
+          >
             <FaTrashAlt />
           </IconButton>
-          <IconButton
-            onClick={() => {
-              if (mode === ActionMode.EDIT) {
-                onModeChange(ActionMode.SUMMARY);
-              }
-            }}
-          >
+          <IconButton onClick={onSave}>
             <FaSave />
           </IconButton>
-          <IconButton
-            onClick={() => {
-              if (mode === ActionMode.EDIT) {
-                onModeChange(ActionMode.SUMMARY);
-              }
-            }}
-          >
+          <IconButton onClick={onDiscard}>
             <FaTimes />
           </IconButton>
         </div>
@@ -72,44 +71,64 @@ const ActionHeader = (props: ActionHeaderProps) => {
 
 const withAction = (
   ActionComponent: React.AbstractComponent<ActionContentProps>,
+  initialValues: any,
 ) => {
   const comp = (props: ActionProps) => {
     const { id, actionName, initMode } = props;
     const [onFocus, setOnFocus] = React.useState(false);
     const [mode, setMode] = React.useState(initMode);
     return (
-      <div
-        className="ActionContainer"
-        onMouseEnter={() => setOnFocus(true)}
-        onMouseLeave={() => setOnFocus(false)}
-      >
-        {mode === ActionMode.SUMMARY ? null : (
-          <ActionHeader
-            actionName={actionName}
-            showButtons={onFocus}
-            mode={mode}
-            onModeChange={newMode => setMode(newMode)}
-          />
-        )}
-        <div className="ActionContainer__content">
-          <div className="ActionContainer__content__frame">
-            <ActionComponent id={id} mode={mode} />
+      <Formik initialValues={initialValues}>
+        {formik => (
+          <div
+            className="ActionContainer"
+            onMouseEnter={() => setOnFocus(true)}
+            onMouseLeave={() => setOnFocus(false)}
+          >
+            {mode === ActionMode.SUMMARY ? null : (
+              <ActionHeader
+                actionName={actionName}
+                showButtons={onFocus}
+                onSave={() => {
+                  if (mode === ActionMode.EDIT) {
+                    setMode(ActionMode.SUMMARY);
+                    PersistenceService.write('Actions', {
+                      [id]: formik.values,
+                    });
+                  }
+                }}
+                onDiscard={() => {
+                  if (mode === ActionMode.EDIT) {
+                    setMode(ActionMode.SUMMARY);
+                    formik.resetForm(PersistenceService.read('Actions', id));
+                  }
+                }}
+                onDelete={() => {}}
+                mode={mode}
+                onModeChange={newMode => setMode(newMode)}
+              />
+            )}
+            <div className="ActionContainer__content">
+              <div className="ActionContainer__content__frame">
+                <ActionComponent id={id} mode={mode} formik={formik} />
+              </div>
+              {mode === ActionMode.SUMMARY ? (
+                <IconButton
+                  className="ActionContainer__content__summary__edit"
+                  iconClassName="ActionContainer__content__summary__editIcon"
+                  onClick={() => {
+                    if (mode === ActionMode.SUMMARY) {
+                      setMode(ActionMode.EDIT);
+                    }
+                  }}
+                >
+                  <FaEdit />
+                </IconButton>
+              ) : null}
+            </div>
           </div>
-          {mode === ActionMode.SUMMARY ? (
-            <IconButton
-              className="ActionContainer__content__summary__expand"
-              iconClassName="ActionContainer__content__summary__expandIcon"
-              onClick={() => {
-                if (mode === ActionMode.SUMMARY) {
-                  setMode(ActionMode.EDIT);
-                }
-              }}
-            >
-              <FaEdit />
-            </IconButton>
-          ) : null}
-        </div>
-      </div>
+        )}
+      </Formik>
     );
   };
   comp.propTypes = {
@@ -128,7 +147,10 @@ const withAction = (
 ActionHeader.propTypes = {
   actionName: PropTypes.string.isRequired,
   showButtons: PropTypes.bool.isRequired,
-  onModeChange: PropTypes.func.isRequired,
+  mode: PropTypes.symbol.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onDiscard: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default withAction;

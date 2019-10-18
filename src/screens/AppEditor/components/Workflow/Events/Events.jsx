@@ -8,7 +8,6 @@ import type { AnyUIView } from '../../../../../services/device/types';
 import Select from '../../../../../components/InputFields/Select';
 import Button from '../../../../../components/InputFields/Button';
 
-import { ActionMode } from '../Actions/Action';
 import UpdateAttributeAction from '../Actions/UpdateAttribute';
 
 import DeviceContext from '../../../contexts/DeviceContext';
@@ -23,7 +22,6 @@ const EventListenerSetupFrom = () => {
       // initialValues={{ id: '', type: '' }}
       // validationSchema={ValidationSchema}
       onSubmit={({ id, type }, { setSubmitting }) => {
-        console.log('Submit');
         setSubmitting(false);
       }}
     >
@@ -50,7 +48,7 @@ const Events = ({ activeNode }: EventsProps) => {
     <div className="Events">
       <div className="Events__title">{`${activeNode.module} Events`}</div>
       <EventListenerSetupFrom />
-      <UpdateAttributeAction id="test" initMode={ActionMode.SUMMARY} />
+      <UpdateAttributeAction id="test" />
     </div>
   );
 };
