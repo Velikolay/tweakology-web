@@ -9,7 +9,7 @@ import withAction, { ActionMode } from './Action';
 import type { ActionContentProps } from './Action';
 
 import Toggle from '../../../../../components/InputFields/Toggle';
-import Select from '../../../../../components/InputFields/SelectInput';
+import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
 
 import './UpdateAttribute.scss';
@@ -109,7 +109,7 @@ const UpdateAttributeActionEdit = ({
       title="Rerender"
       formik={{ values, setFieldValue }}
     />
-    <Select
+    <FormikSelectInput
       className="UpdateAttributeForm__attributes"
       name="attributes"
       placeholder="Attribute Name"

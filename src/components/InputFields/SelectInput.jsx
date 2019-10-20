@@ -11,18 +11,12 @@ const contentColorStyle = provided => ({
   color: '#c8c8c8',
 });
 
-// const heightStyle = {
-//   'min-height': '22px',
-//   height: '22px',
-// };
-
 const customStyles = {
   control: provided => ({
     ...provided,
     backgroundColor: '#3c3f41',
     border: '1px solid #846937',
     color: '#c8c8c8',
-    // ...heightStyle,
   }),
   input: contentColorStyle,
   clearIndicator: contentColorStyle,
@@ -31,12 +25,6 @@ const customStyles = {
     ...provided,
     backgroundColor: '#3c3f41',
   }),
-  // valueContainer: provided => ({
-  //   ...heightStyle,
-  // }),
-  // indicatorsContainer: provided => ({
-  //   ...heightStyle,
-  // }),
   option: (provided, { isFocused }) => ({
     ...provided,
     color: '#c8c8c8',
@@ -45,18 +33,48 @@ const customStyles = {
 };
 
 type SelectInputProps = {
-  name: string,
-  placeholder?: string,
-  disabled?: boolean,
-  creatable?: boolean,
   options: { value: string, label: string }[],
+  onChange: () => void,
+  placeholder: string,
+  disabled: boolean,
+  creatable: boolean,
+};
+
+type FormikSelectInputProps = {
+  name: string,
   formik: {
     setFieldValue: (string, { value: string, label: string }) => void,
     values: any,
   },
+  options: { value: string, label: string }[],
+  placeholder: string,
+  disabled: boolean,
+  creatable: boolean,
 };
 
 const SelectInput = (props: SelectInputProps) => {
+  const {
+    placeholder,
+    disabled,
+    creatable,
+    onChange,
+    options,
+    ...rest
+  } = props;
+  const SelectComponent = creatable ? Creatable : Select;
+  return (
+    <SelectComponent
+      isDisabled={disabled}
+      styles={customStyles}
+      placeholder={placeholder}
+      onChange={onChange}
+      options={options}
+      {...rest}
+    />
+  );
+};
+
+export const FormikSelectInput = (props: FormikSelectInputProps) => {
   const {
     name,
     placeholder,
@@ -80,43 +98,28 @@ const SelectInput = (props: SelectInputProps) => {
   );
 };
 
-// const AutosuggestInput = (props: AutosuggestInputProps) => {
-//   const {
-//     name,
-//     placeholder,
-//     className,
-//     suggestions,
-//     currentValue,
-//     ...rest
-//   } = props;
-//   const [focus, setFocus] = useState(false);
-//   return (
-//     <div>
-//       <Field
-//         className={cx('AutosuggestInput', className)}
-//         name={name}
-//         placeholder={placeholder}
-//         onFocus={() => setFocus(true)}
-//         onBlur={() => setFocus(false)}
-//         // onChange={event => setValue(event.target.value)}
-//         {...rest}
-//       />
-//       {focus ? (
-//         <ul className="AutosuggestInput__suggestions">
-//           {suggestions
-//             .filter(item => item.includes(currentValue))
-//             .map(item => (
-//               <li className="AutosuggestInput__suggestions__item" key={item}>
-//                 {item}
-//               </li>
-//             ))}
-//         </ul>
-//       ) : null}
-//     </div>
-//   );
-// };
-
 SelectInput.propTypes = {
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
+  creatable: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    }),
+  ),
+};
+
+SelectInput.defaultProps = {
+  onChange: () => {},
+  placeholder: '',
+  disabled: false,
+  creatable: false,
+  options: [],
+};
+
+FormikSelectInput.propTypes = {
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
   creatable: PropTypes.bool,
@@ -129,7 +132,7 @@ SelectInput.propTypes = {
   ),
 };
 
-SelectInput.defaultProps = {
+FormikSelectInput.defaultProps = {
   placeholder: '',
   disabled: false,
   creatable: false,

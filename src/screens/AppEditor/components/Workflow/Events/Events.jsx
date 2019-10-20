@@ -8,6 +8,7 @@ import type { AnyUIView } from '../../../../../services/device/types';
 import Select from '../../../../../components/InputFields/Select';
 import Button from '../../../../../components/InputFields/Button';
 
+import Action from '../Actions';
 import UpdateAttributeAction from '../Actions/UpdateAttribute';
 
 import DeviceContext from '../../../contexts/DeviceContext';
@@ -48,7 +49,8 @@ const Events = ({ activeNode }: EventsProps) => {
     <div className="Events">
       <div className="Events__title">{`${activeNode.module} Events`}</div>
       <EventListenerSetupFrom />
-      <UpdateAttributeAction id="test" />
+      <Action id="test" />
+      {/* <UpdateAttributeAction id="test" /> */}
     </div>
   );
 };
