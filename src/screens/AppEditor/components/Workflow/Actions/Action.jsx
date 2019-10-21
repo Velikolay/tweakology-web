@@ -1,7 +1,9 @@
 // @flow
-import * as React from 'react';
+import type { AbstractComponent } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Formik } from 'formik';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { FaTrashAlt, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 
 import { IconButton } from '../../../../../components/InputFields/Button';
@@ -20,6 +22,7 @@ export type ActionContentProps = {
   mode: Symbol,
   formik: {
     values: any,
+    errors: any,
     setFieldValue: (string, any) => void,
   },
 };
@@ -32,24 +35,21 @@ type ActionProps = {
 
 type ActionHeaderProps = {
   actionName: string,
-  showButtons: boolean,
   mode: Symbol,
   onSave: () => void,
   onDiscard: () => void,
   onDelete: () => void,
 };
 
-
-
 const ActionHeader = (props: ActionHeaderProps) => {
-  const { actionName, showButtons, mode, onSave, onDiscard, onDelete } = props;
+  const { actionName, mode, onSave, onDiscard, onDelete } = props;
   return (
     <div className="ActionContainer__header">
       <div className="ActionContainer__header__buffer" />
       <div className="ActionContainer__header__title">
         <span>{actionName}</span>
       </div>
-      {showButtons && mode === ActionMode.EDIT ? (
+      {mode === ActionMode.EDIT ? (
         <div className="ActionContainer__header__buttons">
           <IconButton
             iconClassName="ActionContainer__header__buttons__trashIcon"
@@ -57,7 +57,7 @@ const ActionHeader = (props: ActionHeaderProps) => {
           >
             <FaTrashAlt />
           </IconButton>
-          <IconButton onClick={onSave}>
+          <IconButton type="submit" onClick={onSave}>
             <FaSave />
           </IconButton>
           <IconButton onClick={onDiscard}>
@@ -71,33 +71,34 @@ const ActionHeader = (props: ActionHeaderProps) => {
   );
 };
 
+const hasErrors = errors =>
+  Object.keys(errors).length !== 0 || errors.constructor !== Object;
+
 const withAction = (
-  ActionComponent: React.AbstractComponent<ActionContentProps>,
+  ActionComponent: AbstractComponent<ActionContentProps>,
   initialValues: any,
+  validationSchema: Yup.Schema,
 ) => {
   const comp = (props: ActionProps) => {
     const { id, actionName, initMode } = props;
-    const [onFocus, setOnFocus] = React.useState(false);
-    const [mode, setMode] = React.useState(initMode);
+    const [mode, setMode] = useState(initMode);
     return (
-      <Formik initialValues={initialValues}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema}>
         {formik => (
-          <div
-            className="ActionContainer"
-            onMouseEnter={() => setOnFocus(true)}
-            onMouseLeave={() => setOnFocus(false)}
-          >
+          <Form className="ActionContainer">
             {mode === ActionMode.SUMMARY ? null : (
               <ActionHeader
                 actionName={actionName}
-                showButtons={onFocus}
+                mode={mode}
                 onSave={() => {
-                  if (mode === ActionMode.EDIT) {
-                    setMode(ActionMode.SUMMARY);
-                    PersistenceService.write('Actions', {
-                      [id]: formik.values,
-                    });
-                  }
+                  formik.validateForm().then(errors => {
+                    if (!hasErrors(errors) && mode === ActionMode.EDIT) {
+                      setMode(ActionMode.SUMMARY);
+                      PersistenceService.write('Actions', {
+                        [id]: formik.values,
+                      });
+                    }
+                  });
                 }}
                 onDiscard={() => {
                   if (mode === ActionMode.EDIT) {
@@ -106,8 +107,6 @@ const withAction = (
                   }
                 }}
                 onDelete={() => {}}
-                mode={mode}
-                onModeChange={newMode => setMode(newMode)}
               />
             )}
             <div className="ActionContainer__content">
@@ -128,7 +127,7 @@ const withAction = (
                 </IconButton>
               ) : null}
             </div>
-          </div>
+          </Form>
         )}
       </Formik>
     );
@@ -148,7 +147,6 @@ const withAction = (
 
 ActionHeader.propTypes = {
   actionName: PropTypes.string.isRequired,
-  showButtons: PropTypes.bool.isRequired,
   mode: PropTypes.symbol.isRequired,
   onSave: PropTypes.func.isRequired,
   onDiscard: PropTypes.func.isRequired,

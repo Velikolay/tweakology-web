@@ -9,7 +9,6 @@ import Select from '../../../../../components/InputFields/Select';
 import Button from '../../../../../components/InputFields/Button';
 
 import Action from '../Actions';
-import UpdateAttributeAction from '../Actions/UpdateAttribute';
 
 import DeviceContext from '../../../contexts/DeviceContext';
 import { TreeViewNodeShape } from '../../Tree/Shapes';
@@ -50,7 +49,6 @@ const Events = ({ activeNode }: EventsProps) => {
       <div className="Events__title">{`${activeNode.module} Events`}</div>
       <EventListenerSetupFrom />
       <Action id="test" />
-      {/* <UpdateAttributeAction id="test" /> */}
     </div>
   );
 };

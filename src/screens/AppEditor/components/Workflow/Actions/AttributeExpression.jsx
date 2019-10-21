@@ -1,18 +1,19 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'formik';
+import * as Yup from 'yup';
+
 import { IconContext } from 'react-icons';
 import { FaCode } from 'react-icons/fa';
 
-import withAction, { ActionMode } from './Action';
 import type { ActionContentProps } from './Action';
+import withAction, { ActionMode } from './Action';
 
 import Toggle from '../../../../../components/InputFields/Toggle';
 import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
 
-import './UpdateAttribute.scss';
+import './AttributeExpression.scss';
 
 const options = [
   { value: 'Chocolate', label: 'Chocolate' },
@@ -20,34 +21,48 @@ const options = [
   { value: 'Vanilla', label: 'Vanilla' },
 ];
 
-type UpdateAttributeActionState = {
+type AttributeExpressionActionState = {
   rerenderToggle: boolean,
   attributes: { value: string, label: string }[],
   attributeExpression: string,
 };
 
-type UpdateAttributeActionFormik = {
+type AttributeExpressionActionFormik = {
   formik: {
-    values: UpdateAttributeActionState,
+    values: AttributeExpressionActionState,
+    errors: {
+      rerenderToggle: string,
+      attributes: string,
+      attributeExpression: string,
+    },
     setFieldValue: (string, any) => void,
   },
 };
 
-const INITIAL_VALUES = {
+const InitialValues = {
   rerenderToggle: false,
   attributes: [],
   attributeExpression: '',
 };
 
-const UpdateAttributeAction = ({
+const ValidationSchema = Yup.object().shape({
+  rerenderToggle: Yup.boolean().required('Required'),
+  attributes: Yup.array()
+    .min(1, 'At least one attribute required')
+    .required('Required'),
+  attributeExpression: Yup.string(),
+});
+
+const AttributeExpressionAction = ({
   id,
   mode,
-  formik: { values, setFieldValue },
+  formik,
 }: ActionContentProps) => {
+  const { values } = formik;
   return mode === ActionMode.SUMMARY ? (
-    <UpdateAttributeActionSummary {...values} />
+    <AttributeExpressionActionSummary {...values} />
   ) : (
-    <UpdateAttributeActionEdit formik={{ values, setFieldValue }} />
+    <AttributeExpressionActionEdit formik={formik} />
   );
 };
 
@@ -62,74 +77,83 @@ const FormikShape = PropTypes.shape({
     ).isRequired,
     attributeExpression: PropTypes.string.isRequired,
   }).isRequired,
+  errors: PropTypes.shape({
+    rerenderToggle: PropTypes.string,
+    attributes: PropTypes.string,
+    attributeExpression: PropTypes.string,
+  }).isRequired,
   setFieldValue: PropTypes.func.isRequired,
 });
 
-UpdateAttributeAction.propTypes = {
+AttributeExpressionAction.propTypes = {
   id: PropTypes.string.isRequired,
   mode: PropTypes.symbol.isRequired,
   formik: FormikShape.isRequired,
 };
 
-const UpdateAttributeActionSummary = ({
+const AttributeExpressionActionSummary = ({
   rerenderToggle,
   attributes,
   attributeExpression,
-}: UpdateAttributeActionState) => (
-  <div className="UpdateAttributeSummary">
+}: AttributeExpressionActionState) => (
+  <div className="AttributeExpressionSummary">
     <IconContext.Provider
-      value={{ className: 'UpdateAttributeSummary__actionIcon' }}
+      value={{ className: 'AttributeExpressionSummary__actionIcon' }}
     >
       <FaCode />
     </IconContext.Provider>
-    <div className="UpdateAttributeSummary__text">Update attributes</div>
-    <div className="UpdateAttributeSummary__attributes">
+    <div className="AttributeExpressionSummary__text">Update attributes</div>
+    <div className="AttributeExpressionSummary__attributes">
       {attributes.map(({ label }, idx) => (
         <React.Fragment key={label}>
           {idx > 0 ? <span> , </span> : null}
-          <span className="UpdateAttributeSummary__attributes__label">
+          <span className="AttributeExpressionSummary__attributes__label">
             {label}
           </span>
         </React.Fragment>
       ))}
     </div>
     {rerenderToggle ? (
-      <div className="UpdateAttributeSummary__text">and rerender</div>
+      <div className="AttributeExpressionSummary__text">and rerender</div>
     ) : null}
   </div>
 );
 
-const UpdateAttributeActionEdit = ({
-  formik: { values, setFieldValue },
-}: UpdateAttributeActionFormik) => (
-  <Form className="UpdateAttributeForm">
+const AttributeExpressionActionEdit = ({
+  formik,
+}: AttributeExpressionActionFormik) => (
+  <Fragment>
     <Toggle
-      className="UpdateAttributeForm__rerenderToggle"
+      className="AttributeExpressionForm__rerenderToggle"
       name="rerenderToggle"
       title="Rerender"
-      formik={{ values, setFieldValue }}
+      formik={formik}
     />
     <FormikSelectInput
-      className="UpdateAttributeForm__attributes"
+      className="AttributeExpressionForm__attributes"
       name="attributes"
       placeholder="Attribute Name"
       options={options}
-      formik={{ values, setFieldValue }}
+      formik={formik}
       isMulti
       creatable
     />
     <TextArea
-      className="UpdateAttributeForm__expression"
+      className="AttributeExpressionForm__expression"
       name="attributeExpression"
       placeholder="Attribute Expression"
       rows={6}
-      formik={{ values, setFieldValue }}
+      formik={formik}
     />
-  </Form>
+  </Fragment>
 );
 
-UpdateAttributeActionEdit.propTypes = {
+AttributeExpressionActionEdit.propTypes = {
   formik: FormikShape.isRequired,
 };
 
-export default withAction(UpdateAttributeAction, INITIAL_VALUES);
+export default withAction(
+  AttributeExpressionAction,
+  InitialValues,
+  ValidationSchema,
+);

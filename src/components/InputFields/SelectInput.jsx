@@ -6,32 +6,6 @@ import PropTypes from 'prop-types';
 
 import './SelectInput.scss';
 
-const contentColorStyle = provided => ({
-  ...provided,
-  color: '#c8c8c8',
-});
-
-const customStyles = {
-  control: provided => ({
-    ...provided,
-    backgroundColor: '#3c3f41',
-    border: '1px solid #846937',
-    color: '#c8c8c8',
-  }),
-  input: contentColorStyle,
-  clearIndicator: contentColorStyle,
-  dropdownIndicator: contentColorStyle,
-  menu: provided => ({
-    ...provided,
-    backgroundColor: '#3c3f41',
-  }),
-  option: (provided, { isFocused }) => ({
-    ...provided,
-    color: '#c8c8c8',
-    backgroundColor: isFocused ? '#0071b8' : '#3c3f41',
-  }),
-};
-
 type SelectInputProps = {
   options: { value: string, label: string }[],
   onChange: () => void,
@@ -40,16 +14,55 @@ type SelectInputProps = {
   creatable: boolean,
 };
 
+type FormikProps = {
+  values: any,
+  errors: any,
+  setFieldValue: (string, { value: string, label: string }[]) => void,
+};
+
 type FormikSelectInputProps = {
   name: string,
-  formik: {
-    setFieldValue: (string, { value: string, label: string }) => void,
-    values: any,
-  },
+  formik: FormikProps,
   options: { value: string, label: string }[],
   placeholder: string,
   disabled: boolean,
   creatable: boolean,
+};
+
+const getStyles = (name: ?string, formik: ?FormikProps): any => {
+  const error = name && formik && name in formik.errors;
+
+  const controlBorderShadow = provided =>
+    'borderBox' in provided && !error ? provided.borderBox : 'none';
+
+  const controlBorder = provided =>
+    !error ? '1px solid #846937' : '1px solid #e98675';
+
+  const contentColorStyle = provided => ({
+    ...provided,
+    color: '#c8c8c8',
+  });
+  return {
+    control: provided => ({
+      ...provided,
+      backgroundColor: '#3c3f41',
+      border: controlBorder(provided),
+      color: '#c8c8c8',
+      boxShadow: controlBorderShadow(provided),
+    }),
+    input: contentColorStyle,
+    clearIndicator: contentColorStyle,
+    dropdownIndicator: contentColorStyle,
+    menu: provided => ({
+      ...provided,
+      backgroundColor: '#3c3f41',
+    }),
+    option: (provided, { isFocused }) => ({
+      ...provided,
+      color: '#c8c8c8',
+      backgroundColor: isFocused ? '#0071b8' : '#3c3f41',
+    }),
+  };
 };
 
 const SelectInput = (props: SelectInputProps) => {
@@ -65,7 +78,7 @@ const SelectInput = (props: SelectInputProps) => {
   return (
     <SelectComponent
       isDisabled={disabled}
-      styles={customStyles}
+      styles={getStyles()}
       placeholder={placeholder}
       onChange={onChange}
       options={options}
@@ -80,18 +93,19 @@ export const FormikSelectInput = (props: FormikSelectInputProps) => {
     placeholder,
     disabled,
     creatable,
-    formik: { setFieldValue, values },
+    formik,
     options,
     ...rest
   } = props;
+  const { values, setFieldValue } = formik;
   const SelectComponent = creatable ? Creatable : Select;
   return (
     <SelectComponent
       isDisabled={disabled}
-      styles={customStyles}
+      styles={getStyles(name, formik)}
       value={values[name]}
       placeholder={placeholder}
-      onChange={value => setFieldValue(name, value)}
+      onChange={value => setFieldValue(name, value !== null ? value : [])}
       options={options}
       {...rest}
     />
