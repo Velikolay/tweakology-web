@@ -31,6 +31,7 @@ type ActionProps = {
   id: string,
   actionName: string,
   initMode: Symbol,
+  onDelete: (id: string) => void
 };
 
 type ActionHeaderProps = {
@@ -80,7 +81,7 @@ const withAction = (
   validationSchema: Yup.Schema,
 ) => {
   const comp = (props: ActionProps) => {
-    const { id, actionName, initMode } = props;
+    const { id, actionName, initMode, onDelete } = props;
     const [mode, setMode] = useState(initMode);
     return (
       <Formik initialValues={initialValues} validationSchema={validationSchema}>
@@ -101,12 +102,15 @@ const withAction = (
                   });
                 }}
                 onDiscard={() => {
-                  if (mode === ActionMode.EDIT) {
+                  const action = PersistenceService.read('Actions', id);
+                  if (!action) {
+                    onDelete(id);
+                  } else if (mode === ActionMode.EDIT) {
                     setMode(ActionMode.SUMMARY);
-                    formik.resetForm(PersistenceService.read('Actions', id));
+                    formik.resetForm(action);
                   }
                 }}
-                onDelete={() => {}}
+                onDelete={() => onDelete(id)}
               />
             )}
             <div className="ActionContainer__content">
@@ -136,11 +140,13 @@ const withAction = (
     id: PropTypes.string.isRequired,
     actionName: PropTypes.string,
     initMode: PropTypes.symbol,
+    onDelete: PropTypes.func,
   };
 
   comp.defaultProps = {
     actionName: '',
     initMode: ActionMode.SUMMARY,
+    onDelete: () => {},
   };
   return comp;
 };

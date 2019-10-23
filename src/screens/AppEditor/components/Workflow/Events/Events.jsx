@@ -1,5 +1,5 @@
 // @flow
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Formik, Form } from 'formik';
 
 import type { UIViewNode } from '../../../types';
@@ -44,11 +44,14 @@ type EventsProps = {
 };
 
 const Events = ({ activeNode }: EventsProps) => {
+  const [showAction, setShowAction] = useState(true);
   return (
     <div className="Events">
       <div className="Events__title">{`${activeNode.module} Events`}</div>
       <EventListenerSetupFrom />
-      <Action id="test" />
+      {showAction ? (
+        <Action id="test1" onDelete={() => setShowAction(false)} />
+      ) : null}
     </div>
   );
 };

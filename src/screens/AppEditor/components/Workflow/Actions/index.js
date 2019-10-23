@@ -9,6 +9,7 @@ import AttributeExpression from './AttributeExpression';
 
 type ActionProps = {
   id: string,
+  onDelete: (id: string) => void,
 };
 
 const ACTION_TYPE_OPTIONS = [
@@ -16,10 +17,16 @@ const ACTION_TYPE_OPTIONS = [
   { value: 'http_request', label: 'HTTP Request' },
 ];
 
-const Action = ({ id }: ActionProps) => {
+const Action = ({ id, onDelete }: ActionProps) => {
   const [type, setType] = React.useState(null);
   if (type !== null) {
-    return <AttributeExpression id={id} initMode={ActionMode.EDIT} />;
+    return (
+      <AttributeExpression
+        id={id}
+        initMode={ActionMode.EDIT}
+        onDelete={onDelete}
+      />
+    );
   }
   return (
     <Select
@@ -34,6 +41,11 @@ const Action = ({ id }: ActionProps) => {
 
 Action.propTypes = {
   id: PropTypes.string.isRequired,
+  onDelete: PropTypes.func,
+};
+
+Action.defaultProps = {
+  onDelete: () => {},
 };
 
 export default Action;
