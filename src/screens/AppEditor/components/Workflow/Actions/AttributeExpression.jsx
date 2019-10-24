@@ -6,8 +6,8 @@ import * as Yup from 'yup';
 import { IconContext } from 'react-icons';
 import { FaCode } from 'react-icons/fa';
 
-import type { ActionContentProps } from './Action';
-import withAction, { ActionMode } from './Action';
+import type { ActionContentProps } from './ActionHOC';
+import withAction, { ActionMode } from './ActionHOC';
 
 import Toggle from '../../../../../components/InputFields/Toggle';
 import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';

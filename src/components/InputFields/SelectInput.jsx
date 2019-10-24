@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import './SelectInput.scss';
 
 type SelectInputProps = {
-  options: { value: string, label: string }[],
-  onChange: () => void,
+  options: { value: any, label: string }[],
+  onChange: any => void,
   placeholder: string,
   disabled: boolean,
   creatable: boolean,
@@ -17,13 +17,13 @@ type SelectInputProps = {
 type FormikProps = {
   values: any,
   errors: any,
-  setFieldValue: (string, { value: string, label: string }[]) => void,
+  setFieldValue: (string, { value: any, label: string }[]) => void,
 };
 
 type FormikSelectInputProps = {
   name: string,
   formik: FormikProps,
-  options: { value: string, label: string }[],
+  options: { value: any, label: string }[],
   placeholder: string,
   disabled: boolean,
   creatable: boolean,
@@ -119,7 +119,7 @@ SelectInput.propTypes = {
   creatable: PropTypes.bool,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string.isRequired,
+      value: PropTypes.any.isRequired,
       label: PropTypes.string.isRequired,
     }),
   ),
@@ -140,7 +140,7 @@ FormikSelectInput.propTypes = {
   name: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string.isRequired,
+      value: PropTypes.any.isRequired,
       label: PropTypes.string.isRequired,
     }),
   ),
