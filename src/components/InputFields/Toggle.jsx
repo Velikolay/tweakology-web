@@ -12,7 +12,7 @@ type ToggleProps = {
   title?: string,
   className?: string,
   formik: {
-    setFieldValue: (string, { value: string, label: string }) => void,
+    setFieldValue: (string, boolean) => void,
     values: any,
   },
 };

@@ -6,6 +6,11 @@ import PropTypes from 'prop-types';
 
 import './SelectInput.scss';
 
+type OptionType = {
+  [string]: any,
+};
+type OptionsType = OptionType[];
+
 type SelectInputProps = {
   options: { value: any, label: string }[],
   onChange: any => void,
@@ -17,7 +22,7 @@ type SelectInputProps = {
 type FormikProps = {
   values: any,
   errors: any,
-  setFieldValue: (string, { value: any, label: string }[]) => void,
+  setFieldValue: (string, OptionType | OptionsType) => void,
 };
 
 type FormikSelectInputProps = {
@@ -76,6 +81,7 @@ const SelectInput = (props: SelectInputProps) => {
   } = props;
   const SelectComponent = creatable ? Creatable : Select;
   return (
+    // $FlowFixMe Createable bug!
     <SelectComponent
       isDisabled={disabled}
       styles={getStyles()}
@@ -100,12 +106,13 @@ export const FormikSelectInput = (props: FormikSelectInputProps) => {
   const { values, setFieldValue } = formik;
   const SelectComponent = creatable ? Creatable : Select;
   return (
+    // $FlowFixMe Createable bug!
     <SelectComponent
       isDisabled={disabled}
       styles={getStyles(name, formik)}
       value={values[name]}
       placeholder={placeholder}
-      onChange={value => setFieldValue(name, value !== null ? value : [])}
+      onChange={value => setFieldValue(name, value || [])}
       options={options}
       {...rest}
     />

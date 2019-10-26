@@ -86,7 +86,7 @@ const hasErrors = errors =>
 const withAction = (
   ActionComponent: AbstractComponent<ActionContentProps>,
   initialValues: any,
-  validationSchema: Yup.Schema,
+  validationSchema: Yup.Schema<any, any>,
 ) => {
   const comp = (props: ActionProps) => {
     const { id, actionName, initMode, onDelete } = props;
