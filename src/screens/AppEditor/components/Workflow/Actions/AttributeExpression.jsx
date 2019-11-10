@@ -13,13 +13,9 @@ import Toggle from '../../../../../components/InputFields/Toggle';
 import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
 
-import './AttributeExpression.scss';
+import RuntimeContext from '../../../contexts/RuntimeContext';
 
-const options = [
-  { value: 'Chocolate', label: 'Chocolate' },
-  { value: 'Strawberry', label: 'Strawberry' },
-  { value: 'Vanilla', label: 'Vanilla' },
-];
+import './AttributeExpression.scss';
 
 type AttributeExpressionActionState = {
   rerenderToggle: boolean,
@@ -122,30 +118,37 @@ const AttributeExpressionActionSummary = ({
 const AttributeExpressionActionEdit = ({
   formik,
 }: AttributeExpressionActionFormik) => (
-  <Fragment>
-    <Toggle
-      className="AttributeExpressionForm__rerenderToggle"
-      name="rerenderToggle"
-      title="Rerender"
-      formik={formik}
-    />
-    <FormikSelectInput
-      className="AttributeExpressionForm__attributes"
-      name="attributes"
-      placeholder="Attribute Name"
-      options={options}
-      formik={formik}
-      isMulti
-      creatable
-    />
-    <TextArea
-      className="AttributeExpressionForm__expression"
-      name="attributeExpression"
-      placeholder="Attribute Expression"
-      rows={6}
-      formik={formik}
-    />
-  </Fragment>
+  <RuntimeContext.Consumer>
+    {({ attributes }) => (
+      <Fragment>
+        <Toggle
+          className="AttributeExpressionForm__rerenderToggle"
+          name="rerenderToggle"
+          title="Rerender"
+          formik={formik}
+        />
+        <FormikSelectInput
+          className="AttributeExpressionForm__attributes"
+          name="attributes"
+          placeholder="Attribute Name"
+          options={Object.keys(attributes).map(name => ({
+            value: name,
+            label: name,
+          }))}
+          formik={formik}
+          isMulti
+          creatable
+        />
+        <TextArea
+          className="AttributeExpressionForm__expression"
+          name="attributeExpression"
+          placeholder="Attribute Expression"
+          rows={6}
+          formik={formik}
+        />
+      </Fragment>
+    )}
+  </RuntimeContext.Consumer>
 );
 
 AttributeExpressionActionEdit.propTypes = {

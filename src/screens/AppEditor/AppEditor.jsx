@@ -5,6 +5,7 @@ import DeviceConnector from '../../services/device/connector';
 import PersistenceService from '../../services/persistence';
 import APIClient from './api-client-adapter';
 import DeviceContext from './contexts/DeviceContext';
+import RuntimeContext from './contexts/RuntimeContext';
 
 import getTransformer from './transformers/form';
 
@@ -62,6 +63,7 @@ class AppEditor extends Component {
       !isEqual(newConnectedDevice, connectedDevice)
     ) {
       this.updateDeviceContext();
+      this.updateRuntimeContext();
       this.updateTree();
     }
     this.setState({
@@ -78,6 +80,14 @@ class AppEditor extends Component {
           fonts: fontDataEnrichment(fonts),
           events,
         };
+      })
+      .catch(err => console.log(err));
+
+  updateRuntimeContext = () =>
+    this.apiClient
+      .fetchRuntimeData()
+      .then(runtimeData => {
+        this.runtimeContext = runtimeData;
       })
       .catch(err => console.log(err));
 
@@ -223,18 +233,20 @@ class AppEditor extends Component {
     } = this.state;
     return (
       <DeviceContext.Provider value={this.deviceContext}>
-        <AppEditorLayout
-          connectedDevice={connectedDevice}
-          devices={devices}
-          tree={tree}
-          activeNode={activeNode}
-          onFocusNode={onFocusNode}
-          treeEventHandler={this.treeEventHandler}
-          sceneEventHandler={this.sceneEventHandler}
-          formEventHandler={this.formEventHandler}
-          deviceEventHandler={this.deviceEventHandler}
-          onSubmitChanges={this.onSubmitChanges}
-        />
+        <RuntimeContext.Provider value={this.runtimeContext}>
+          <AppEditorLayout
+            connectedDevice={connectedDevice}
+            devices={devices}
+            tree={tree}
+            activeNode={activeNode}
+            onFocusNode={onFocusNode}
+            treeEventHandler={this.treeEventHandler}
+            sceneEventHandler={this.sceneEventHandler}
+            formEventHandler={this.formEventHandler}
+            deviceEventHandler={this.deviceEventHandler}
+            onSubmitChanges={this.onSubmitChanges}
+          />
+        </RuntimeContext.Provider>
       </DeviceContext.Provider>
     );
   }
