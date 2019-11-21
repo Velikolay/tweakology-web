@@ -5,8 +5,8 @@ import cx from 'classnames';
 import Field from '../Field';
 import ToggleButtonMenu from '../ToggleButtonMenu/ToggleButtonMenu';
 
-import FormikContext from '../../../../contexts/FormikContext';
-import { nameWithPrefix, formikValueWithPrefix } from '../../FormikHelpers';
+import FormikContext from '../../FormikContext';
+import { nameWithPrefix, formikValueWithPrefix } from '../../../../form/FormikHelpers';
 import {
   attributeToModifiers,
   valueSwitch,

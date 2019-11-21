@@ -9,6 +9,7 @@ import { FaTrashAlt, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 import { IconButton } from '../../../../../components/InputFields/Button';
 
 import PersistenceService from '../../../../../services/persistence';
+import Persistence, { setForm } from '../../../form/Presistence';
 
 import './ActionHOC.scss';
 
@@ -90,6 +91,7 @@ const withAction = (
 ) => {
   const comp = (props: ActionProps) => {
     const { id, actionName, initMode, onDelete } = props;
+    const persistKey = `Actions.${id}`;
     const [mode, setMode] = useState(initMode);
     return (
       <Formik initialValues={initialValues} validationSchema={validationSchema}>
@@ -103,19 +105,17 @@ const withAction = (
                   formik.validateForm().then(errors => {
                     if (!hasErrors(errors) && mode === ActionMode.EDIT) {
                       setMode(ActionMode.SUMMARY);
-                      PersistenceService.write('Actions', {
-                        [id]: formik.values,
-                      });
+                      PersistenceService.write(persistKey, formik);
                     }
                   });
                 }}
                 onDiscard={() => {
-                  const action = PersistenceService.read('Actions', id);
-                  if (!action) {
+                  const persisted = PersistenceService.read(persistKey);
+                  if (!persisted) {
                     onDelete(id);
                   } else if (mode === ActionMode.EDIT) {
                     setMode(ActionMode.SUMMARY);
-                    formik.resetForm(action);
+                    setForm(formik, persisted);
                   }
                 }}
                 onDelete={() => onDelete(id)}
@@ -139,6 +139,7 @@ const withAction = (
                 </IconButton>
               ) : null}
             </div>
+            <Persistence name={persistKey} autosave={false} formik={formik} />
           </Form>
         )}
       </Formik>

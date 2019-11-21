@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import FormikContext from '../../../contexts/FormikContext';
+import FormikContext from '../FormikContext';
 
 import Field from '../Inputs/Field';
 import ConstraintItemSelector from '../Inputs/ConstraintItemSelector/ConstraintItemSelector';
-import { nameWithPrefix, formikValueWithPrefix } from '../FormikHelpers';
+import { nameWithPrefix, formikValueWithPrefix } from '../../../form/FormikHelpers';
 import { constraintAttributes } from '../../../../../services/device/metadata/NSLayoutConstraint';
 
 import './Blocks.scss';

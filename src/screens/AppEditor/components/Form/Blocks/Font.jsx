@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import FormikContext from '../../../contexts/FormikContext';
+import FormikContext from '../FormikContext';
 import DeviceContext from '../../../contexts/DeviceContext';
 
 import Field from '../Inputs/Field';
@@ -9,17 +9,17 @@ import {
   nameWithPrefix,
   titleForField,
   formikValueWithPrefix,
-} from '../FormikHelpers';
+} from '../../../form/FormikHelpers';
 
 import './Blocks.scss';
 
 const Font = props => {
+  const device = useContext(DeviceContext);
   const formik = useContext(FormikContext);
   const { touched, errors } = formik;
   const familyNameId = nameWithPrefix(props, 'familyName');
   const fontNameId = nameWithPrefix(props, 'fontName');
   const pointSizeId = nameWithPrefix(props, 'pointSize');
-  const device = useContext(DeviceContext);
   return (
     <div className="form-group">
       <div className="form-row">

@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 
@@ -117,39 +117,39 @@ const AttributeExpressionActionSummary = ({
 
 const AttributeExpressionActionEdit = ({
   formik,
-}: AttributeExpressionActionFormik) => (
-  <RuntimeContext.Consumer>
-    {({ attributes }) => (
-      <Fragment>
-        <Toggle
-          className="AttributeExpressionForm__rerenderToggle"
-          name="rerenderToggle"
-          title="Rerender"
-          formik={formik}
-        />
-        <FormikSelectInput
-          className="AttributeExpressionForm__attributes"
-          name="attributes"
-          placeholder="Attribute Name"
-          options={Object.keys(attributes).map(name => ({
-            value: name,
-            label: name,
-          }))}
-          formik={formik}
-          isMulti
-          creatable
-        />
-        <TextArea
-          className="AttributeExpressionForm__expression"
-          name="attributeExpression"
-          placeholder="Attribute Expression"
-          rows={6}
-          formik={formik}
-        />
-      </Fragment>
-    )}
-  </RuntimeContext.Consumer>
-);
+}: AttributeExpressionActionFormik) => {
+  const { attributes } = useContext(RuntimeContext);
+  const options = Object.keys(attributes).map(name => ({
+    value: name,
+    label: name,
+  }));
+  return (
+    <Fragment>
+      <Toggle
+        className="AttributeExpressionForm__rerenderToggle"
+        name="rerenderToggle"
+        title="Rerender"
+        formik={formik}
+      />
+      <FormikSelectInput
+        className="AttributeExpressionForm__attributes"
+        name="attributes"
+        placeholder="Attribute Name"
+        options={options}
+        formik={formik}
+        isMulti
+        creatable
+      />
+      <TextArea
+        className="AttributeExpressionForm__expression"
+        name="attributeExpression"
+        placeholder="Attribute Expression"
+        rows={6}
+        formik={formik}
+      />
+    </Fragment>
+  );
+};
 
 AttributeExpressionActionEdit.propTypes = {
   formik: FormikShape.isRequired,
