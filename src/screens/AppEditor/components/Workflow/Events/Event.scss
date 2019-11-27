@@ -1,0 +1,14 @@
+@import '../../../../../assets/styles/colors';
+
+.Event {
+  // margin: 18px 0;
+
+  &__select {
+    margin: 12px 0;
+    min-width: 200px;
+  }
+
+  &__actionContainer {
+    margin: 0 24px;
+  }
+}

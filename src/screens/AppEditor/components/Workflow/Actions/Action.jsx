@@ -12,17 +12,57 @@ const ACTION_OPTIONS = [
   { value: AttributeExpression, label: 'HTTP Request' },
 ];
 
+const ACTIONS = {
+  AttributeExpression,
+};
+
 type ActionProps = {
   id: string,
+  onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
 
-const Action = ({ id, onDelete }: ActionProps) => {
+type ActionItemProps = {
+  id: string,
+  kind: string,
+  onDelete: (id: string) => void,
+  onSave?: (id: string) => void,
+  initValues?: any,
+};
+
+export const ActionItem = ({
+  id,
+  kind,
+  initValues,
+  onSave,
+  onDelete,
+}: ActionItemProps) => {
+  if (kind in ACTIONS) {
+    const ActionComponent = ACTIONS[kind];
+    return (
+      <ActionComponent
+        id={id}
+        initMode={ActionMode.SUMMARY}
+        initValues={initValues}
+        onSave={onSave}
+        onDelete={onDelete}
+      />
+    );
+  }
+  return null;
+};
+
+const Action = ({ id, onSave, onDelete }: ActionProps) => {
   const [action, setAction] = React.useState(null);
   if (action !== null) {
     const ActionComponent = action.value;
     return (
-      <ActionComponent id={id} initMode={ActionMode.EDIT} onDelete={onDelete} />
+      <ActionComponent
+        id={id}
+        initMode={ActionMode.EDIT}
+        onSave={onSave}
+        onDelete={onDelete}
+      />
     );
   }
   return (
@@ -36,12 +76,27 @@ const Action = ({ id, onDelete }: ActionProps) => {
   );
 };
 
+ActionItem.propTypes = {
+  id: PropTypes.string.isRequired,
+  kind: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
+  initValues: PropTypes.any,
+};
+
+ActionItem.defaultProps = {
+  onSave: () => {},
+  initValues: null,
+};
+
 Action.propTypes = {
   id: PropTypes.string.isRequired,
+  onSave: PropTypes.func,
   onDelete: PropTypes.func,
 };
 
 Action.defaultProps = {
+  onSave: () => {},
   onDelete: () => {},
 };
 

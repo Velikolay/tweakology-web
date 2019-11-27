@@ -6,19 +6,4 @@
   &__title {
     color: $content-color;
   }
-
-  &__listenerSetupForm {
-    display: flex;
-    margin: 18px 0;
-
-    &__select {
-      min-width: 200px;
-      max-width: 400px;
-    }
-
-    &__submit {
-      flex: none;
-      margin-left: 12px;
-    }
-  }
 }

@@ -18,7 +18,7 @@ import RuntimeContext from '../../../contexts/RuntimeContext';
 import './AttributeExpression.scss';
 
 type AttributeExpressionActionState = {
-  rerenderToggle: boolean,
+  rerender: boolean,
   attributes: { value: string, label: string }[],
   attributeExpression: string,
 };
@@ -27,7 +27,7 @@ type AttributeExpressionActionFormik = {
   formik: {
     values: AttributeExpressionActionState,
     errors: {
-      rerenderToggle: string,
+      rerender: string,
       attributes: string,
       attributeExpression: string,
     },
@@ -36,13 +36,13 @@ type AttributeExpressionActionFormik = {
 };
 
 const InitialValues = {
-  rerenderToggle: false,
+  rerender: false,
   attributes: [],
   attributeExpression: '',
 };
 
 const ValidationSchema = Yup.object().shape({
-  rerenderToggle: Yup.boolean().required('Required'),
+  rerender: Yup.boolean().required('Required'),
   attributes: Yup.array()
     .min(1, 'At least one attribute required')
     .required('Required'),
@@ -64,7 +64,7 @@ const AttributeExpressionAction = ({
 
 const FormikShape = PropTypes.shape({
   values: PropTypes.shape({
-    rerenderToggle: PropTypes.bool.isRequired,
+    rerender: PropTypes.bool.isRequired,
     attributes: PropTypes.arrayOf(
       PropTypes.shape({
         value: PropTypes.string.isRequired,
@@ -74,7 +74,7 @@ const FormikShape = PropTypes.shape({
     attributeExpression: PropTypes.string.isRequired,
   }).isRequired,
   errors: PropTypes.shape({
-    rerenderToggle: PropTypes.string,
+    rerender: PropTypes.string,
     attributes: PropTypes.string,
     attributeExpression: PropTypes.string,
   }).isRequired,
@@ -88,7 +88,7 @@ AttributeExpressionAction.propTypes = {
 };
 
 const AttributeExpressionActionSummary = ({
-  rerenderToggle,
+  rerender,
   attributes,
   attributeExpression,
 }: AttributeExpressionActionState) => (
@@ -109,7 +109,7 @@ const AttributeExpressionActionSummary = ({
         </React.Fragment>
       ))}
     </div>
-    {rerenderToggle ? (
+    {rerender ? (
       <div className="AttributeExpressionSummary__text">and rerender</div>
     ) : null}
   </div>
@@ -127,7 +127,7 @@ const AttributeExpressionActionEdit = ({
     <Fragment>
       <Toggle
         className="AttributeExpressionForm__rerenderToggle"
-        name="rerenderToggle"
+        name="rerender"
         title="Rerender"
         formik={formik}
       />
@@ -157,6 +157,6 @@ AttributeExpressionActionEdit.propTypes = {
 
 export default withAction(
   AttributeExpressionAction,
-  InitialValues,
   ValidationSchema,
+  InitialValues,
 );

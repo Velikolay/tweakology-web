@@ -2,7 +2,7 @@
 import type { AbstractComponent } from 'react';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Formik, Form } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { FaTrashAlt, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 
@@ -52,7 +52,7 @@ const ActionHeader = (props: ActionHeaderProps) => {
           >
             <FaTrashAlt />
           </IconButton>
-          <IconButton type="submit" onClick={onSave}>
+          <IconButton onClick={onSave}>
             <FaSave />
           </IconButton>
           <IconButton onClick={onDiscard}>
@@ -78,6 +78,8 @@ type ActionProps = {
   id: string,
   actionName: string,
   initMode: Symbol,
+  initValues?: any,
+  onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
 
@@ -86,17 +88,25 @@ const hasErrors = errors =>
 
 const withAction = (
   ActionComponent: AbstractComponent<ActionContentProps>,
-  initialValues: any,
   validationSchema: Yup.Schema<any, any>,
+  defaultInitValues: any,
 ) => {
   const comp = (props: ActionProps) => {
-    const { id, actionName, initMode, onDelete } = props;
+    const {
+      id,
+      actionName,
+      initMode,
+      initValues: customInitValues,
+      onSave,
+      onDelete,
+    } = props;
+    const initValues = customInitValues || defaultInitValues;
     const persistKey = `Actions.${id}`;
     const [mode, setMode] = useState(initMode);
     return (
-      <Formik initialValues={initialValues} validationSchema={validationSchema}>
+      <Formik initialValues={initValues} validationSchema={validationSchema}>
         {formik => (
-          <Form className="ActionContainer">
+          <div className="ActionContainer">
             {mode === ActionMode.SUMMARY ? null : (
               <ActionHeader
                 actionName={actionName}
@@ -106,6 +116,7 @@ const withAction = (
                     if (!hasErrors(errors) && mode === ActionMode.EDIT) {
                       setMode(ActionMode.SUMMARY);
                       PersistenceService.write(persistKey, formik);
+                      onSave(id);
                     }
                   });
                 }}
@@ -139,8 +150,8 @@ const withAction = (
                 </IconButton>
               ) : null}
             </div>
-            <Persistence name={persistKey} autosave={false} formik={formik} />
-          </Form>
+            <Persistence name={persistKey} formik={formik} autosave={false} />
+          </div>
         )}
       </Formik>
     );
@@ -149,13 +160,17 @@ const withAction = (
     id: PropTypes.string.isRequired,
     actionName: PropTypes.string,
     initMode: PropTypes.symbol,
+    initValues: PropTypes.any,
     onDelete: PropTypes.func,
+    onSave: PropTypes.func,
   };
 
   comp.defaultProps = {
     actionName: '',
     initMode: ActionMode.SUMMARY,
+    initValues: null,
     onDelete: () => {},
+    onSave: () => {},
   };
   return comp;
 };
