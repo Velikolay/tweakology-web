@@ -59,36 +59,37 @@ export const MutableList = (props: MutableListProps) => {
   if (items.length === 0) {
     let initItems = PersistenceService.read(parentId);
     if (!initItems) {
-      initItems = remoteItems.map(({ id }) => ({ id }));
+      initItems = remoteItems.map(({ id, kind, values }) => ({
+        id,
+        kind: kind || '',
+        values: values || null,
+        status: 'saved',
+      }));
     }
     if (initItems.length > 0) {
       PersistenceService.write(parentId, initItems);
       setItems(initItems);
     }
   }
-  console.log(items);
-  const itemComps = items.map(({ id }) => {
-    const itemProps = remoteItems.find(item => item.id === id);
-    const initValues = itemProps ? itemProps.values : null;
-    return (
+
+  const itemComps = items
+    .filter(({ status }) => status === 'saved')
+    .map(({ id, kind, values }) => (
       <Item
         id={id}
         key={id}
-        kind="AttributeExpression"
-        initValues={initValues}
+        kind={kind}
+        initValues={values}
         onDelete={() => {
           const updated = items.filter(item => item.id !== id);
-          console.log(updated);
-          // const item = list.items[idx];
+          // const item = items[idx];
           // item.status = 'disabled';
-          // list.items[idx] = item;
+          // items[idx] = item;
           PersistenceService.write(parentId, updated);
           setItems(updated);
-          console.log('Delete invoked');
         }}
       />
-    );
-  });
+    ));
 
   return (
     <React.Fragment>
@@ -96,8 +97,30 @@ export const MutableList = (props: MutableListProps) => {
       <NewItem
         id={newItemId}
         key={newItemId}
+        onInit={({ id, kind }) => {
+          const updated = items.concat({
+            id,
+            kind,
+            values: null,
+            status: 'init',
+          });
+          setItems(updated);
+        }}
         onSave={() => {
-          const updated = items.concat({ id: newItemId });
+          let updated;
+          if (items.length > 0 && items[items.length - 1].status === 'init') {
+            const { id, kind, values } = items[items.length - 1];
+            updated = items
+              .slice(0, -1)
+              .concat({ id, kind, values, status: 'saved' });
+          } else {
+            updated = items.concat({
+              id: newItemId,
+              kind: '',
+              values: null,
+              status: 'saved',
+            });
+          }
           PersistenceService.write(parentId, updated);
           setItems(updated);
           setNewItemId(uuidv4());

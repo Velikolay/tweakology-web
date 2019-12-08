@@ -8,8 +8,8 @@ import AttributeExpression from './AttributeExpression';
 import Select from '../../../../../components/InputFields/SelectInput';
 
 const ACTION_OPTIONS = [
-  { value: AttributeExpression, label: 'Attribute Expression' },
-  { value: AttributeExpression, label: 'HTTP Request' },
+  { value: 'AttributeExpression', label: 'Attribute Expression' },
+  { value: 'AttributeExpression', label: 'HTTP Request' },
 ];
 
 const ACTIONS = {
@@ -18,6 +18,7 @@ const ACTIONS = {
 
 type ActionProps = {
   id: string,
+  onInit: ({ id: string, kind: string }) => void,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
@@ -25,9 +26,9 @@ type ActionProps = {
 type ActionItemProps = {
   id: string,
   kind: string,
+  initValues: any,
   onDelete: (id: string) => void,
-  onSave?: (id: string) => void,
-  initValues?: any,
+  onSave: (id: string) => void,
 };
 
 export const ActionItem = ({
@@ -52,10 +53,10 @@ export const ActionItem = ({
   return null;
 };
 
-const Action = ({ id, onSave, onDelete }: ActionProps) => {
-  const [action, setAction] = React.useState(null);
-  if (action !== null) {
-    const ActionComponent = action.value;
+const Action = ({ id, onInit, onSave, onDelete }: ActionProps) => {
+  const [kind, setKind] = React.useState(null);
+  if (kind !== null) {
+    const ActionComponent = ACTIONS[kind];
     return (
       <ActionComponent
         id={id}
@@ -71,7 +72,10 @@ const Action = ({ id, onSave, onDelete }: ActionProps) => {
       name="attributes"
       placeholder="Action Type"
       options={ACTION_OPTIONS}
-      onChange={value => setAction(value)}
+      onChange={({ value }) => {
+        setKind(value);
+        onInit({ id, kind: value });
+      }}
     />
   );
 };
@@ -79,9 +83,9 @@ const Action = ({ id, onSave, onDelete }: ActionProps) => {
 ActionItem.propTypes = {
   id: PropTypes.string.isRequired,
   kind: PropTypes.string.isRequired,
+  initValues: PropTypes.any,
   onDelete: PropTypes.func.isRequired,
   onSave: PropTypes.func,
-  initValues: PropTypes.any,
 };
 
 ActionItem.defaultProps = {
@@ -91,11 +95,13 @@ ActionItem.defaultProps = {
 
 Action.propTypes = {
   id: PropTypes.string.isRequired,
+  onInit: PropTypes.func,
   onSave: PropTypes.func,
   onDelete: PropTypes.func,
 };
 
 Action.defaultProps = {
+  onInit: () => {},
   onSave: () => {},
   onDelete: () => {},
 };
