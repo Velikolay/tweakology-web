@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import PersistenceService from '../../services/persistence';
 
+import './MutableList.scss';
+
 const uuidv4 = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -37,6 +39,7 @@ type MutableListProps = {
   items: ItemProps[],
   itemComponent: ComponentType<ItemComponentProps>,
   newItemComponent: ComponentType<NewItemComponentProps>,
+  itemStyles: string,
 };
 
 export const MutableList = (props: MutableListProps) => {
@@ -45,6 +48,7 @@ export const MutableList = (props: MutableListProps) => {
     items: remoteItems,
     itemComponent: Item,
     newItemComponent: NewItem,
+    itemStyles,
   } = props;
   const [items, setItems] = useState([]);
   const [newItemId, setNewItemId] = useState(uuidv4());
@@ -67,57 +71,61 @@ export const MutableList = (props: MutableListProps) => {
   const itemComps = items
     .filter(({ status }) => status === 'saved')
     .map(({ id, kind, values }) => (
-      <Item
-        id={id}
-        key={id}
-        kind={kind}
-        initValues={values}
-        onDelete={() => {
-          const updated = items.filter(item => item.id !== id);
-          // const item = items[idx];
-          // item.status = 'disabled';
-          // items[idx] = item;
-          PersistenceService.write(parentId, updated);
-          setItems(updated);
-        }}
-      />
+      <div className={itemStyles}>
+        <Item
+          id={id}
+          key={id}
+          kind={kind}
+          initValues={values}
+          onDelete={() => {
+            const updated = items.filter(item => item.id !== id);
+            // const item = items[idx];
+            // item.status = 'disabled';
+            // items[idx] = item;
+            PersistenceService.write(parentId, updated);
+            setItems(updated);
+          }}
+        />
+      </div>
     ));
 
   return (
     <React.Fragment>
       {itemComps}
-      <NewItem
-        id={newItemId}
-        key={newItemId}
-        onInit={({ id, kind }) => {
-          const updated = items.concat({
-            id,
-            kind,
-            values: null,
-            status: 'init',
-          });
-          setItems(updated);
-        }}
-        onSave={() => {
-          let updated;
-          if (items.length > 0 && items[items.length - 1].status === 'init') {
-            const { id, kind, values } = items[items.length - 1];
-            updated = items
-              .slice(0, -1)
-              .concat({ id, kind, values, status: 'saved' });
-          } else {
-            updated = items.concat({
-              id: newItemId,
-              kind: '',
+      <div className={itemStyles}>
+        <NewItem
+          id={newItemId}
+          key={newItemId}
+          onInit={({ id, kind }) => {
+            const updated = items.concat({
+              id,
+              kind,
               values: null,
-              status: 'saved',
+              status: 'init',
             });
-          }
-          PersistenceService.write(parentId, updated);
-          setItems(updated);
-          setNewItemId(uuidv4());
-        }}
-      />
+            setItems(updated);
+          }}
+          onSave={() => {
+            let updated;
+            if (items.length > 0 && items[items.length - 1].status === 'init') {
+              const { id, kind, values } = items[items.length - 1];
+              updated = items
+                .slice(0, -1)
+                .concat({ id, kind, values, status: 'saved' });
+            } else {
+              updated = items.concat({
+                id: newItemId,
+                kind: '',
+                values: null,
+                status: 'saved',
+              });
+            }
+            PersistenceService.write(parentId, updated);
+            setItems(updated);
+            setNewItemId(uuidv4());
+          }}
+        />
+      </div>
     </React.Fragment>
   );
 };
@@ -127,6 +135,11 @@ MutableList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   itemComponent: PropTypes.elementType.isRequired,
   newItemComponent: PropTypes.elementType.isRequired,
+  itemStyles: PropTypes.string,
+};
+
+MutableList.defaultProps = {
+  itemStyles: 'MutableList__item',
 };
 
 export default MutableList;
