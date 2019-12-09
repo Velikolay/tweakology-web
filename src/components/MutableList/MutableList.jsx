@@ -14,10 +14,22 @@ const uuidv4 = () => {
   });
 };
 
-type ItemComponentProps = {
+export const ItemPropsShape = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  kind: PropTypes.string,
+  values: PropTypes.any.isRequired,
+});
+
+export type ItemProps = {
   id: string,
-  kind: string,
-  initValues?: any,
+  kind?: string,
+  values: any,
+};
+
+type ItemComponentProps = ItemProps & {
+  id: string,
+  kind?: string,
+  values: any,
   onSave?: (id: string) => void,
   onDelete: (id: string) => void,
 };
@@ -26,12 +38,6 @@ type NewItemComponentProps = {
   id: string,
   onSave: (id: string) => void,
   onDelete?: (id: string) => void,
-};
-
-type ItemProps = {
-  id: string,
-  kind: string,
-  values: any,
 };
 
 type MutableListProps = {
@@ -52,6 +58,7 @@ export const MutableList = (props: MutableListProps) => {
   } = props;
   const [items, setItems] = useState([]);
   const [newItemId, setNewItemId] = useState(uuidv4());
+
   if (items.length === 0) {
     let initItems = PersistenceService.read(parentId);
     if (!initItems) {
@@ -71,12 +78,11 @@ export const MutableList = (props: MutableListProps) => {
   const itemComps = items
     .filter(({ status }) => status === 'saved')
     .map(({ id, kind, values }) => (
-      <div className={itemStyles}>
+      <div key={id} className={itemStyles}>
         <Item
           id={id}
-          key={id}
           kind={kind}
-          initValues={values}
+          values={values}
           onDelete={() => {
             const updated = items.filter(item => item.id !== id);
             // const item = items[idx];
@@ -124,6 +130,13 @@ export const MutableList = (props: MutableListProps) => {
             setItems(updated);
             setNewItemId(uuidv4());
           }}
+          onDelete={() => {
+            if (items.length > 0 && items[items.length - 1].status === 'init') {
+              const updated = items.slice(0, -1);
+              setItems(updated);
+              setNewItemId(uuidv4());
+            }
+          }}
         />
       </div>
     </React.Fragment>
@@ -132,7 +145,7 @@ export const MutableList = (props: MutableListProps) => {
 
 MutableList.propTypes = {
   id: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(PropTypes.any).isRequired,
+  items: PropTypes.arrayOf(ItemPropsShape).isRequired,
   itemComponent: PropTypes.elementType.isRequired,
   newItemComponent: PropTypes.elementType.isRequired,
   itemStyles: PropTypes.string,

@@ -78,7 +78,7 @@ type ActionProps = {
   id: string,
   actionName: string,
   initMode: Symbol,
-  initValues?: any,
+  values?: any,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
@@ -89,18 +89,18 @@ const hasErrors = errors =>
 const withAction = (
   ActionComponent: AbstractComponent<ActionContentProps>,
   validationSchema: Yup.Schema<any, any>,
-  defaultInitValues: any,
+  defaultValues: any,
 ) => {
   const comp = (props: ActionProps) => {
     const {
       id,
       actionName,
       initMode,
-      initValues: customInitValues,
+      values: customValues,
       onSave,
       onDelete,
     } = props;
-    const initValues = customInitValues || defaultInitValues;
+    const initValues = customValues || defaultValues;
     const persistKey = `Actions.${id}`;
     const [mode, setMode] = useState(initMode);
     return (
@@ -160,7 +160,7 @@ const withAction = (
     id: PropTypes.string.isRequired,
     actionName: PropTypes.string,
     initMode: PropTypes.symbol,
-    initValues: PropTypes.any,
+    values: PropTypes.any,
     onDelete: PropTypes.func,
     onSave: PropTypes.func,
   };
@@ -168,7 +168,7 @@ const withAction = (
   comp.defaultProps = {
     actionName: '',
     initMode: ActionMode.SUMMARY,
-    initValues: null,
+    values: null,
     onDelete: () => {},
     onSave: () => {},
   };
