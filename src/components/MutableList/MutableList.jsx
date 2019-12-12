@@ -26,18 +26,18 @@ export type ItemProps = {
   values: any,
 };
 
+type NewItemComponentProps = {
+  id: string,
+  onSave: (id: string) => void,
+  onDelete: (id: string) => void,
+};
+
 type ItemComponentProps = ItemProps & {
   id: string,
   kind?: string,
   values: any,
   onSave?: (id: string) => void,
   onDelete: (id: string) => void,
-};
-
-type NewItemComponentProps = {
-  id: string,
-  onSave: (id: string) => void,
-  onDelete?: (id: string) => void,
 };
 
 type MutableListProps = {

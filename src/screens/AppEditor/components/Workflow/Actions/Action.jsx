@@ -27,8 +27,8 @@ type ActionItemProps = {
   id: string,
   kind: string,
   values: any,
-  onDelete: (id: string) => void,
   onSave: (id: string) => void,
+  onDelete: (id: string) => void,
 };
 
 export const ActionItem = ({
@@ -43,7 +43,7 @@ export const ActionItem = ({
     return (
       <ActionComponent
         id={id}
-        initMode={ActionMode.SUMMARY}
+        mode={ActionMode.SUMMARY}
         values={values}
         onSave={onSave}
         onDelete={onDelete}
@@ -53,14 +53,14 @@ export const ActionItem = ({
   return null;
 };
 
-const Action = ({ id, onInit, onSave, onDelete }: ActionProps) => {
+export const NewAction = ({ id, onInit, onSave, onDelete }: ActionProps) => {
   const [kind, setKind] = React.useState(null);
   if (kind !== null) {
     const ActionComponent = ACTIONS[kind];
     return (
       <ActionComponent
         id={id}
-        initMode={ActionMode.EDIT}
+        mode={ActionMode.EDIT}
         onSave={onSave}
         onDelete={onDelete}
       />
@@ -93,17 +93,17 @@ ActionItem.defaultProps = {
   values: null,
 };
 
-Action.propTypes = {
+NewAction.propTypes = {
   id: PropTypes.string.isRequired,
   onInit: PropTypes.func,
   onSave: PropTypes.func,
   onDelete: PropTypes.func,
 };
 
-Action.defaultProps = {
+NewAction.defaultProps = {
   onInit: () => {},
   onSave: () => {},
   onDelete: () => {},
 };
 
-export default Action;
+export default NewAction;

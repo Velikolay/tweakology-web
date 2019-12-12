@@ -77,7 +77,7 @@ ActionHeader.propTypes = {
 type ActionProps = {
   id: string,
   actionName: string,
-  initMode: Symbol,
+  mode: Symbol,
   values?: any,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
@@ -95,7 +95,7 @@ const withAction = (
     const {
       id,
       actionName,
-      initMode,
+      mode: initMode,
       values: customValues,
       onSave,
       onDelete,
@@ -107,7 +107,7 @@ const withAction = (
       <Formik initialValues={initValues} validationSchema={validationSchema}>
         {formik => (
           <div className="ActionContainer">
-            {mode === ActionMode.SUMMARY ? null : (
+            {mode === ActionMode.EDIT ? (
               <ActionHeader
                 actionName={actionName}
                 mode={mode}
@@ -131,7 +131,7 @@ const withAction = (
                 }}
                 onDelete={() => onDelete(id)}
               />
-            )}
+            ) : null}
             <div className="ActionContainer__content">
               <div className="ActionContainer__content__frame">
                 <ActionComponent id={id} mode={mode} formik={formik} />
@@ -159,7 +159,7 @@ const withAction = (
   comp.propTypes = {
     id: PropTypes.string.isRequired,
     actionName: PropTypes.string,
-    initMode: PropTypes.symbol,
+    mode: PropTypes.symbol,
     values: PropTypes.any,
     onDelete: PropTypes.func,
     onSave: PropTypes.func,
@@ -167,7 +167,7 @@ const withAction = (
 
   comp.defaultProps = {
     actionName: '',
-    initMode: ActionMode.SUMMARY,
+    mode: ActionMode.SUMMARY,
     values: null,
     onDelete: () => {},
     onSave: () => {},

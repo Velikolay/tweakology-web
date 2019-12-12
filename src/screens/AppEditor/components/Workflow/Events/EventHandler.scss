@@ -8,6 +8,41 @@
     min-width: 200px;
   }
 
+  &__header {
+    display: flex;
+    padding: 4px;
+    height: 22px;
+    min-width: 0;
+
+    &__buffer {
+      flex: 1;
+    }
+
+    &__title {
+      display: flex;
+      justify-content: flex-start;
+      font-size: 16px;
+      color: $content-color;
+      overflow: hidden;
+
+      & > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &__buttons {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+
+      &__trashIcon {
+        color: $alert-color;
+      }
+    }
+  }
+
   &__actionContainer {
     margin: 0 24px;
   }

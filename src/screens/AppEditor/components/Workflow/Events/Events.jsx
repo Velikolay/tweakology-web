@@ -4,7 +4,7 @@ import React from 'react';
 import type { UIViewNode } from '../../../types';
 import type { AnyUIView } from '../../../../../services/device/types';
 
-import EventHandler, { EventHandlerItem } from './EventHandler';
+import { NewEventHandler, EventHandlerItem } from './EventHandler';
 import MutableList from '../../../../../components/MutableList';
 
 import { TreeViewNodeShape } from '../../Tree/Shapes';
@@ -20,10 +20,10 @@ const Events = ({ activeNode }: EventsProps) => {
     <div className="Events">
       <div className="Events__title">{`${activeNode.module} Events`}</div>
       <MutableList
-        id={activeNode.id}
+        id={`Events.${activeNode.id}`}
         items={[]}
         itemComponent={EventHandlerItem}
-        newItemComponent={EventHandler}
+        newItemComponent={NewEventHandler}
       />
     </div>
   );
