@@ -2,9 +2,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ActionMode } from './ActionHOC';
 import AttributeExpression from './AttributeExpression';
 
+import { Mode } from '../../../../../components/MutableList/MutableListItem';
 import Select from '../../../../../components/InputFields/SelectInput';
 
 const ACTION_OPTIONS = [
@@ -43,7 +43,7 @@ export const ActionItem = ({
     return (
       <ActionComponent
         id={id}
-        mode={ActionMode.SUMMARY}
+        mode={Mode.SUMMARY}
         values={values}
         onSave={onSave}
         onDelete={onDelete}
@@ -60,7 +60,7 @@ export const NewAction = ({ id, onInit, onSave, onDelete }: ActionProps) => {
     return (
       <ActionComponent
         id={id}
-        mode={ActionMode.EDIT}
+        mode={Mode.EDIT}
         onSave={onSave}
         onDelete={onDelete}
       />

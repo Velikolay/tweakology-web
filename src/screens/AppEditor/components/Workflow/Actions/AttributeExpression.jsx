@@ -7,11 +7,12 @@ import { IconContext } from 'react-icons';
 import { FaCode } from 'react-icons/fa';
 
 import type { ActionContentProps } from './ActionHOC';
-import withAction, { ActionMode } from './ActionHOC';
+import withAction from './ActionHOC';
 
 import Toggle from '../../../../../components/InputFields/Toggle';
 import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
+import { Mode } from '../../../../../components/MutableList/MutableListItem';
 
 import RuntimeContext from '../../../contexts/RuntimeContext';
 
@@ -55,7 +56,7 @@ const AttributeExpressionAction = ({
   formik,
 }: ActionContentProps) => {
   const { values } = formik;
-  return mode === ActionMode.SUMMARY ? (
+  return mode === Mode.SUMMARY ? (
     <AttributeExpressionActionSummary {...values} />
   ) : (
     <AttributeExpressionActionEdit formik={formik} />
