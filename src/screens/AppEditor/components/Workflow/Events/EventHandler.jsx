@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 
 import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
-import type { ItemProps } from '../../../../../components/MutableList';
-import MutableList, {
-  ItemPropsShape,
-} from '../../../../../components/MutableList';
+import MutableList from '../../../../../components/MutableList';
+import type { ItemProps } from '../../../../../components/MutableList/MutableListItem';
 import MutableListItem, {
-  Mode,
+  ItemMode,
+  ItemPropsShape,
 } from '../../../../../components/MutableList/MutableListItem';
 
 import { NewAction, ActionItem } from '../Actions';
@@ -37,7 +36,7 @@ type EventHandlerProps = EventHandlerItemProps & {
 };
 
 export const NewEventHandler = (props: NewEventHandlerProps) => {
-  return <EventHandler mode={Mode.EDIT} showActions={false} {...props} />;
+  return <EventHandler mode={ItemMode.EDIT} showActions={false} {...props} />;
 };
 
 export const EventHandlerItem = (props: EventHandlerItemProps) => {
@@ -70,7 +69,7 @@ const EventHandler = ({
             onDelete={onDelete}
           >
             {(_, mode) =>
-              mode === Mode.EDIT ? (
+              mode === ItemMode.EDIT ? (
                 <FormikSelectInput
                   className="EventHandlerEdit__select"
                   name="events"
@@ -138,7 +137,7 @@ EventHandlerItem.propTypes = {
 };
 
 EventHandlerItem.defaultProps = {
-  mode: Mode.SUMMARY,
+  mode: ItemMode.SUMMARY,
   values: {
     events: [],
     actions: [],
@@ -160,7 +159,7 @@ EventHandler.propTypes = {
 };
 
 EventHandler.defaultProps = {
-  mode: Mode.SUMMARY,
+  mode: ItemMode.SUMMARY,
   showActions: true,
   values: {
     events: [],

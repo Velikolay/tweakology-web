@@ -8,14 +8,12 @@
 
 .EventHandlerEdit {
   &__select {
-    margin: 12px 0;
     min-width: 200px;
   }
 }
 
 .EventHandlerSummary {
   display: flex;
-  // justify-content: center;
   margin: 8px;
 
   &__text {

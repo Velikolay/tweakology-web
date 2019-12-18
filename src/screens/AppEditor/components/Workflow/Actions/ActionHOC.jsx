@@ -6,10 +6,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import MutableListItem, {
-  Mode,
+  ItemMode,
 } from '../../../../../components/MutableList/MutableListItem';
-
-import './ActionHOC.scss';
 
 export type ActionContentProps = {
   id: string,
@@ -23,7 +21,6 @@ export type ActionContentProps = {
 
 type ActionProps = {
   id: string,
-  actionName: string,
   mode: Symbol,
   values?: any,
   onSave: (id: string) => void,
@@ -38,7 +35,6 @@ const withAction = (
   const comp = (props: ActionProps) => {
     const {
       id,
-      // actionName,
       mode: initMode,
       values: customValues,
       onSave,
@@ -46,7 +42,7 @@ const withAction = (
     } = props;
     const initValues = customValues || defaultValues;
     const persistKey = `Actions.${id}`;
-    // const [mode, setMode] = useState(initMode);
+
     return (
       <Formik initialValues={initValues} validationSchema={validationSchema}>
         {formik => (
@@ -69,16 +65,14 @@ const withAction = (
   };
   comp.propTypes = {
     id: PropTypes.string.isRequired,
-    actionName: PropTypes.string,
     mode: PropTypes.symbol,
-    values: PropTypes.any,
+    values: PropTypes.objectOf(PropTypes.any),
     onDelete: PropTypes.func,
     onSave: PropTypes.func,
   };
 
   comp.defaultProps = {
-    actionName: '',
-    mode: Mode.SUMMARY,
+    mode: ItemMode.SUMMARY,
     values: null,
     onDelete: () => {},
     onSave: () => {},

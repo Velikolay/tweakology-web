@@ -11,9 +11,21 @@ import Persistence, { setForm } from '../../screens/AppEditor/form/Presistence';
 
 import './MutableListItem.scss';
 
-export const Mode = Object.freeze({
+export const ItemMode = Object.freeze({
   SUMMARY: Symbol('summary'),
   EDIT: Symbol('edit'),
+});
+
+export type ItemProps = {
+  id: string,
+  kind?: string,
+  values: any,
+};
+
+export const ItemPropsShape = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  kind: PropTypes.string,
+  values: PropTypes.objectOf(PropTypes.any).isRequired,
 });
 
 type MutableListItemProps = {
@@ -43,7 +55,7 @@ const Header = (props: HeaderProps) => {
       <div className="MutableListItem__header__title">
         <span>{name}</span>
       </div>
-      {mode === Mode.EDIT ? (
+      {mode === ItemMode.EDIT ? (
         <div className="MutableListItem__header__buttons">
           <IconButton
             iconClassName="MutableListItem__header__buttons__trashIcon"
@@ -82,14 +94,14 @@ const MutableListItem = (props: MutableListItemProps) => {
   const [mode, setMode] = useState(initMode);
   return (
     <div className="MutableListItem">
-      {mode === Mode.EDIT ? (
+      {mode === ItemMode.EDIT ? (
         <Header
           name=""
           mode={mode}
           onSave={() => {
             formik.validateForm().then(errors => {
-              if (!hasErrors(errors) && mode === Mode.EDIT) {
-                setMode(Mode.SUMMARY);
+              if (!hasErrors(errors) && mode === ItemMode.EDIT) {
+                setMode(ItemMode.SUMMARY);
                 PersistenceService.write(persistKey, formik);
                 onSave(id);
               }
@@ -99,8 +111,8 @@ const MutableListItem = (props: MutableListItemProps) => {
             const persisted = PersistenceService.read(persistKey);
             if (!persisted) {
               onDelete(id);
-            } else if (mode === Mode.EDIT) {
-              setMode(Mode.SUMMARY);
+            } else if (mode === ItemMode.EDIT) {
+              setMode(ItemMode.SUMMARY);
               setForm(formik, persisted);
             }
           }}
@@ -111,13 +123,13 @@ const MutableListItem = (props: MutableListItemProps) => {
         <div className="MutableListItem__content__frame">
           {typeof children === 'function' ? children(formik, mode) : null}
         </div>
-        {mode === Mode.SUMMARY ? (
+        {mode === ItemMode.SUMMARY ? (
           <IconButton
             className="MutableListItem__content__summary__edit"
             iconClassName="MutableListItem__content__summary__editIcon"
             onClick={() => {
-              if (mode === Mode.SUMMARY) {
-                setMode(Mode.EDIT);
+              if (mode === ItemMode.SUMMARY) {
+                setMode(ItemMode.EDIT);
               }
             }}
           >
@@ -138,7 +150,7 @@ MutableListItem.propTypes = {
 };
 
 MutableListItem.defaultProps = {
-  mode: Mode.SUMMARY,
+  mode: ItemMode.SUMMARY,
   onDelete: () => {},
   onSave: () => {},
 };

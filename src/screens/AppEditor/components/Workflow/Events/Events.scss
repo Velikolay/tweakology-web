@@ -1,9 +1,14 @@
 @import '../../../../../assets/styles/colors';
 
 .Events {
-  margin: 18px;
+  padding: 18px;
+  overflow: auto;
 
   &__title {
     color: $content-color;
+  }
+
+  &__item {
+    margin: 16px 0;
   }
 }

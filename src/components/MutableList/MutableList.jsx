@@ -3,28 +3,13 @@ import type { ComponentType } from 'react';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import uuidv4 from 'uuid/v4';
+
 import PersistenceService from '../../services/persistence';
+import type { ItemProps } from './MutableListItem';
+import { ItemPropsShape } from './MutableListItem';
 
 import './MutableList.scss';
-
-const uuidv4 = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-};
-
-export const ItemPropsShape = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  kind: PropTypes.string,
-  values: PropTypes.any.isRequired,
-});
-
-export type ItemProps = {
-  id: string,
-  kind?: string,
-  values: any,
-};
 
 type NewItemComponentProps = {
   id: string,
@@ -32,7 +17,7 @@ type NewItemComponentProps = {
   onDelete: (id: string) => void,
 };
 
-type ItemComponentProps = ItemProps & {
+type ItemComponentProps = {
   id: string,
   kind?: string,
   values: any,
@@ -48,7 +33,7 @@ type MutableListProps = {
   itemStyles: string,
 };
 
-export const MutableList = (props: MutableListProps) => {
+const MutableList = (props: MutableListProps) => {
   const {
     id: parentId,
     items: remoteItems,
@@ -146,7 +131,9 @@ export const MutableList = (props: MutableListProps) => {
 MutableList.propTypes = {
   id: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(ItemPropsShape).isRequired,
+  // $FlowFixMe missing type def in flow-typed
   itemComponent: PropTypes.elementType.isRequired,
+  // $FlowFixMe missing type def in flow-typed
   newItemComponent: PropTypes.elementType.isRequired,
   itemStyles: PropTypes.string,
 };

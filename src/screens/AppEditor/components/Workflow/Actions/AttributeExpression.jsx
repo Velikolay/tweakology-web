@@ -12,7 +12,7 @@ import withAction from './ActionHOC';
 import Toggle from '../../../../../components/InputFields/Toggle';
 import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
-import { Mode } from '../../../../../components/MutableList/MutableListItem';
+import { ItemMode } from '../../../../../components/MutableList/MutableListItem';
 
 import RuntimeContext from '../../../contexts/RuntimeContext';
 
@@ -56,7 +56,7 @@ const AttributeExpressionAction = ({
   formik,
 }: ActionContentProps) => {
   const { values } = formik;
-  return mode === Mode.SUMMARY ? (
+  return mode === ItemMode.SUMMARY ? (
     <AttributeExpressionActionSummary {...values} />
   ) : (
     <AttributeExpressionActionEdit formik={formik} />

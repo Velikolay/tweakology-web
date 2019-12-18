@@ -6,7 +6,10 @@ import Field from '../Field';
 import ToggleButtonMenu from '../ToggleButtonMenu/ToggleButtonMenu';
 
 import FormikContext from '../../FormikContext';
-import { nameWithPrefix, formikValueWithPrefix } from '../../../../form/FormikHelpers';
+import {
+  nameWithPrefix,
+  formikValueWithPrefix,
+} from '../../../../form/FormikHelpers';
 import {
   attributeToModifiers,
   valueSwitch,

@@ -22,6 +22,7 @@ const Events = ({ activeNode }: EventsProps) => {
       <MutableList
         id={`Events.${activeNode.id}`}
         items={[]}
+        itemStyles="Events__item"
         itemComponent={EventHandlerItem}
         newItemComponent={NewEventHandler}
       />

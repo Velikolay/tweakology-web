@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import AttributeExpression from './AttributeExpression';
 
-import { Mode } from '../../../../../components/MutableList/MutableListItem';
+import { ItemMode } from '../../../../../components/MutableList/MutableListItem';
 import Select from '../../../../../components/InputFields/SelectInput';
 
 const ACTION_OPTIONS = [
@@ -43,7 +43,7 @@ export const ActionItem = ({
     return (
       <ActionComponent
         id={id}
-        mode={Mode.SUMMARY}
+        mode={ItemMode.SUMMARY}
         values={values}
         onSave={onSave}
         onDelete={onDelete}
@@ -60,7 +60,7 @@ export const NewAction = ({ id, onInit, onSave, onDelete }: ActionProps) => {
     return (
       <ActionComponent
         id={id}
-        mode={Mode.EDIT}
+        mode={ItemMode.EDIT}
         onSave={onSave}
         onDelete={onDelete}
       />
@@ -83,7 +83,7 @@ export const NewAction = ({ id, onInit, onSave, onDelete }: ActionProps) => {
 ActionItem.propTypes = {
   id: PropTypes.string.isRequired,
   kind: PropTypes.string.isRequired,
-  values: PropTypes.any,
+  values: PropTypes.objectOf(PropTypes.any),
   onDelete: PropTypes.func.isRequired,
   onSave: PropTypes.func,
 };
