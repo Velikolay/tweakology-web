@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 
-import FormikContext from '../../../../contexts/FormikContext';
+import FormikContext from '../../FormikContext';
 
 import Field from '../../Inputs/Field';
 import {
   nameWithPrefix,
   titleForField,
   formikValueWithPrefix,
-} from '../../FormikHelpers';
+} from '../../../../form/FormikHelpers';
 
 import '../Blocks.scss';
 import './Color.scss';

@@ -1,0 +1,15 @@
+@import '../../../../../assets/styles/colors';
+
+.Events {
+  height: 100%;
+  padding: 18px;
+  overflow-y: auto;
+
+  &__title {
+    color: $content-color;
+  }
+
+  &__item {
+    margin: 16px 0;
+  }
+}

@@ -1,0 +1,41 @@
+@import '../../assets/styles/colors';
+
+// .PrimarySelectInput {
+//   height: 18px;
+//   background-color: $light-background-color;
+//   color: $content-color;
+//   border-bottom: 1px solid $input-border-color;
+
+//   &__suggestions {
+//     text-align: left;
+//     list-style-type: none;
+//     background-color: $light-background-color;
+//     border: 1px solid $input-border-color;
+
+//     &__item {
+//       line-height: 28px;
+//       color: $content-color;
+//     }
+//   }
+// }
+
+.PrimarySelectInput {
+  &__control {
+    height: 18px;
+    background-color: $light-background-color;
+    color: $content-color;
+    border-bottom: 1px solid $input-border-color;
+  }
+
+  &__suggestions {
+    text-align: left;
+    list-style-type: none;
+    background-color: $light-background-color;
+    border: 1px solid $input-border-color;
+
+    &__item {
+      line-height: 28px;
+      color: $content-color;
+    }
+  }
+}

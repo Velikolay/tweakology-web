@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import FormikPersistence from './Presistence';
-import FormikObserver from './Observer';
+import Persistence from '../../form/Presistence';
+import Observer from '../../form/Observer';
 
 // eslint-disable-next-line import/prefer-default-export
 export const withFormikShell = Component => {
@@ -11,12 +11,16 @@ export const withFormikShell = Component => {
     return (
       <form onSubmit={handleSubmit}>
         <Component {...props} />
-        <FormikObserver
+        <Observer
+          formik={props}
           onChange={({ values }) =>
-            eventHandler('update', { id, type, values })
-          }
+            eventHandler('update', { id, type, values })}
         />
-        <FormikPersistence name={id} />
+        <Persistence
+          name={id}
+          formik={props}
+          onChange={formikBag => eventHandler('select', formikBag)}
+        />
       </form>
     );
   };

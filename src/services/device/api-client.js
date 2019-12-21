@@ -1,8 +1,8 @@
 // @flow
 import type {
   DeviceSystemData,
+  DeviceRuntimeData,
   DeviceUITreeData,
-  DeviceAttributes,
 } from './types';
 import DeviceConnector, { RemoteDevice } from './connector';
 
@@ -31,9 +31,9 @@ class APIClient {
     );
   }
 
-  fetchAttributes(): Promise<DeviceAttributes> {
+  fetchRuntimeData(): Promise<DeviceRuntimeData> {
     return this.remoteCall(endpoint =>
-      fetch(`${endpoint}/attributes`).then(response => response.json()),
+      fetch(`${endpoint}/runtime`).then(response => response.json()),
     );
   }
 

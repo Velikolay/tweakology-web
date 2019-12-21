@@ -42,7 +42,7 @@ const TreeContainer = props => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <div className="Tree">
         <Tree tree={tree} renderNode={renderNode} />
       </div>
@@ -55,7 +55,7 @@ const TreeContainer = props => {
         <TreeEnhancementMenu eventHandler={internalEventHandler} />
       </CSSTransition>
       <TreeToolbar eventHandler={internalEventHandler} />
-    </React.Fragment>
+    </>
   );
 };
 

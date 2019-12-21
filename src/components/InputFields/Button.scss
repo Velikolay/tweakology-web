@@ -1,0 +1,33 @@
+@import '../../assets/styles/colors';
+
+.Button {
+  height: 18px;
+  background-color: $light-background-color;
+  color: $content-color;
+  border-radius: 4px;
+  border: 1px solid $input-border-color;
+}
+
+.IconButton {
+  background-color: transparent;
+  border: none;
+
+  &__icon {
+    height: 16px;
+    width: 16px;
+    margin: 0 auto;
+    color: $content-color;
+
+    &:hover {
+      color: $highlighted-content-color;
+      cursor: pointer;
+    }
+  }
+
+  &:disabled &__icon {
+    &:hover {
+      color: $content-color;
+      cursor: not-allowed;
+    }
+  }
+}

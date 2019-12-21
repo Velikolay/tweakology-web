@@ -7,10 +7,10 @@ import {
   FaAlignJustify,
 } from 'react-icons/fa';
 
-import FormikContext from '../../../contexts/FormikContext';
+import FormikContext from '../FormikContext';
 
 import ToggleButtonMenu from '../Inputs/ToggleButtonMenu/ToggleButtonMenu';
-import { nameWithPrefix, titleForField } from '../FormikHelpers';
+import { nameWithPrefix, titleForField } from '../../../form/FormikHelpers';
 
 import './Blocks.scss';
 

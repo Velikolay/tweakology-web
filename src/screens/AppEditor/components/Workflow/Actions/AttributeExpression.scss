@@ -1,0 +1,46 @@
+@import '../../../../../assets/styles/colors';
+
+.AttributeExpressionForm {
+  &__rerenderToggle {
+    margin-bottom: 8px;
+  }
+
+  &__attributes {
+    margin-bottom: 8px;
+    min-width: 200px;
+  }
+
+  &__expression {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 38px;
+  }
+}
+
+.AttributeExpressionSummary {
+  display: flex;
+  margin: 8px;
+
+  &__actionIcon {
+    height: 20px;
+    width: 20px;
+    margin: 0 4px;
+    color: $content-color;
+  }
+
+  &__text {
+    margin: 0 4px;
+    color: $content-color;
+  }
+
+  &__attributes {
+    margin: 0 4px;
+    color: $content-color;
+
+    &__label {
+      padding: 2px;
+      background: $dark-background-color;
+    }
+  }
+}

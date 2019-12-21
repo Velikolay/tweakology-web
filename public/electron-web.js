@@ -5,7 +5,7 @@ function on(msg, callback) {
       {
         online: true,
         name: 'Example',
-        host: 'NIKOIVAN02M.local',
+        host: 'Nikolays-MacBook-Pro.local',
         port: 8080,
       },
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FormDataShape } from '../../Shapes';
+import FormDataShape from '../../Shapes';
 import NSLayoutConstraint from '../../Blocks/NSLayoutConstraint';
 
 const NSLayoutConstraintAttributes = ({ formData }) => (

@@ -102,40 +102,7 @@ const NSLayoutConstraint = PropTypes.shape({
   itemOptions: PropTypes.any, // TODO: ideally should not be here
 });
 
-const formikTypeObjFrom = baseFormShape => ({
-  initialValues: baseFormShape.isRequired,
-  values: baseFormShape.isRequired,
-  errors: PropTypes.oneOfType([baseFormShape, PropTypes.shape()]),
-  touched: PropTypes.oneOfType([baseFormShape, PropTypes.shape()]),
-  dirty: PropTypes.bool.isRequired,
-  isSubmitting: PropTypes.bool.isRequired,
-  isValid: PropTypes.bool.isRequired,
-  isValidating: PropTypes.bool.isRequired,
-  validateOnBlur: PropTypes.bool.isRequired,
-  validateOnChange: PropTypes.bool.isRequired,
-  submitCount: PropTypes.number.isRequired,
-  handleBlur: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  handleReset: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  setError: PropTypes.func.isRequired,
-  setErrors: PropTypes.func.isRequired,
-  setFieldError: PropTypes.func.isRequired,
-  setFieldTouched: PropTypes.func.isRequired,
-  setFieldValue: PropTypes.func.isRequired,
-  setFormikState: PropTypes.func.isRequired,
-  setStatus: PropTypes.func.isRequired,
-  setSubmitting: PropTypes.func.isRequired,
-  setTouched: PropTypes.func.isRequired,
-  setValues: PropTypes.func.isRequired,
-  submitForm: PropTypes.func.isRequired,
-  validateField: PropTypes.func.isRequired,
-  validateForm: PropTypes.func.isRequired,
-  registerField: PropTypes.func.isRequired,
-  unregisterField: PropTypes.func.isRequired,
-});
-
-export const FormDataShape = PropTypes.oneOfType([
+export default PropTypes.oneOfType([
   UIView,
   UILabel,
   UIButton,
@@ -144,11 +111,3 @@ export const FormDataShape = PropTypes.oneOfType([
   UIScrollView,
   NSLayoutConstraint,
 ]);
-
-export const AttributeFormikShape = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  eventHandler: PropTypes.func.isRequired,
-  formData: FormDataShape.isRequired,
-  ...formikTypeObjFrom(FormDataShape),
-});

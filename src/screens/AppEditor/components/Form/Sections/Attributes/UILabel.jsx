@@ -17,7 +17,7 @@ import Font from '../../Blocks/Font';
 import Color from '../../Blocks/Color/Color';
 
 const UILabelAttributes = () => (
-  <React.Fragment>
+  <>
     <Frame prefix="frame" />
     <hr />
     <InputField name="text" type="text" title="Text" />
@@ -55,7 +55,7 @@ const UILabelAttributes = () => (
       prefix="backgroundColor"
       titles={{ alpha: 'Alpha', color: 'Background' }}
     />
-  </React.Fragment>
+  </>
 );
 
 export default UILabelAttributes;

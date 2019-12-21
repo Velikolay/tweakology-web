@@ -1,0 +1,33 @@
+@import '../../../../../assets/styles/colors';
+
+.EventHandler {
+  &__actionContainer {
+    margin: 0 24px;
+  }
+}
+
+.EventHandlerEdit {
+  &__select {
+    min-width: 200px;
+  }
+}
+
+.EventHandlerSummary {
+  display: flex;
+  margin: 8px;
+
+  &__text {
+    margin: 0 4px;
+    color: $content-color;
+  }
+
+  &__attributes {
+    margin: 0 4px;
+    color: $content-color;
+
+    &__label {
+      padding: 2px;
+      background: $dark-background-color;
+    }
+  }
+}

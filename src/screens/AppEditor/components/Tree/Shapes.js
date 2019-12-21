@@ -62,4 +62,4 @@ const TreeRootNodeShape = PropTypes.oneOfType([
   TreeViewNodeShape,
 ]);
 
-export { TreeRootNodeShape, TreeNodeShape };
+export { TreeRootNodeShape, TreeNodeShape, TreeViewNodeShape };

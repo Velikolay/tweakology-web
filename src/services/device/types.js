@@ -128,4 +128,6 @@ export type DeviceSystemData = {
   events: DeviceEvents,
 };
 
-export type DeviceAttributes = { [attr_name: string]: any };
+export type DeviceRuntimeData = {
+  attributes: { [attr_name: string]: any },
+};

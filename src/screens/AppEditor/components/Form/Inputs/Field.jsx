@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Field as FormikField } from 'formik';
 import cx from 'classnames';
 
-import FormikContext from '../../../contexts/FormikContext';
-import { isValueDirty } from '../FormikHelpers';
+import FormikContext from '../FormikContext';
+import { isValueDirty } from '../../../form/FormikHelpers';
 
 const Field = props => {
   const { name, className, ...rest } = props;

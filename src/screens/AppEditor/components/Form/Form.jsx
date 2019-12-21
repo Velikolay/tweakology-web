@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 
-import { FormDataShape } from './Shapes';
-import { withFormikContextProvider } from '../../contexts/FormikContext';
+import FormDataShape from './Shapes';
+import { withFormikContextProvider } from './FormikContext';
 import { withFormikShell } from './FormikShell';
 
 import getAttributesComponent from './Sections/Attributes';

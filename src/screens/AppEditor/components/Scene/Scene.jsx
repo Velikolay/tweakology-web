@@ -111,7 +111,8 @@ class SceneContainer extends Component {
     this.start();
   }
 
-  componentWillReceiveProps(nextProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { hidden, tree, constraints } = nextProps;
     this.sceneManager.updateViews(tree);
     this.sceneManager.updateConstraintIndicators(constraints);
@@ -176,7 +177,7 @@ class SceneContainer extends Component {
   render() {
     const { hidden } = this.state;
     return (
-      <React.Fragment>
+      <>
         <div
           ref={el => {
             this.container = el;
@@ -190,7 +191,7 @@ class SceneContainer extends Component {
         <TextureOnOffButton
           onClick={() => this.sceneManager.flipTextureVisibility()}
         />
-      </React.Fragment>
+      </>
     );
   }
 }

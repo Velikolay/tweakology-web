@@ -4,7 +4,7 @@ import type {
   NSLayoutConstraint,
   DeviceUITreeData,
   DeviceSystemData,
-  DeviceAttributes,
+  DeviceRuntimeData,
 } from '../../services/device/types';
 import type {
   UITree,
@@ -225,8 +225,8 @@ class APIClientAdapter {
     return this.apiClient.fetchSystemData();
   }
 
-  fetchAttributes(): Promise<DeviceAttributes> {
-    return this.apiClient.fetchAttributes();
+  fetchRuntimeData(): Promise<DeviceRuntimeData> {
+    return this.apiClient.fetchRuntimeData();
   }
 
   modifyTree(name: string, tree: UITree): Promise<any> {

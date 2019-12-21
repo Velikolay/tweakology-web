@@ -35,7 +35,7 @@ const fontDataEnrichment = (fontsData: DeviceFonts): DeviceFonts => {
   families.push(...Object.keys(preffered).sort((a, b) => a.localeCompare(b)));
   families.push(...Object.keys(custom).sort((a, b) => a.localeCompare(b)));
   const prefferedFonts = Object.keys(preffered).reduce((map, key) => {
-    map[key] = Object.keys(preffered[key]); // eslint-disable-line no-param-reassign
+    map[key] = Object.keys(preffered[key]).sort((a, b) => a.localeCompare(b)); // eslint-disable-line no-param-reassign
     return map;
   }, {});
   const all = {
