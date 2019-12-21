@@ -10,7 +10,7 @@ import SelectField from '../../Blocks/SelectField';
 import Color from '../../Blocks/Color/Color';
 
 const UIViewAttributes = () => (
-  <React.Fragment>
+  <>
     <Frame prefix="frame" />
     <hr />
     <SelectField
@@ -28,7 +28,7 @@ const UIViewAttributes = () => (
       prefix="backgroundColor"
       titles={{ alpha: 'Alpha', color: 'Background' }}
     />
-  </React.Fragment>
+  </>
 );
 
 export default UIViewAttributes;

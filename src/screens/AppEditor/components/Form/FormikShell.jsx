@@ -14,8 +14,7 @@ export const withFormikShell = Component => {
         <Observer
           formik={props}
           onChange={({ values }) =>
-            eventHandler('update', { id, type, values })
-          }
+            eventHandler('update', { id, type, values })}
         />
         <Persistence
           name={id}

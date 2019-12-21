@@ -9,7 +9,8 @@ class FormikObserver extends Component {
   // eslint-disable-next-line react/destructuring-assignment
   onChange = debounce(next => this.props.onChange(next), this.props.debounce);
 
-  componentWillReceiveProps(nextProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { formik } = this.props;
     if (!isEqual(nextProps.formik, formik)) {
       this.onChange(nextProps.formik);

@@ -16,8 +16,8 @@ const ToggleButtonMenu = props => {
     onSwitch,
     children,
   } = props;
+  const formik = useContext(FormikContext);
   if (children.length) {
-    const formik = useContext(FormikContext);
     const exclusiveValue = exclusiveMode
       ? formikValueWithPrefix(formik, props, globalName)
       : null;

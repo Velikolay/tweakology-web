@@ -12,7 +12,7 @@ import Font from '../../Blocks/Font';
 import Color from '../../Blocks/Color/Color';
 
 const UIButtonAttributes = () => (
-  <React.Fragment>
+  <>
     <Frame prefix="frame" />
     <hr />
     <SelectField
@@ -37,7 +37,7 @@ const UIButtonAttributes = () => (
       prefix="title.textColor"
       titles={{ alpha: 'Opacity', color: 'Text Color' }}
     />
-  </React.Fragment>
+  </>
 );
 
 export default UIButtonAttributes;

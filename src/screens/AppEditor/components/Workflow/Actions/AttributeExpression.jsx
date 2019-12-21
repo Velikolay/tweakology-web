@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 
@@ -125,7 +125,7 @@ const AttributeExpressionActionEdit = ({
     label: name,
   }));
   return (
-    <Fragment>
+    <>
       <Toggle
         className="AttributeExpressionForm__rerenderToggle"
         name="rerender"
@@ -148,7 +148,7 @@ const AttributeExpressionActionEdit = ({
         rows={6}
         formik={formik}
       />
-    </Fragment>
+    </>
   );
 };
 

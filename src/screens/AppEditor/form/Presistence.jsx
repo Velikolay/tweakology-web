@@ -43,7 +43,8 @@ class FormikPersistence extends Component {
     this.dispatchFormikBag(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { name, formik, autosave } = this.props;
     /*
       This is a fragile logic for handling form resets caused by enableReinitialize.

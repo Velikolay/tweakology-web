@@ -68,7 +68,7 @@ const EventHandler = ({
   return (
     <Formik initialValues={{ events }} validationSchema={ValidationSchema}>
       {formik => (
-        <React.Fragment>
+        <>
           <MutableListItem
             id={id}
             mode={initMode}
@@ -104,8 +104,7 @@ const EventHandler = ({
                     ))}
                   </div>
                 </div>
-              )
-            }
+              )}
           </MutableListItem>
           {showActions ? (
             <div className="EventHandler__actionContainer">
@@ -119,7 +118,7 @@ const EventHandler = ({
               />
             </div>
           ) : null}
-        </React.Fragment>
+        </>
       )}
     </Formik>
   );

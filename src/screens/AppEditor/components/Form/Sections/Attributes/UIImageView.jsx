@@ -11,7 +11,7 @@ import SelectField from '../../Blocks/SelectField';
 import Color from '../../Blocks/Color/Color';
 
 const UIImageViewAttributes = () => (
-  <React.Fragment>
+  <>
     <Frame prefix="frame" />
     <hr />
     <InputField
@@ -42,7 +42,7 @@ const UIImageViewAttributes = () => (
       prefix="backgroundColor"
       titles={{ alpha: 'Alpha', color: 'Background' }}
     />
-  </React.Fragment>
+  </>
 );
 
 export default UIImageViewAttributes;

@@ -107,7 +107,7 @@ const MutableList = (props: MutableListProps) => {
     ));
 
   return (
-    <React.Fragment>
+    <>
       <DragDropContext
         onDragEnd={result => {
           if (!result.destination) {
@@ -174,7 +174,7 @@ const MutableList = (props: MutableListProps) => {
           }}
         />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
