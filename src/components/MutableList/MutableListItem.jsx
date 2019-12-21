@@ -30,11 +30,11 @@ export const ItemPropsShape = PropTypes.shape({
 
 type MutableListItemProps = {
   id: string,
-  persistKey: string,
   mode: Symbol,
   formik: any,
   autosave: boolean,
-  children: any,
+  // $FlowFixMe missing type def in flow-typed
+  children: (formik: any, mode: Symbol) => React.Element<any>,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
@@ -83,7 +83,6 @@ const hasErrors = errors =>
 const MutableListItem = (props: MutableListItemProps) => {
   const {
     id,
-    persistKey,
     mode: initMode,
     formik,
     autosave,
@@ -102,13 +101,13 @@ const MutableListItem = (props: MutableListItemProps) => {
             formik.validateForm().then(errors => {
               if (!hasErrors(errors) && mode === ItemMode.EDIT) {
                 setMode(ItemMode.SUMMARY);
-                PersistenceService.write(persistKey, formik);
+                PersistenceService.write(id, formik);
                 onSave(id);
               }
             });
           }}
           onDiscard={() => {
-            const persisted = PersistenceService.read(persistKey);
+            const persisted = PersistenceService.read(id);
             if (!persisted) {
               onDelete(id);
             } else if (mode === ItemMode.EDIT) {
@@ -137,7 +136,7 @@ const MutableListItem = (props: MutableListItemProps) => {
           </IconButton>
         ) : null}
       </div>
-      <Persistence name={persistKey} formik={formik} autosave={autosave} />
+      <Persistence name={id} formik={formik} autosave={autosave} />
     </div>
   );
 };

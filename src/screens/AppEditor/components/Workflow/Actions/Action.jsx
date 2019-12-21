@@ -2,6 +2,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import uuidv4 from 'uuid/v4';
+
 import AttributeExpression from './AttributeExpression';
 
 import { ItemMode } from '../../../../../components/MutableList/MutableListItem';
@@ -79,6 +81,8 @@ export const NewAction = ({ id, onInit, onSave, onDelete }: ActionProps) => {
     />
   );
 };
+
+export const genActionId = () => `Actions.${uuidv4()}`;
 
 ActionItem.propTypes = {
   id: PropTypes.string.isRequired,

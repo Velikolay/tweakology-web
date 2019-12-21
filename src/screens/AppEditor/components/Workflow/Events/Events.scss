@@ -1,8 +1,9 @@
 @import '../../../../../assets/styles/colors';
 
 .Events {
+  height: 100%;
   padding: 18px;
-  overflow: auto;
+  overflow-y: auto;
 
   &__title {
     color: $content-color;

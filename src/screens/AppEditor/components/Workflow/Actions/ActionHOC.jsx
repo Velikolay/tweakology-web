@@ -41,14 +41,12 @@ const withAction = (
       onDelete,
     } = props;
     const initValues = customValues || defaultValues;
-    const persistKey = `Actions.${id}`;
 
     return (
       <Formik initialValues={initValues} validationSchema={validationSchema}>
         {formik => (
           <MutableListItem
             id={id}
-            persistKey={persistKey}
             mode={initMode}
             formik={formik}
             autosave={false}

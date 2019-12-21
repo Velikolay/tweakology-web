@@ -2,6 +2,9 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+import uuidv4 from 'uuid/v4';
 
 import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
 import MutableList from '../../../../../components/MutableList';
@@ -11,7 +14,7 @@ import MutableListItem, {
   ItemPropsShape,
 } from '../../../../../components/MutableList/MutableListItem';
 
-import { NewAction, ActionItem } from '../Actions';
+import { NewAction, ActionItem, genActionId } from '../Actions';
 
 import DeviceContext from '../../../contexts/DeviceContext';
 
@@ -43,25 +46,31 @@ export const EventHandlerItem = (props: EventHandlerItemProps) => {
   return <EventHandler {...props} />;
 };
 
+export const genEventHandlerId = () => `EventHandler.${uuidv4()}`;
+
+const ValidationSchema = Yup.object().shape({
+  events: Yup.array()
+    .min(1, 'At least one event required')
+    .required('Required'),
+});
+
 const EventHandler = ({
   id,
   mode: initMode,
-  showActions,
   values,
   onSave,
   onDelete,
+  showActions,
 }: EventHandlerProps) => {
   const { events: eventOptions } = useContext(DeviceContext);
   const { events, actions } = values || { events: [], actions: [] };
-  const persistKey = `EventHandler.${id}`;
 
   return (
-    <Formik initialValues={{ events }}>
+    <Formik initialValues={{ events }} validationSchema={ValidationSchema}>
       {formik => (
         <React.Fragment>
           <MutableListItem
             id={id}
-            persistKey={persistKey}
             mode={initMode}
             formik={formik}
             autosave={false}
@@ -101,10 +110,12 @@ const EventHandler = ({
           {showActions ? (
             <div className="EventHandler__actionContainer">
               <MutableList
+                sortable
                 id={id}
                 items={actions}
                 itemComponent={ActionItem}
                 newItemComponent={NewAction}
+                genId={genActionId}
               />
             </div>
           ) : null}
@@ -149,24 +160,24 @@ EventHandlerItem.defaultProps = {
 EventHandler.propTypes = {
   id: PropTypes.string.isRequired,
   mode: PropTypes.symbol,
-  showActions: PropTypes.bool,
   values: PropTypes.shape({
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
     actions: PropTypes.arrayOf(ItemPropsShape).isRequired,
   }),
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
+  showActions: PropTypes.bool,
 };
 
 EventHandler.defaultProps = {
   mode: ItemMode.SUMMARY,
-  showActions: true,
   values: {
     events: [],
     actions: [],
   },
   onDelete: () => {},
   onSave: () => {},
+  showActions: true,
 };
 
 export default EventHandler;

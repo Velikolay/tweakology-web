@@ -1,5 +1,5 @@
-import Action, { NewAction, ActionItem } from './Action';
+import Action, { NewAction, ActionItem, genActionId } from './Action';
 
-export { NewAction, ActionItem };
+export { NewAction, ActionItem, genActionId };
 
 export default Action;
