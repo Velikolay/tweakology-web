@@ -6,9 +6,12 @@ import * as Yup from 'yup';
 
 import uuidv4 from 'uuid/v4';
 
-import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
+import SelectInput from '../../../../../components/InputFields/SelectInput';
 import MutableList from '../../../../../components/MutableList';
-import type { ItemProps } from '../../../../../components/MutableList/MutableListItem';
+import type {
+  ItemProps,
+  ItemModeType,
+} from '../../../../../components/MutableList/MutableListItem';
 import MutableListItem, {
   ItemMode,
   ItemPropsShape,
@@ -34,16 +37,35 @@ type EventHandlerItemProps = NewEventHandlerProps & {
 };
 
 type EventHandlerProps = EventHandlerItemProps & {
-  mode: Symbol,
+  mode: ItemModeType,
   showActions: boolean,
 };
 
-export const NewEventHandler = (props: NewEventHandlerProps) => {
-  return <EventHandler mode={ItemMode.EDIT} showActions={false} {...props} />;
+export const NewEventHandler = ({
+  id,
+  onSave,
+  onDelete,
+}: NewEventHandlerProps) => {
+  return (
+    <EventHandler
+      id={id}
+      showActions={false}
+      mode={ItemMode.EDIT}
+      onSave={onSave}
+      onDelete={onDelete}
+    />
+  );
 };
 
-export const EventHandlerItem = (props: EventHandlerItemProps) => {
-  return <EventHandler {...props} />;
+export const EventHandlerItem = ({
+  id,
+  values,
+  onSave,
+  onDelete,
+}: EventHandlerItemProps) => {
+  return (
+    <EventHandler id={id} values={values} onSave={onSave} onDelete={onDelete} />
+  );
 };
 
 export const genEventHandlerId = () => `EventHandler.${uuidv4()}`;
@@ -79,7 +101,7 @@ const EventHandler = ({
           >
             {(_, mode) =>
               mode === ItemMode.EDIT ? (
-                <FormikSelectInput
+                <SelectInput
                   className="EventHandlerEdit__select"
                   name="events"
                   placeholder="Event Names"
@@ -104,7 +126,8 @@ const EventHandler = ({
                     ))}
                   </div>
                 </div>
-              )}
+              )
+            }
           </MutableListItem>
           {showActions ? (
             <div className="EventHandler__actionContainer">
@@ -137,7 +160,6 @@ NewEventHandler.defaultProps = {
 
 EventHandlerItem.propTypes = {
   id: PropTypes.string.isRequired,
-  mode: PropTypes.symbol,
   values: PropTypes.shape({
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
     actions: PropTypes.arrayOf(ItemPropsShape).isRequired,
@@ -147,7 +169,6 @@ EventHandlerItem.propTypes = {
 };
 
 EventHandlerItem.defaultProps = {
-  mode: ItemMode.SUMMARY,
   values: {
     events: [],
     actions: [],
@@ -158,7 +179,7 @@ EventHandlerItem.defaultProps = {
 
 EventHandler.propTypes = {
   id: PropTypes.string.isRequired,
-  mode: PropTypes.symbol,
+  mode: PropTypes.string,
   values: PropTypes.shape({
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
     actions: PropTypes.arrayOf(ItemPropsShape).isRequired,

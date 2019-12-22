@@ -4,7 +4,8 @@ import type {
   DeviceRuntimeData,
   DeviceUITreeData,
 } from './types';
-import DeviceConnector, { RemoteDevice } from './connector';
+import RemoteDevice from './device';
+import DeviceConnector from './connector';
 
 class APIClient {
   deviceConnector: DeviceConnector;

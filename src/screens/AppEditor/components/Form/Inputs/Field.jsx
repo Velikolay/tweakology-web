@@ -13,6 +13,7 @@ const Field = props => {
     'is-dirty': isValueDirty(formik, props, name),
   });
 
+  // eslint-disable-next-line react/jsx-props-no-spreading
   return <FormikField name={name} className={newClassName} {...rest} />;
 };
 

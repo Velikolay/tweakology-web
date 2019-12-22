@@ -23,14 +23,12 @@ const Toggle = (props: ToggleProps) => {
     title,
     className,
     formik: { setFieldValue, values },
-    ...rest
   } = props;
   return (
     <div className={cx('Toggle', className)}>
       <ReactToggle
         checked={values[name]}
         onChange={e => setFieldValue(name, e.target.checked)}
-        {...rest}
       />
       {title !== null ? <div className="Toggle__title">{title}</div> : null}
     </div>

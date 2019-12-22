@@ -13,12 +13,12 @@ type WorkflowProps = {
   activeNode: UIViewNode<AnyUIView>,
 };
 
-const Workflow = (props: WorkflowProps) => {
+const Workflow = ({ activeNode }: WorkflowProps) => {
   return (
     <div className="Workflow">
       <TabBar>
         <Tab id="events" title="Events">
-          <Events {...props} />
+          <Events activeNode={activeNode} />
         </Tab>
         <Tab id="actions" title="Actions" />
         <Tab id="attributes" title="Attributes" />

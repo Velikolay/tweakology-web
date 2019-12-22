@@ -1,13 +1,12 @@
 // @flow
-import type { ComponentType } from 'react';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import uuidv4 from 'uuid/v4';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import uuidv4 from 'uuid/v4';
-
 import PersistenceService from '../../services/persistence';
+
 import type { ItemProps } from './MutableListItem';
 import { ItemPropsShape } from './MutableListItem';
 
@@ -30,8 +29,8 @@ type ItemComponentProps = {
 type MutableListProps = {
   id: string,
   items: ItemProps[],
-  itemComponent: ComponentType<ItemComponentProps>,
-  newItemComponent: ComponentType<NewItemComponentProps>,
+  itemComponent: React$ComponentType<ItemComponentProps>,
+  newItemComponent: React$ComponentType<NewItemComponentProps>,
   itemStyles: string,
   sortable: boolean,
   genId: () => string,
@@ -41,7 +40,6 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-
   return result;
 };
 
@@ -88,7 +86,9 @@ const MutableList = (props: MutableListProps) => {
           <div
             className={itemStyles}
             ref={provided.innerRef}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...provided.draggableProps}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...provided.dragHandleProps}
           >
             <Item
@@ -126,6 +126,7 @@ const MutableList = (props: MutableListProps) => {
       >
         <Droppable droppableId={listId} isDropDisabled={!sortable}>
           {(provided, snapshot) => (
+            // eslint-disable-next-line react/jsx-props-no-spreading
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {itemComps}
               {provided.placeholder}

@@ -10,11 +10,13 @@ export const withFormikShell = Component => {
     const { id, type, handleSubmit, eventHandler } = props;
     return (
       <form onSubmit={handleSubmit}>
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <Component {...props} />
         <Observer
           formik={props}
           onChange={({ values }) =>
-            eventHandler('update', { id, type, values })}
+            eventHandler('update', { id, type, values })
+          }
         />
         <Persistence
           name={id}

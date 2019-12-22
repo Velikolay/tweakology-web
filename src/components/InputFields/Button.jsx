@@ -36,10 +36,10 @@ const Button = (props: ButtonProps) => {
 };
 
 export const IconButton = (props: IconButtonProps) => {
-  const { className, iconClassName, onClick, children, ...rest } = props;
+  const { className, iconClassName, onClick, children } = props;
   return (
     /* eslint-disable react/button-has-type */
-    <button className={cx('IconButton', className)} onClick={onClick} {...rest}>
+    <button className={cx('IconButton', className)} onClick={onClick}>
       <IconContext.Provider
         value={{ className: cx('IconButton__icon', iconClassName) }}
       >

@@ -5,17 +5,21 @@ import cx from 'classnames';
 
 import './TextArea.scss';
 
-type TextAreaControlledProps = {
-  name: string,
+type TextAreaProps = {
   className?: string,
+  placeholder?: string,
+  rows?: number,
+};
+
+type TextAreaControlledProps = TextAreaProps & {
+  name: string,
   formik: {
     setFieldValue: (string, { value: string, label: string }) => void,
     values: any,
   },
 };
 
-type TextAreaUncontrolledProps = {
-  className?: string,
+type TextAreaUncontrolledProps = TextAreaProps & {
   defaultValue: string,
 };
 
@@ -23,46 +27,58 @@ const TextAreaControlled = (props: TextAreaControlledProps) => {
   const {
     name,
     className,
+    placeholder,
+    rows,
     formik: { setFieldValue, values },
-    ...rest
   } = props;
   return (
     <textarea
       className={cx('TextArea', className)}
       value={values[name]}
+      placeholder={placeholder}
+      rows={rows}
       onChange={e => setFieldValue(name, e.target.value)}
-      {...rest}
     />
   );
 };
 
 export const TextAreaUncontrolled = (props: TextAreaUncontrolledProps) => {
-  const { className, defaultValue, ...rest } = props;
+  const { className, defaultValue, placeholder, rows } = props;
   return (
     <textarea
       className={cx('TextArea', className)}
       defaultValue={defaultValue}
-      {...rest}
+      placeholder={placeholder}
+      rows={rows}
     />
   );
 };
 
-TextAreaUncontrolled.propTypes = {
-  defaultValue: PropTypes.string.isRequired,
+const commonPropTypes = {
   className: PropTypes.string,
+  placeholder: PropTypes.string,
+  rows: PropTypes.number,
 };
 
-TextAreaUncontrolled.defaultProps = {
+const commonDefaultProps = {
   className: '',
+  placeholder: '',
+  rows: 4,
 };
+
+TextAreaUncontrolled.propTypes = {
+  defaultValue: PropTypes.string.isRequired,
+  ...commonPropTypes,
+};
+
+TextAreaUncontrolled.defaultProps = commonDefaultProps;
 
 TextAreaControlled.propTypes = {
   name: PropTypes.string.isRequired,
-  className: PropTypes.string,
+  formik: PropTypes.objectOf(PropTypes.any).isRequired,
+  ...commonPropTypes,
 };
 
-TextAreaControlled.defaultProps = {
-  className: '',
-};
+TextAreaControlled.defaultProps = commonDefaultProps;
 
 export default TextAreaControlled;

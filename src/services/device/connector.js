@@ -1,37 +1,12 @@
 // @flow
 import debounce from 'lodash.debounce';
+
+import type { RemoteDeviceData } from './device';
+import RemoteDevice from './device';
 import PersistenceService from '../persistence';
 
 const DEVICE_HISTORY_PERSISTENCE_KEY = 'DeviceHistory';
 const AUTOCONNECT_MAX_WAIT_MILLIS = 3 * 1000;
-
-export type RemoteDeviceData = {
-  online: boolean,
-  name: string,
-  host: string,
-  port: number,
-};
-
-export class RemoteDevice {
-  online: boolean;
-
-  name: string;
-
-  host: string;
-
-  port: number;
-
-  constructor({ name, host, port, online }: RemoteDeviceData) {
-    this.name = name;
-    this.host = host;
-    this.port = port;
-    this.online = online;
-  }
-
-  getEndpoint(): string {
-    return `http://${this.host}:${this.port}`;
-  }
-}
 
 export type AutoconnectHandlerFunc = (device: RemoteDevice) => void;
 

@@ -10,7 +10,7 @@ import type { ActionContentProps } from './ActionHOC';
 import withAction from './ActionHOC';
 
 import Toggle from '../../../../../components/InputFields/Toggle';
-import { FormikSelectInput } from '../../../../../components/InputFields/SelectInput';
+import SelectInput from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
 import { ItemMode } from '../../../../../components/MutableList/MutableListItem';
 
@@ -55,9 +55,15 @@ const AttributeExpressionAction = ({
   mode,
   formik,
 }: ActionContentProps) => {
-  const { values } = formik;
+  const {
+    values: { rerender, attributes, attributeExpression },
+  } = formik;
   return mode === ItemMode.SUMMARY ? (
-    <AttributeExpressionActionSummary {...values} />
+    <AttributeExpressionActionSummary
+      rerender={rerender}
+      attributes={attributes}
+      attributeExpression={attributeExpression}
+    />
   ) : (
     <AttributeExpressionActionEdit formik={formik} />
   );
@@ -84,7 +90,7 @@ const FormikShape = PropTypes.shape({
 
 AttributeExpressionAction.propTypes = {
   id: PropTypes.string.isRequired,
-  mode: PropTypes.symbol.isRequired,
+  mode: PropTypes.string.isRequired,
   formik: FormikShape.isRequired,
 };
 
@@ -132,12 +138,12 @@ const AttributeExpressionActionEdit = ({
         title="Rerender"
         formik={formik}
       />
-      <FormikSelectInput
+      <SelectInput
         className="AttributeExpressionForm__attributes"
         name="attributes"
+        formik={formik}
         placeholder="Attribute Name"
         options={options}
-        formik={formik}
         isMulti
         creatable
       />

@@ -7,7 +7,9 @@ import uuidv4 from 'uuid/v4';
 import AttributeExpression from './AttributeExpression';
 
 import { ItemMode } from '../../../../../components/MutableList/MutableListItem';
-import Select from '../../../../../components/InputFields/SelectInput';
+import { SelectInputUncontrolled } from '../../../../../components/InputFields/SelectInput';
+
+import './Action.scss';
 
 const ACTION_OPTIONS = [
   { value: 'AttributeExpression', label: 'Attribute Expression' },
@@ -69,9 +71,8 @@ export const NewAction = ({ id, onInit, onSave, onDelete }: ActionProps) => {
     );
   }
   return (
-    <Select
-      className="AttributeExpressionForm__attributes"
-      name="attributes"
+    <SelectInputUncontrolled
+      className="Action__select"
       placeholder="Action Type"
       options={ACTION_OPTIONS}
       onChange={({ value }) => {

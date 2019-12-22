@@ -4,19 +4,22 @@ import Select from 'react-select';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
 
-import './SelectInput.scss';
-
 type OptionType = {
   [string]: any,
 };
 type OptionsType = OptionType[];
 
 type SelectInputProps = {
-  options: { value: any, label: string }[],
+  className?: string,
+  placeholder?: string,
+  disabled?: boolean,
+  creatable?: boolean,
+  isMulti?: boolean,
+  options?: { value: any, label: string }[],
+};
+
+type SelectInputUncontrolledProps = SelectInputProps & {
   onChange: any => void,
-  placeholder: string,
-  disabled: boolean,
-  creatable: boolean,
 };
 
 type FormikProps = {
@@ -25,13 +28,9 @@ type FormikProps = {
   setFieldValue: (string, OptionType | OptionsType) => void,
 };
 
-type FormikSelectInputProps = {
+type SelectInputControlledProps = SelectInputProps & {
   name: string,
   formik: FormikProps,
-  options: { value: any, label: string }[],
-  placeholder: string,
-  disabled: boolean,
-  creatable: boolean,
 };
 
 const getStyles = (name: ?string, formik: ?FormikProps): any => {
@@ -70,94 +69,100 @@ const getStyles = (name: ?string, formik: ?FormikProps): any => {
   };
 };
 
-const SelectInput = (props: SelectInputProps) => {
+export const SelectInputUncontrolled = (
+  props: SelectInputUncontrolledProps,
+) => {
   const {
+    className,
     placeholder,
     disabled,
     creatable,
-    onChange,
+    isMulti,
     options,
-    ...rest
+    onChange,
   } = props;
   const SelectComponent = creatable ? Creatable : Select;
   return (
     // $FlowFixMe Createable bug!
     <SelectComponent
+      className={className}
       isDisabled={disabled}
+      isMulti={isMulti}
       styles={getStyles()}
       placeholder={placeholder}
-      onChange={onChange}
       options={options}
-      {...rest}
+      onChange={onChange}
     />
   );
 };
 
-export const FormikSelectInput = (props: FormikSelectInputProps) => {
+const SelectInputControlled = (props: SelectInputControlledProps) => {
   const {
     name,
+    formik,
+    className,
     placeholder,
     disabled,
     creatable,
-    formik,
+    isMulti,
     options,
-    ...rest
   } = props;
   const { values, setFieldValue } = formik;
   const SelectComponent = creatable ? Creatable : Select;
   return (
     // $FlowFixMe Createable bug!
     <SelectComponent
+      className={className}
       isDisabled={disabled}
+      isMulti={isMulti}
       styles={getStyles(name, formik)}
       value={values[name]}
       placeholder={placeholder}
-      onChange={value => setFieldValue(name, value || [])}
       options={options}
-      {...rest}
+      onChange={value => setFieldValue(name, value || [])}
     />
   );
 };
 
-SelectInput.propTypes = {
+const commonPropTypes = {
+  className: PropTypes.string,
+  placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
+  creatable: PropTypes.bool,
+  isMulti: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.any.isRequired,
+      label: PropTypes.string.isRequired,
+    }),
+  ),
+};
+
+const commonDefaultProps = {
+  className: '',
+  placeholder: '',
+  disabled: false,
+  creatable: false,
+  isMulti: false,
+  options: [],
+};
+
+SelectInputUncontrolled.propTypes = {
   onChange: PropTypes.func,
-  placeholder: PropTypes.string,
-  disabled: PropTypes.bool,
-  creatable: PropTypes.bool,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.any.isRequired,
-      label: PropTypes.string.isRequired,
-    }),
-  ),
+  ...commonPropTypes,
 };
 
-SelectInput.defaultProps = {
+SelectInputUncontrolled.defaultProps = {
   onChange: () => {},
-  placeholder: '',
-  disabled: false,
-  creatable: false,
-  options: [],
+  ...commonDefaultProps,
 };
 
-FormikSelectInput.propTypes = {
-  placeholder: PropTypes.string,
-  disabled: PropTypes.bool,
-  creatable: PropTypes.bool,
+SelectInputControlled.propTypes = {
   name: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.any.isRequired,
-      label: PropTypes.string.isRequired,
-    }),
-  ),
+  formik: PropTypes.objectOf(PropTypes.any).isRequired,
+  ...commonPropTypes,
 };
 
-FormikSelectInput.defaultProps = {
-  placeholder: '',
-  disabled: false,
-  creatable: false,
-  options: [],
-};
+SelectInputControlled.defaultProps = commonDefaultProps;
 
-export default SelectInput;
+export default SelectInputControlled;

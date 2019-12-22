@@ -1,4 +1,6 @@
 [ignore]
+
+[untyped]
 .*/node_modules/react-beautiful-dnd/.*
 .*/node_modules/react-select/.*
 

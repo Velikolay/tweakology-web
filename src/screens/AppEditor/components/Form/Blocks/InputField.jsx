@@ -11,6 +11,7 @@ const InputField = ({ title, name, ...rest }) => (
       <label className="input-title" htmlFor={name}>
         {title}
       </label>
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <Field id={name} name={name} className="full-width-input" {...rest} />
     </div>
   </div>

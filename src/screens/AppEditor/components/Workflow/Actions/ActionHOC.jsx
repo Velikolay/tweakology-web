@@ -5,13 +5,15 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
+import type { ItemModeType } from '../../../../../components/MutableList/MutableListItem';
+
 import MutableListItem, {
   ItemMode,
 } from '../../../../../components/MutableList/MutableListItem';
 
 export type ActionContentProps = {
   id: string,
-  mode: Symbol,
+  mode: ItemModeType,
   formik: {
     values: any,
     errors: any,
@@ -21,7 +23,7 @@ export type ActionContentProps = {
 
 type ActionProps = {
   id: string,
-  mode: Symbol,
+  mode: ItemModeType,
   values?: any,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
@@ -63,7 +65,7 @@ const withAction = (
   };
   comp.propTypes = {
     id: PropTypes.string.isRequired,
-    mode: PropTypes.symbol,
+    mode: PropTypes.string,
     values: PropTypes.objectOf(PropTypes.any),
     onDelete: PropTypes.func,
     onSave: PropTypes.func,

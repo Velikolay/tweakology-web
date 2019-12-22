@@ -21,6 +21,7 @@ import FormReducer from './reducers/form';
 import './AppEditorLayout.scss';
 
 const componentWithReducer = (Comp, mapStateToProps) => props => (
+  // eslint-disable-next-line react/jsx-props-no-spreading
   <Comp {...mapStateToProps(props, useContext(DeviceContext))} />
 );
 

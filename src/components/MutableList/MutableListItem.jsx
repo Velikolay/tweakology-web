@@ -12,9 +12,11 @@ import Persistence, { setForm } from '../../screens/AppEditor/form/Presistence';
 import './MutableListItem.scss';
 
 export const ItemMode = Object.freeze({
-  SUMMARY: Symbol('summary'),
-  EDIT: Symbol('edit'),
+  SUMMARY: 'summary',
+  EDIT: 'edit',
 });
+
+export type ItemModeType = $Values<typeof ItemMode>;
 
 export type ItemProps = {
   id: string,
@@ -30,18 +32,18 @@ export const ItemPropsShape = PropTypes.shape({
 
 type MutableListItemProps = {
   id: string,
-  mode: Symbol,
+  mode: ItemModeType,
   formik: any,
   autosave: boolean,
   // $FlowFixMe missing type def in flow-typed
-  children: (formik: any, mode: Symbol) => React.Element<any>,
+  children: (formik: any, mode: ItemModeType) => React.Element<any>,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
 
 type HeaderProps = {
   name: string,
-  mode: Symbol,
+  mode: ItemModeType,
   onSave: () => void,
   onDiscard: () => void,
   onDelete: () => void,
@@ -143,7 +145,7 @@ const MutableListItem = (props: MutableListItemProps) => {
 
 MutableListItem.propTypes = {
   id: PropTypes.string.isRequired,
-  mode: PropTypes.symbol,
+  mode: PropTypes.string,
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
 };

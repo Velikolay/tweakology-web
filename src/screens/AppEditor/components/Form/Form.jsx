@@ -16,10 +16,16 @@ const getAttributesComponentWithFormik = type => {
   })(withFormikContextProvider(withFormikShell(getAttributesComponent(type))));
 };
 
-const FormContainer = props => {
-  const { type } = props;
+const FormContainer = ({ id, type, formData, eventHandler }) => {
   const AttributesComponent = getAttributesComponentWithFormik(type);
-  return <AttributesComponent {...props} />;
+  return (
+    <AttributesComponent
+      id={id}
+      type={type}
+      formData={formData}
+      eventHandler={eventHandler}
+    />
+  );
 };
 
 FormContainer.propTypes = {
