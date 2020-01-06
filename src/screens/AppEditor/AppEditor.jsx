@@ -107,6 +107,7 @@ class AppEditor extends Component {
 
   onSubmitChanges = () => {
     const { tree } = this.state;
+    console.log(tree);
     this.apiClient
       .modifyTree('test', tree)
       .then(() => this.updateTree())

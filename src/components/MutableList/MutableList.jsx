@@ -20,7 +20,7 @@ type NewItemComponentProps = {
 
 type ItemComponentProps = {
   id: string,
-  kind?: string,
+  kind: string,
   values: any,
   onSave?: (id: string) => void,
   onDelete: (id: string) => void,
@@ -64,7 +64,7 @@ const MutableList = (props: MutableListProps) => {
         id,
         kind: kind || '',
         values: values || null,
-        status: 'saved',
+        status: 'enabled',
       }));
     }
     if (initItems.length > 0) {
@@ -74,7 +74,7 @@ const MutableList = (props: MutableListProps) => {
   }
 
   const itemComps = items
-    .filter(({ status }) => status === 'saved')
+    .filter(({ status }) => status === 'enabled')
     .map(({ id, kind, values }, index) => (
       <Draggable
         key={id}
@@ -153,13 +153,13 @@ const MutableList = (props: MutableListProps) => {
               const { id, kind, values } = items[items.length - 1];
               updated = items
                 .slice(0, -1)
-                .concat({ id, kind, values, status: 'saved' });
+                .concat({ id, kind, values, status: 'enabled' });
             } else {
               updated = items.concat({
                 id: newItemId,
                 kind: '',
                 values: null,
-                status: 'saved',
+                status: 'enabled',
               });
             }
             PersistenceService.write(listId, updated);

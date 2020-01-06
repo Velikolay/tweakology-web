@@ -23,6 +23,8 @@ import NSLayoutConstraintTransformer from './transformers/form/NSLayoutConstrain
 
 import { getConstraintItemOptions, constraintNodeName } from './tree-manip';
 
+import { getEventHandlerIds, getAllWorkflowAssets } from './components/Workflow';
+
 export const readPersistedConstraints = (): { [string]: any[] } => {
   const constraints = {};
   Object.entries(PersistenceService.readAll()).forEach(
@@ -42,7 +44,7 @@ export const readPersistedConstraints = (): { [string]: any[] } => {
 
   const getIndex = c => parseInt(c.id.split(':')[1], 10);
   // https://github.com/facebook/flow/issues/2221
-  // $FlowFixMe - Object.values currently does not have good flow support
+  // $FlowFixMe - Object.values currently has poor flow support
   (Object.values(constraints): any).forEach((viewConstraints: any[]) =>
     viewConstraints.sort((a, b) => getIndex(a) - getIndex(b)),
   );
@@ -165,6 +167,7 @@ const viewConstraintsChanges = (tree: UITree): ?any => {
 
 const viewChanges = (tree: UITree): ?any => {
   const constraints = viewConstraintsChanges(tree);
+  const eventHandlers = getEventHandlerIds(tree.id);
   const changes = {};
 
   if (tree.updatedProperties) {
@@ -174,6 +177,10 @@ const viewChanges = (tree: UITree): ?any => {
 
   if (constraints) {
     changes.constraints = constraints;
+  }
+
+  if (eventHandlers.length > 0) {
+    changes.eventHandlers = eventHandlers;
   }
 
   return Object.keys(changes).length !== 0 ? changes : null;
@@ -231,6 +238,10 @@ class APIClientAdapter {
 
   modifyTree(name: string, tree: UITree): Promise<any> {
     const changes = treeToPayload(tree);
+    console.log({
+      views: changes,
+      ...getAllWorkflowAssets(),
+    });
     return this.apiClient.submitChanges(name, changes);
   }
 

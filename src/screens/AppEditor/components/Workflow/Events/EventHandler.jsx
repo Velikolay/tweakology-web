@@ -68,7 +68,7 @@ export const EventHandlerItem = ({
   );
 };
 
-export const genEventHandlerId = () => `EventHandler.${uuidv4()}`;
+export const genEventHandlerId = () => `EventHandlers.${uuidv4()}`;
 
 const ValidationSchema = Yup.object().shape({
   events: Yup.array()
