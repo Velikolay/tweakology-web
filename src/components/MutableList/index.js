@@ -1,20 +1,11 @@
 // @flow
 import MutableList from './MutableList';
-import PersistenceService from '../../services/persistence';
+import MutableListItem from './MutableListItem';
 
-export const readList = (id: string): any[] => {
-  return PersistenceService.read(`${id}.list`);
-};
-
-export const readItem = (id: string): any => {
-  return PersistenceService.read(id, 'values');
-};
-
-export const findItems = (kind: string): string[] => {
-  const items = PersistenceService.readAll();
-  return Object.keys(items).filter(
-    id => id.startsWith(`${kind}.`) && !id.endsWith('.list'),
-  );
-};
+export { MutableListItem };
+export { MutableListItemShape } from './shapes';
+export { MutableListItemMode } from './enums';
+export { readList, readItem, findItemIds } from './operations';
+export type { MutableListItemType, MutableListItemModeType } from './types';
 
 export default MutableList;

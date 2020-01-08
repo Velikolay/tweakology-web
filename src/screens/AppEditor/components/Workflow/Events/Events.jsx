@@ -20,11 +20,13 @@ type EventsProps = {
 };
 
 const Events = ({ activeNode }: EventsProps) => {
+  const id = `Events.${activeNode.id}`;
   return (
     <div className="Events">
       <div className="Events__title">{`${activeNode.module} Events`}</div>
       <MutableList
-        id={`Events.${activeNode.id}`}
+        id={id}
+        key={id}
         items={[]}
         itemStyles="Events__item"
         itemComponent={EventHandlerItem}

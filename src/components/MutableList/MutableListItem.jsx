@@ -6,44 +6,28 @@ import { FaTrashAlt, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 
 import { IconButton } from '../InputFields/Button';
 
-import PersistenceService from '../../services/persistence';
+import { readItem, writeItem } from './operations';
 import Persistence, { setForm } from '../../screens/AppEditor/form/Presistence';
+
+import type { MutableListItemModeType } from './types';
+import { MutableListItemMode } from './enums';
 
 import './MutableListItem.scss';
 
-export const ItemMode = Object.freeze({
-  SUMMARY: 'summary',
-  EDIT: 'edit',
-});
-
-export type ItemModeType = $Values<typeof ItemMode>;
-
-export type ItemProps = {
-  id: string,
-  kind?: string,
-  values: any,
-};
-
-export const ItemPropsShape = PropTypes.shape({
-  id: PropTypes.string.isRequired,
-  kind: PropTypes.string,
-  values: PropTypes.objectOf(PropTypes.any).isRequired,
-});
-
 type MutableListItemProps = {
   id: string,
-  mode: ItemModeType,
+  mode: MutableListItemModeType,
   formik: any,
   autosave: boolean,
   // $FlowFixMe missing type def in flow-typed
-  children: (formik: any, mode: ItemModeType) => React.Element<any>,
+  children: (formik: any, mode: MutableListItemModeType) => React.Element<any>,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
 
 type HeaderProps = {
   name: string,
-  mode: ItemModeType,
+  mode: MutableListItemModeType,
   onSave: () => void,
   onDiscard: () => void,
   onDelete: () => void,
@@ -57,7 +41,7 @@ const Header = (props: HeaderProps) => {
       <div className="MutableListItem__header__title">
         <span>{name}</span>
       </div>
-      {mode === ItemMode.EDIT ? (
+      {mode === MutableListItemMode.EDIT ? (
         <div className="MutableListItem__header__buttons">
           <IconButton
             iconClassName="MutableListItem__header__buttons__trashIcon"
@@ -95,25 +79,25 @@ const MutableListItem = (props: MutableListItemProps) => {
   const [mode, setMode] = useState(initMode);
   return (
     <div className="MutableListItem">
-      {mode === ItemMode.EDIT ? (
+      {mode === MutableListItemMode.EDIT ? (
         <Header
           name=""
           mode={mode}
           onSave={() => {
             formik.validateForm().then(errors => {
-              if (!hasErrors(errors) && mode === ItemMode.EDIT) {
-                setMode(ItemMode.SUMMARY);
-                PersistenceService.write(id, formik);
+              if (!hasErrors(errors) && mode === MutableListItemMode.EDIT) {
+                setMode(MutableListItemMode.SUMMARY);
+                writeItem(id, formik);
                 onSave(id);
               }
             });
           }}
           onDiscard={() => {
-            const persisted = PersistenceService.read(id);
+            const persisted = readItem(id);
             if (!persisted) {
               onDelete(id);
-            } else if (mode === ItemMode.EDIT) {
-              setMode(ItemMode.SUMMARY);
+            } else if (mode === MutableListItemMode.EDIT) {
+              setMode(MutableListItemMode.SUMMARY);
               setForm(formik, persisted);
             }
           }}
@@ -124,13 +108,13 @@ const MutableListItem = (props: MutableListItemProps) => {
         <div className="MutableListItem__content__frame">
           {typeof children === 'function' ? children(formik, mode) : null}
         </div>
-        {mode === ItemMode.SUMMARY ? (
+        {mode === MutableListItemMode.SUMMARY ? (
           <IconButton
             className="MutableListItem__content__summary__edit"
             iconClassName="MutableListItem__content__summary__editIcon"
             onClick={() => {
-              if (mode === ItemMode.SUMMARY) {
-                setMode(ItemMode.EDIT);
+              if (mode === MutableListItemMode.SUMMARY) {
+                setMode(MutableListItemMode.EDIT);
               }
             }}
           >
@@ -151,7 +135,7 @@ MutableListItem.propTypes = {
 };
 
 MutableListItem.defaultProps = {
-  mode: ItemMode.SUMMARY,
+  mode: MutableListItemMode.SUMMARY,
   onDelete: () => {},
   onSave: () => {},
 };

@@ -12,7 +12,7 @@ import withAction from './ActionHOC';
 import Toggle from '../../../../../components/InputFields/Toggle';
 import SelectInput from '../../../../../components/InputFields/SelectInput';
 import TextArea from '../../../../../components/InputFields/TextArea';
-import { ItemMode } from '../../../../../components/MutableList/MutableListItem';
+import { MutableListItemMode } from '../../../../../components/MutableList';
 
 import RuntimeContext from '../../../contexts/RuntimeContext';
 
@@ -58,7 +58,7 @@ const AttributeExpressionAction = ({
   const {
     values: { rerender, attributes, attributeExpression },
   } = formik;
-  return mode === ItemMode.SUMMARY ? (
+  return mode === MutableListItemMode.SUMMARY ? (
     <AttributeExpressionActionSummary
       rerender={rerender}
       attributes={attributes}

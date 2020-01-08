@@ -1,22 +1,24 @@
 // @flow
 import Workflow from './Workflow';
-import type { EventHandler } from './Events';
+import type { EventHandlerType } from './Events';
 import { getEventHandlers, getAllEventHandlers } from './Events';
 import { getAllActions } from './Actions';
 
 import { readItem } from '../../../../components/MutableList';
 
 type WorkflowAssets = {
-  eventHandlers: { string: EventHandler },
+  eventHandlers: { string: EventHandlerType },
   actions: { string: any },
 };
 
 export const getWorkflowAssets = (viewId: string): WorkflowAssets => {
   const eventHandlers = getEventHandlers(viewId);
   const actions = Object.values(eventHandlers)
+    // https://github.com/facebook/flow/issues/2221
+    // $FlowFixMe - Object.values currently has poor flow support
     .flatMap(eventHandler => eventHandler.actions)
     .reduce((map, { id }) => {
-      map[id] = readItem(id); // eslint-disable-line no-param-reassign
+      map[id] = readItem(id, 'values'); // eslint-disable-line no-param-reassign
       return map;
     }, {});
   return {

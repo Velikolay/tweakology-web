@@ -6,7 +6,7 @@ import uuidv4 from 'uuid/v4';
 
 import AttributeExpression from './AttributeExpression';
 
-import { ItemMode } from '../../../../../components/MutableList/MutableListItem';
+import { MutableListItemMode } from '../../../../../components/MutableList';
 import { SelectInputUncontrolled } from '../../../../../components/InputFields/SelectInput';
 
 import './Action.scss';
@@ -47,7 +47,7 @@ export const ActionItem = ({
     return (
       <ActionComponent
         id={id}
-        mode={ItemMode.SUMMARY}
+        mode={MutableListItemMode.SUMMARY}
         values={values}
         onSave={onSave}
         onDelete={onDelete}
@@ -64,7 +64,7 @@ export const NewAction = ({ id, onInit, onSave, onDelete }: ActionProps) => {
     return (
       <ActionComponent
         id={id}
-        mode={ItemMode.EDIT}
+        mode={MutableListItemMode.EDIT}
         onSave={onSave}
         onDelete={onDelete}
       />

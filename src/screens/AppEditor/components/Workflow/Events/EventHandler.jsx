@@ -7,15 +7,16 @@ import * as Yup from 'yup';
 import uuidv4 from 'uuid/v4';
 
 import SelectInput from '../../../../../components/InputFields/SelectInput';
-import MutableList from '../../../../../components/MutableList';
+
 import type {
-  ItemProps,
-  ItemModeType,
-} from '../../../../../components/MutableList/MutableListItem';
-import MutableListItem, {
-  ItemMode,
-  ItemPropsShape,
-} from '../../../../../components/MutableList/MutableListItem';
+  MutableListItemType,
+  MutableListItemModeType,
+} from '../../../../../components/MutableList';
+import MutableList, {
+  MutableListItem,
+  MutableListItemMode,
+  MutableListItemShape,
+} from '../../../../../components/MutableList';
 
 import { NewAction, ActionItem, genActionId } from '../Actions';
 
@@ -32,12 +33,12 @@ type NewEventHandlerProps = {
 type EventHandlerItemProps = NewEventHandlerProps & {
   values: {
     events: string[],
-    actions: ItemProps[],
+    actions: MutableListItemType[],
   },
 };
 
 type EventHandlerProps = EventHandlerItemProps & {
-  mode: ItemModeType,
+  mode: MutableListItemModeType,
   showActions: boolean,
 };
 
@@ -50,7 +51,7 @@ export const NewEventHandler = ({
     <EventHandler
       id={id}
       showActions={false}
-      mode={ItemMode.EDIT}
+      mode={MutableListItemMode.EDIT}
       onSave={onSave}
       onDelete={onDelete}
     />
@@ -100,7 +101,7 @@ const EventHandler = ({
             onDelete={onDelete}
           >
             {(_, mode) =>
-              mode === ItemMode.EDIT ? (
+              mode === MutableListItemMode.EDIT ? (
                 <SelectInput
                   className="EventHandlerEdit__select"
                   name="events"
@@ -162,7 +163,7 @@ EventHandlerItem.propTypes = {
   id: PropTypes.string.isRequired,
   values: PropTypes.shape({
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
-    actions: PropTypes.arrayOf(ItemPropsShape).isRequired,
+    actions: PropTypes.arrayOf(MutableListItemShape).isRequired,
   }),
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
@@ -182,7 +183,7 @@ EventHandler.propTypes = {
   mode: PropTypes.string,
   values: PropTypes.shape({
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
-    actions: PropTypes.arrayOf(ItemPropsShape).isRequired,
+    actions: PropTypes.arrayOf(MutableListItemShape).isRequired,
   }),
   onDelete: PropTypes.func,
   onSave: PropTypes.func,
@@ -190,7 +191,7 @@ EventHandler.propTypes = {
 };
 
 EventHandler.defaultProps = {
-  mode: ItemMode.SUMMARY,
+  mode: MutableListItemMode.SUMMARY,
   values: {
     events: [],
     actions: [],

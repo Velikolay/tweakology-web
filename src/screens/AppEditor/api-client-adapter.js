@@ -23,7 +23,10 @@ import NSLayoutConstraintTransformer from './transformers/form/NSLayoutConstrain
 
 import { getConstraintItemOptions, constraintNodeName } from './tree-manip';
 
-import { getEventHandlerIds, getAllWorkflowAssets } from './components/Workflow';
+import {
+  getEventHandlerIds,
+  getAllWorkflowAssets,
+} from './components/Workflow';
 
 export const readPersistedConstraints = (): { [string]: any[] } => {
   const constraints = {};
@@ -237,12 +240,14 @@ class APIClientAdapter {
   }
 
   modifyTree(name: string, tree: UITree): Promise<any> {
-    const changes = treeToPayload(tree);
+    const treeChanges = treeToPayload(tree);
+    const { eventHandlers, actions } = getAllWorkflowAssets();
     console.log({
-      views: changes,
-      ...getAllWorkflowAssets(),
+      tree: treeChanges,
+      eventHandlers,
+      actions,
     });
-    return this.apiClient.submitChanges(name, changes);
+    return this.apiClient.submitChanges(name, treeChanges);
   }
 
   insertNode(

@@ -5,15 +5,16 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import type { ItemModeType } from '../../../../../components/MutableList/MutableListItem';
+import type { MutableListItemModeType } from '../../../../../components/MutableList';
 
-import MutableListItem, {
-  ItemMode,
-} from '../../../../../components/MutableList/MutableListItem';
+import {
+  MutableListItem,
+  MutableListItemMode,
+} from '../../../../../components/MutableList';
 
 export type ActionContentProps = {
   id: string,
-  mode: ItemModeType,
+  mode: MutableListItemModeType,
   formik: {
     values: any,
     errors: any,
@@ -23,7 +24,7 @@ export type ActionContentProps = {
 
 type ActionProps = {
   id: string,
-  mode: ItemModeType,
+  mode: MutableListItemModeType,
   values?: any,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
@@ -72,7 +73,7 @@ const withAction = (
   };
 
   comp.defaultProps = {
-    mode: ItemMode.SUMMARY,
+    mode: MutableListItemMode.SUMMARY,
     values: null,
     onDelete: () => {},
     onSave: () => {},

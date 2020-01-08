@@ -5,12 +5,18 @@ import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import PersistenceService from '../../services/persistence';
+import { readList, writeList } from './operations';
 
-import type { ItemProps } from './MutableListItem';
-import { ItemPropsShape } from './MutableListItem';
+import type { MutableListItemType } from './types';
+import { MutableListItemShape } from './shapes';
 
 import './MutableList.scss';
+
+const MutableListElementStatus = Object.freeze({
+  INIT: 'init',
+  ENABLED: 'enabled',
+  DISABLED: 'disabled',
+});
 
 type NewItemComponentProps = {
   id: string,
@@ -28,7 +34,7 @@ type ItemComponentProps = {
 
 type MutableListProps = {
   id: string,
-  items: ItemProps[],
+  items: MutableListItemType[],
   itemComponent: React$ComponentType<ItemComponentProps>,
   newItemComponent: React$ComponentType<NewItemComponentProps>,
   itemStyles: string,
@@ -58,23 +64,23 @@ const MutableList = (props: MutableListProps) => {
   const [newItemId, setNewItemId] = useState(genId());
 
   if (items.length === 0) {
-    let initItems = PersistenceService.read(listId);
+    let initItems = readList(parentId);
     if (!initItems) {
       initItems = remoteItems.map(({ id, kind, values }) => ({
         id,
-        kind: kind || '',
+        status: MutableListElementStatus.ENABLED,
+        kind: kind || null,
         values: values || null,
-        status: 'enabled',
       }));
     }
     if (initItems.length > 0) {
-      PersistenceService.write(listId, initItems);
+      writeList(parentId, initItems);
       setItems(initItems);
     }
   }
 
   const itemComps = items
-    .filter(({ status }) => status === 'enabled')
+    .filter(({ status }) => status === MutableListElementStatus.ENABLED)
     .map(({ id, kind, values }, index) => (
       <Draggable
         key={id}
@@ -93,11 +99,12 @@ const MutableList = (props: MutableListProps) => {
           >
             <Item
               id={id}
+              // $FlowFixMe
               kind={kind}
               values={values}
               onDelete={() => {
                 const updated = items.filter(item => item.id !== id);
-                PersistenceService.write(listId, updated);
+                writeList(parentId, updated);
                 setItems(updated);
               }}
             />
@@ -120,7 +127,7 @@ const MutableList = (props: MutableListProps) => {
             result.destination.index,
           );
 
-          PersistenceService.write(listId, reorderedItems);
+          writeList(parentId, reorderedItems);
           setItems(reorderedItems);
         }}
       >
@@ -141,33 +148,42 @@ const MutableList = (props: MutableListProps) => {
           onInit={({ id, kind }) => {
             const updated = items.concat({
               id,
+              status: MutableListElementStatus.INIT,
               kind,
               values: null,
-              status: 'init',
             });
             setItems(updated);
           }}
           onSave={() => {
             let updated;
-            if (items.length > 0 && items[items.length - 1].status === 'init') {
+            if (
+              items.length > 0 &&
+              items[items.length - 1].status === MutableListElementStatus.INIT
+            ) {
               const { id, kind, values } = items[items.length - 1];
-              updated = items
-                .slice(0, -1)
-                .concat({ id, kind, values, status: 'enabled' });
+              updated = items.slice(0, -1).concat({
+                id,
+                status: MutableListElementStatus.ENABLED,
+                kind,
+                values,
+              });
             } else {
               updated = items.concat({
                 id: newItemId,
-                kind: '',
+                status: MutableListElementStatus.ENABLED,
+                kind: null,
                 values: null,
-                status: 'enabled',
               });
             }
-            PersistenceService.write(listId, updated);
+            writeList(parentId, updated);
             setItems(updated);
             setNewItemId(genId());
           }}
           onDelete={() => {
-            if (items.length > 0 && items[items.length - 1].status === 'init') {
+            if (
+              items.length > 0 &&
+              items[items.length - 1].status === MutableListElementStatus.INIT
+            ) {
               const updated = items.slice(0, -1);
               setItems(updated);
               setNewItemId(genId());
@@ -181,7 +197,7 @@ const MutableList = (props: MutableListProps) => {
 
 MutableList.propTypes = {
   id: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(ItemPropsShape).isRequired,
+  items: PropTypes.arrayOf(MutableListItemShape).isRequired,
   // $FlowFixMe missing type def in flow-typed
   itemComponent: PropTypes.elementType.isRequired,
   // $FlowFixMe missing type def in flow-typed
