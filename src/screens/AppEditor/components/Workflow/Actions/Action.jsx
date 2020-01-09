@@ -110,5 +110,3 @@ NewAction.defaultProps = {
   onSave: () => {},
   onDelete: () => {},
 };
-
-export default NewAction;

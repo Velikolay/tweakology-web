@@ -23,10 +23,8 @@ import NSLayoutConstraintTransformer from './transformers/form/NSLayoutConstrain
 
 import { getConstraintItemOptions, constraintNodeName } from './tree-manip';
 
-import {
-  getEventHandlerIds,
-  getAllWorkflowAssets,
-} from './components/Workflow';
+import { getAllWorkflowAssets } from './components/Workflow';
+import { getEventHandlerIds } from './components/Workflow/Events';
 
 export const readPersistedConstraints = (): { [string]: any[] } => {
   const constraints = {};
