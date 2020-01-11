@@ -26,8 +26,7 @@ type NewItemComponentProps = {
 
 type ItemComponentProps = {
   id: string,
-  kind: string,
-  values: any,
+  data: ?any,
   onSave?: (id: string) => void,
   onDelete: (id: string) => void,
 };
@@ -66,11 +65,10 @@ const MutableList = (props: MutableListProps) => {
   if (items.length === 0) {
     let initItems = readList(parentId);
     if (!initItems) {
-      initItems = remoteItems.map(({ id, kind, values }) => ({
+      initItems = remoteItems.map(({ id, data }) => ({
         id,
         status: MutableListElementStatus.ENABLED,
-        kind: kind || null,
-        values: values || null,
+        data: data || null,
       }));
     }
     if (initItems.length > 0) {
@@ -81,7 +79,7 @@ const MutableList = (props: MutableListProps) => {
 
   const itemComps = items
     .filter(({ status }) => status === MutableListElementStatus.ENABLED)
-    .map(({ id, kind, values }, index) => (
+    .map(({ id, data }, index) => (
       <Draggable
         key={id}
         draggableId={id}
@@ -99,9 +97,7 @@ const MutableList = (props: MutableListProps) => {
           >
             <Item
               id={id}
-              // $FlowFixMe
-              kind={kind}
-              values={values}
+              data={data}
               onDelete={() => {
                 const updated = items.filter(item => item.id !== id);
                 writeList(parentId, updated);
@@ -145,12 +141,11 @@ const MutableList = (props: MutableListProps) => {
         <NewItem
           id={newItemId}
           key={newItemId}
-          onInit={({ id, kind }) => {
+          onInit={({ id }) => {
             const updated = items.concat({
               id,
               status: MutableListElementStatus.INIT,
-              kind,
-              values: null,
+              data: null,
             });
             setItems(updated);
           }}
@@ -160,19 +155,17 @@ const MutableList = (props: MutableListProps) => {
               items.length > 0 &&
               items[items.length - 1].status === MutableListElementStatus.INIT
             ) {
-              const { id, kind, values } = items[items.length - 1];
+              const { id, data } = items[items.length - 1];
               updated = items.slice(0, -1).concat({
                 id,
                 status: MutableListElementStatus.ENABLED,
-                kind,
-                values,
+                data,
               });
             } else {
               updated = items.concat({
                 id: newItemId,
                 status: MutableListElementStatus.ENABLED,
-                kind: null,
-                values: null,
+                data: null,
               });
             }
             writeList(parentId, updated);

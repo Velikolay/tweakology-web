@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 import isEqual from 'lodash.isequal';
 
-import FormikShape from './Shapes';
+import FormikShape from './shapes';
 
 class FormikObserver extends Component {
   // eslint-disable-next-line react/destructuring-assignment

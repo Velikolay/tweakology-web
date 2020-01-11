@@ -24,6 +24,11 @@ import DeviceContext from '../../../contexts/DeviceContext';
 
 import './EventHandler.scss';
 
+type EventHandlerType = {
+  events: string[],
+  actions: MutableListItemType[],
+};
+
 type NewEventHandlerProps = {
   id: string,
   onSave: (id: string) => void,
@@ -31,10 +36,7 @@ type NewEventHandlerProps = {
 };
 
 type EventHandlerItemProps = NewEventHandlerProps & {
-  values: {
-    events: string[],
-    actions: MutableListItemType[],
-  },
+  data: ?EventHandlerType,
 };
 
 type EventHandlerProps = EventHandlerItemProps & {
@@ -60,12 +62,12 @@ export const NewEventHandler = ({
 
 export const EventHandlerItem = ({
   id,
-  values,
+  data,
   onSave,
   onDelete,
 }: EventHandlerItemProps) => {
   return (
-    <EventHandler id={id} values={values} onSave={onSave} onDelete={onDelete} />
+    <EventHandler id={id} data={data} onSave={onSave} onDelete={onDelete} />
   );
 };
 
@@ -80,13 +82,13 @@ const ValidationSchema = Yup.object().shape({
 const EventHandler = ({
   id,
   mode: initMode,
-  values,
+  data,
   onSave,
   onDelete,
   showActions,
 }: EventHandlerProps) => {
   const { events: eventOptions } = useContext(DeviceContext);
-  const { events, actions } = values || { events: [], actions: [] };
+  const { events, actions } = data || { events: [], actions: [] };
 
   return (
     <Formik initialValues={{ events }} validationSchema={ValidationSchema}>
@@ -160,44 +162,30 @@ NewEventHandler.defaultProps = {
 };
 
 EventHandlerItem.propTypes = {
-  id: PropTypes.string.isRequired,
-  values: PropTypes.shape({
+  ...NewEventHandler.propTypes,
+  data: PropTypes.shape({
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
     actions: PropTypes.arrayOf(MutableListItemShape).isRequired,
   }),
-  onDelete: PropTypes.func,
-  onSave: PropTypes.func,
 };
 
 EventHandlerItem.defaultProps = {
-  values: {
+  ...NewEventHandler.defaultProps,
+  data: {
     events: [],
     actions: [],
   },
-  onDelete: () => {},
-  onSave: () => {},
 };
 
 EventHandler.propTypes = {
-  id: PropTypes.string.isRequired,
+  ...EventHandlerItem.propTypes,
   mode: PropTypes.string,
-  values: PropTypes.shape({
-    events: PropTypes.arrayOf(PropTypes.string).isRequired,
-    actions: PropTypes.arrayOf(MutableListItemShape).isRequired,
-  }),
-  onDelete: PropTypes.func,
-  onSave: PropTypes.func,
   showActions: PropTypes.bool,
 };
 
 EventHandler.defaultProps = {
+  ...EventHandlerItem.defaultProps,
   mode: MutableListItemMode.SUMMARY,
-  values: {
-    events: [],
-    actions: [],
-  },
-  onDelete: () => {},
-  onSave: () => {},
   showActions: true,
 };
 

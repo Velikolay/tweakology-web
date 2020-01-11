@@ -9,7 +9,7 @@ import FormikContext from '../../FormikContext';
 import {
   nameWithPrefix,
   formikValueWithPrefix,
-} from '../../../../form/FormikHelpers';
+} from '../../../../../../components/Formik';
 import {
   attributeToModifiers,
   valueSwitch,

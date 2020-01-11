@@ -8,7 +8,7 @@ import ConstraintItemSelector from '../Inputs/ConstraintItemSelector/ConstraintI
 import {
   nameWithPrefix,
   formikValueWithPrefix,
-} from '../../../form/FormikHelpers';
+} from '../../../../../components/Formik';
 import { constraintAttributes } from '../../../../../services/device/metadata/NSLayoutConstraint';
 
 import './Blocks.scss';

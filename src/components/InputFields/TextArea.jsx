@@ -3,6 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 
+import { deepValue } from '../Formik';
+
 import './TextArea.scss';
 
 type TextAreaProps = {
@@ -34,7 +36,7 @@ const TextAreaControlled = (props: TextAreaControlledProps) => {
   return (
     <textarea
       className={cx('TextArea', className)}
-      value={values[name]}
+      value={deepValue(values, name)}
       placeholder={placeholder}
       rows={rows}
       onChange={e => setFieldValue(name, e.target.value)}

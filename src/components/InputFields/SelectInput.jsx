@@ -4,6 +4,8 @@ import Select from 'react-select';
 import Creatable from 'react-select/creatable';
 import PropTypes from 'prop-types';
 
+import { deepValue } from '../Formik';
+
 type OptionType = {
   [string]: any,
 };
@@ -116,7 +118,7 @@ const SelectInputControlled = (props: SelectInputControlledProps) => {
       isDisabled={disabled}
       isMulti={isMulti}
       styles={getStyles(name, formik)}
-      value={values[name]}
+      value={deepValue(values, name)}
       placeholder={placeholder}
       options={options}
       onChange={value => setFieldValue(name, value || [])}

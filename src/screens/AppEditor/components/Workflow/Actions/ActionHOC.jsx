@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
+import type { ActionType } from './types';
 import type { MutableListItemModeType } from '../../../../../components/MutableList';
 
 import {
@@ -16,8 +17,12 @@ export type ActionContentProps = {
   id: string,
   mode: MutableListItemModeType,
   formik: {
-    values: any,
-    errors: any,
+    values: {
+      values: any,
+    },
+    errors: {
+      values: any,
+    },
     setFieldValue: (string, any) => void,
   },
 };
@@ -25,7 +30,7 @@ export type ActionContentProps = {
 type ActionProps = {
   id: string,
   mode: MutableListItemModeType,
-  values?: any,
+  data: ?ActionType,
   onSave: (id: string) => void,
   onDelete: (id: string) => void,
 };
@@ -33,20 +38,14 @@ type ActionProps = {
 const withAction = (
   ActionComponent: AbstractComponent<ActionContentProps>,
   validationSchema: Yup.Schema<any, any>,
-  defaultValues: any,
+  defaultData: ActionType,
 ) => {
   const comp = (props: ActionProps) => {
-    const {
-      id,
-      mode: initMode,
-      values: customValues,
-      onSave,
-      onDelete,
-    } = props;
-    const initValues = customValues || defaultValues;
+    const { id, mode: initMode, data, onSave, onDelete } = props;
+    const initData = data || defaultData;
 
     return (
-      <Formik initialValues={initValues} validationSchema={validationSchema}>
+      <Formik initialValues={initData} validationSchema={validationSchema}>
         {formik => (
           <MutableListItem
             id={id}
@@ -67,14 +66,17 @@ const withAction = (
   comp.propTypes = {
     id: PropTypes.string.isRequired,
     mode: PropTypes.string,
-    values: PropTypes.objectOf(PropTypes.any),
+    data: PropTypes.shape({
+      type: PropTypes.string.isRequired,
+      values: PropTypes.objectOf(PropTypes.any),
+    }),
     onDelete: PropTypes.func,
     onSave: PropTypes.func,
   };
 
   comp.defaultProps = {
     mode: MutableListItemMode.SUMMARY,
-    values: null,
+    data: null,
     onDelete: () => {},
     onSave: () => {},
   };

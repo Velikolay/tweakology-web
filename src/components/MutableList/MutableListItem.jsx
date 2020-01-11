@@ -7,7 +7,7 @@ import { FaTrashAlt, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 import { IconButton } from '../InputFields/Button';
 
 import { readItem, writeItem } from './operations';
-import Persistence, { setForm } from '../../screens/AppEditor/form/Presistence';
+import Persistence, { setForm } from '../Formik/Presistence';
 
 import type { MutableListItemModeType } from './types';
 import { MutableListItemMode } from './enums';

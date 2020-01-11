@@ -10,7 +10,10 @@ import {
 import FormikContext from '../FormikContext';
 
 import ToggleButtonMenu from '../Inputs/ToggleButtonMenu/ToggleButtonMenu';
-import { nameWithPrefix, titleForField } from '../../../form/FormikHelpers';
+import {
+  nameWithPrefix,
+  titleForField,
+} from '../../../../../components/Formik';
 
 import './Blocks.scss';
 

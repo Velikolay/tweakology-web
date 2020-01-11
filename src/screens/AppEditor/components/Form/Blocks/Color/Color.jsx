@@ -7,7 +7,7 @@ import {
   nameWithPrefix,
   titleForField,
   formikValueWithPrefix,
-} from '../../../../form/FormikHelpers';
+} from '../../../../../../components/Formik';
 
 import '../Blocks.scss';
 import './Color.scss';

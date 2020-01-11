@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Persistence from '../../form/Presistence';
-import Observer from '../../form/Observer';
+import Persistence from '../../../../components/Formik/Presistence';
+import Observer from '../../../../components/Formik/Observer';
 
 // eslint-disable-next-line import/prefer-default-export
 export const withFormikShell = Component => {

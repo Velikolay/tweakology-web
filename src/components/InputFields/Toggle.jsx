@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import ReactToggle from 'react-toggle';
 
+import { deepValue } from '../Formik';
+
 import 'react-toggle/style.css';
 import './Toggle.scss';
 
@@ -27,7 +29,7 @@ const Toggle = (props: ToggleProps) => {
   return (
     <div className={cx('Toggle', className)}>
       <ReactToggle
-        checked={values[name]}
+        checked={deepValue(values, name)}
         onChange={e => setFieldValue(name, e.target.checked)}
       />
       {title !== null ? <div className="Toggle__title">{title}</div> : null}

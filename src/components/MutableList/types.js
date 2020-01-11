@@ -4,14 +4,12 @@ import { MutableListItemMode } from './enums';
 export type MutableListElement = {
   id: string,
   status: string,
-  kind: ?string,
-  values: ?any,
+  data: ?any,
 };
 
 export type MutableListItemType = {
   id: string,
-  kind?: string,
-  values: any,
+  data: any,
 };
 
 export type MutableListItemModeType = $Values<typeof MutableListItemMode>;

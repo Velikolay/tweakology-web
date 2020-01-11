@@ -3,7 +3,10 @@ import React, { useContext } from 'react';
 import FormikContext from '../FormikContext';
 
 import Field from '../Inputs/Field';
-import { nameWithPrefix, titleForField } from '../../../form/FormikHelpers';
+import {
+  nameWithPrefix,
+  titleForField,
+} from '../../../../../components/Formik';
 
 import './Blocks.scss';
 

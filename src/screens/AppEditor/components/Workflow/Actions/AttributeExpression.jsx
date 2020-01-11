@@ -24,30 +24,41 @@ type AttributeExpressionActionState = {
   attributeExpression: string,
 };
 
+type AttributeExpressionActionError = {
+  rerender: string,
+  attributes: string,
+  attributeExpression: string,
+};
+
 type AttributeExpressionActionFormik = {
   formik: {
-    values: AttributeExpressionActionState,
+    values: {
+      values: AttributeExpressionActionState,
+    },
     errors: {
-      rerender: string,
-      attributes: string,
-      attributeExpression: string,
+      values: AttributeExpressionActionError,
     },
     setFieldValue: (string, any) => void,
   },
 };
 
 const InitialValues = {
-  rerender: false,
-  attributes: [],
-  attributeExpression: '',
+  type: 'AttributeExpression',
+  values: {
+    rerender: false,
+    attributes: [],
+    attributeExpression: '',
+  },
 };
 
 const ValidationSchema = Yup.object().shape({
-  rerender: Yup.boolean().required('Required'),
-  attributes: Yup.array()
-    .min(1, 'At least one attribute required')
-    .required('Required'),
-  attributeExpression: Yup.string(),
+  values: Yup.object().shape({
+    rerender: Yup.boolean().required('Required'),
+    attributes: Yup.array()
+      .min(1, 'At least one attribute required')
+      .required('Required'),
+    attributeExpression: Yup.string(),
+  }),
 });
 
 const AttributeExpressionAction = ({
@@ -56,7 +67,9 @@ const AttributeExpressionAction = ({
   formik,
 }: ActionContentProps) => {
   const {
-    values: { rerender, attributes, attributeExpression },
+    values: {
+      values: { rerender, attributes, attributeExpression },
+    },
   } = formik;
   return mode === MutableListItemMode.SUMMARY ? (
     <AttributeExpressionActionSummary
@@ -71,19 +84,23 @@ const AttributeExpressionAction = ({
 
 const FormikShape = PropTypes.shape({
   values: PropTypes.shape({
-    rerender: PropTypes.bool.isRequired,
-    attributes: PropTypes.arrayOf(
-      PropTypes.shape({
-        value: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    attributeExpression: PropTypes.string.isRequired,
+    values: PropTypes.shape({
+      rerender: PropTypes.bool.isRequired,
+      attributes: PropTypes.arrayOf(
+        PropTypes.shape({
+          value: PropTypes.string.isRequired,
+          label: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
+      attributeExpression: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
   errors: PropTypes.shape({
-    rerender: PropTypes.string,
-    attributes: PropTypes.string,
-    attributeExpression: PropTypes.string,
+    values: PropTypes.shape({
+      rerender: PropTypes.string,
+      attributes: PropTypes.string,
+      attributeExpression: PropTypes.string,
+    }),
   }).isRequired,
   setFieldValue: PropTypes.func.isRequired,
 });
@@ -134,13 +151,13 @@ const AttributeExpressionActionEdit = ({
     <>
       <Toggle
         className="AttributeExpressionForm__rerenderToggle"
-        name="rerender"
+        name="values.rerender"
         title="Rerender"
         formik={formik}
       />
       <SelectInput
         className="AttributeExpressionForm__attributes"
-        name="attributes"
+        name="values.attributes"
         formik={formik}
         placeholder="Attribute Name"
         options={options}
@@ -149,7 +166,7 @@ const AttributeExpressionActionEdit = ({
       />
       <TextArea
         className="AttributeExpressionForm__expression"
-        name="attributeExpression"
+        name="values.attributeExpression"
         placeholder="Attribute Expression"
         rows={6}
         formik={formik}

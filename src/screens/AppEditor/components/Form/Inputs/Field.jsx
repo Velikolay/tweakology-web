@@ -4,7 +4,7 @@ import { Field as FormikField } from 'formik';
 import cx from 'classnames';
 
 import FormikContext from '../FormikContext';
-import { isValueDirty } from '../../../form/FormikHelpers';
+import { isValueDirty } from '../../../../../components/Formik';
 
 const Field = props => {
   const { name, className, ...rest } = props;

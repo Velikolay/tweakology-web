@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 
 import FormikContext from '../../FormikContext';
-import { formikValueWithPrefix } from '../../../../form/FormikHelpers';
+import { formikValueWithPrefix } from '../../../../../../components/Formik';
 
 import './ToggleButtonMenu.scss';
 
