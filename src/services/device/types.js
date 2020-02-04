@@ -17,6 +17,18 @@ export type UIColor = {
   alpha: number,
 };
 
+export type UIFont = {
+  trait: number,
+  pointSize: number,
+  familyName: string,
+  fontName: string,
+  fontStyle?: string,
+};
+
+export type UIImage = {
+  src: string,
+};
+
 export type UIView = {
   frame: CGRect,
   backgroundColor: UIColor,
@@ -25,12 +37,8 @@ export type UIView = {
   isHidden?: boolean,
 };
 
-export type UIFont = {
-  trait: number,
-  pointSize: number,
-  familyName: string,
-  fontName: string,
-  fontStyle?: string,
+export type UIControl = UIView & {
+  eventHandlers: string[],
 };
 
 export type UILabel = UIView & {
@@ -45,12 +53,8 @@ export type UILabel = UIView & {
 
 export type UIButtonLabel = UILabel;
 
-export type UIButton = UIView & {
+export type UIButton = UIControl & {
   title: UIButtonLabel,
-};
-
-export type UIImage = {
-  src: string,
 };
 
 export type UIImageView = UIView & {
@@ -128,6 +132,12 @@ export type DeviceSystemData = {
   events: DeviceEvents,
 };
 
+export type ActionsData = { [action_id: string]: any };
+export type EventHandlersData = { [event_id: string]: any };
+export type AttributesData = { [attr_name: string]: any };
+
 export type DeviceRuntimeData = {
-  attributes: { [attr_name: string]: any },
+  actions: ActionsData,
+  eventHandlers: EventHandlersData,
+  attributes: AttributesData,
 };

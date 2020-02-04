@@ -18,10 +18,10 @@ export type ActionContentProps = {
   mode: MutableListItemModeType,
   formik: {
     values: {
-      values: any,
+      args: any,
     },
     errors: {
-      values: any,
+      args: any,
     },
     setFieldValue: (string, any) => void,
   },
@@ -68,7 +68,7 @@ const withAction = (
     mode: PropTypes.string,
     data: PropTypes.shape({
       type: PropTypes.string.isRequired,
-      values: PropTypes.objectOf(PropTypes.any),
+      args: PropTypes.objectOf(PropTypes.any),
     }),
     onDelete: PropTypes.func,
     onSave: PropTypes.func,

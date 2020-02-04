@@ -8,25 +8,22 @@ import uuidv4 from 'uuid/v4';
 
 import SelectInput from '../../../../../components/InputFields/SelectInput';
 
-import type {
-  MutableListItemType,
-  MutableListItemModeType,
-} from '../../../../../components/MutableList';
+import type { MutableListItemModeType } from '../../../../../components/MutableList';
 import MutableList, {
   MutableListItem,
   MutableListItemMode,
-  MutableListItemShape,
 } from '../../../../../components/MutableList';
 
 import { NewAction, ActionItem, genActionId } from '../Actions';
 
 import DeviceContext from '../../../contexts/DeviceContext';
+import RuntimeContext from '../../../contexts/RuntimeContext';
 
 import './EventHandler.scss';
 
 type EventHandlerType = {
   events: string[],
-  actions: MutableListItemType[],
+  actions: string[],
 };
 
 type NewEventHandlerProps = {
@@ -88,8 +85,14 @@ const EventHandler = ({
   showActions,
 }: EventHandlerProps) => {
   const { events: eventOptions } = useContext(DeviceContext);
+  const { actions: remoteActions } = useContext(RuntimeContext);
   const { events, actions } = data || { events: [], actions: [] };
-
+  const actionItems = actions
+    .filter(aid => aid in remoteActions)
+    .map(aid => ({
+      id: aid,
+      data: remoteActions[aid],
+    }));
   return (
     <Formik initialValues={{ events }} validationSchema={ValidationSchema}>
       {formik => (
@@ -110,20 +113,21 @@ const EventHandler = ({
                   placeholder="Event Names"
                   options={eventOptions.map(({ name, value }) => ({
                     label: name,
-                    value,
+                    value: name,
                   }))}
                   formik={formik}
                   isMulti
+                  valueOnly
                 />
               ) : (
                 <div className="EventHandlerSummary">
                   <div className="EventHandlerSummary__text">On</div>
                   <div className="EventHandlerSummary__attributes">
-                    {formik.values.events.map(({ label }, idx) => (
-                      <React.Fragment key={label}>
+                    {formik.values.events.map((event, idx) => (
+                      <React.Fragment key={event}>
                         {idx > 0 ? <span> , </span> : null}
                         <span className="EventHandlerSummary__attributes__label">
-                          {label}
+                          {event}
                         </span>
                       </React.Fragment>
                     ))}
@@ -137,7 +141,7 @@ const EventHandler = ({
               <MutableList
                 sortable
                 id={id}
-                items={actions}
+                items={actionItems}
                 itemComponent={ActionItem}
                 newItemComponent={NewAction}
                 genId={genActionId}
@@ -165,7 +169,7 @@ EventHandlerItem.propTypes = {
   ...NewEventHandler.propTypes,
   data: PropTypes.shape({
     events: PropTypes.arrayOf(PropTypes.string).isRequired,
-    actions: PropTypes.arrayOf(MutableListItemShape).isRequired,
+    actions: PropTypes.arrayOf(PropTypes.string).isRequired,
   }),
 };
 

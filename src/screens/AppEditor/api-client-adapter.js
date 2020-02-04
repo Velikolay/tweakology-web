@@ -1,4 +1,6 @@
 // @flow
+import isEqual from 'lodash.isequal';
+
 import type {
   AnyUIView,
   NSLayoutConstraint,
@@ -214,6 +216,31 @@ const treeToPayload = (tree: UITree): any => {
   return payload;
 };
 
+const runtimeAssetToPayload = (
+  assetType: string,
+  asset: { [string]: any },
+  remoteAsset: { [string]: any },
+): any[] => {
+  const insertOps = Object.entries(asset)
+    .filter(([key, value]) => !(key in remoteAsset))
+    .map(([key, value]) => ({
+      operation: 'insert',
+      [assetType]: {
+        id: key,
+        ...value,
+      },
+    }));
+  const modifyOps = Object.entries(asset)
+    .filter(
+      ([key, value]) => key in remoteAsset && !isEqual(value, remoteAsset[key]),
+    )
+    .map(([key, value]) => ({
+      operation: 'modify',
+      [assetType]: value,
+    }));
+  return [...insertOps, ...modifyOps];
+};
+
 class APIClientAdapter {
   apiClient: APIClient;
 
@@ -237,15 +264,31 @@ class APIClientAdapter {
     return this.apiClient.fetchRuntimeData();
   }
 
-  modifyTree(name: string, tree: UITree): Promise<any> {
-    const treeChanges = treeToPayload(tree);
-    const { eventHandlers, actions } = getAllWorkflowAssets();
-    console.log({
-      tree: treeChanges,
-      eventHandlers,
+  modify(
+    name: string,
+    local: { tree: UITree },
+    remote: DeviceRuntimeData,
+  ): Promise<any> {
+    const { tree } = local;
+    const {
+      eventHandlers: remoteEventHandlers,
+      actions: remoteActions,
+    } = remote;
+    const { eventHandlers, actions } = getAllWorkflowAssets(remote);
+    const actionChanges = runtimeAssetToPayload(
+      'action',
       actions,
-    });
-    return this.apiClient.submitChanges(name, treeChanges);
+      remoteActions,
+    );
+    const eventHandlerChanges = runtimeAssetToPayload(
+      'eventHandler',
+      eventHandlers,
+      remoteEventHandlers,
+    );
+    const treeChanges = treeToPayload(tree);
+    const changes = [...treeChanges, ...actionChanges, ...eventHandlerChanges];
+    console.log(changes);
+    return this.apiClient.submitChanges(name, changes);
   }
 
   insertNode(

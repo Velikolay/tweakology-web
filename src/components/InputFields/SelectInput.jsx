@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 import { deepValue } from '../Formik';
 
 type OptionType = {
-  [string]: any,
+  value: any,
+  label: string,
 };
 type OptionsType = OptionType[];
 
@@ -16,8 +17,9 @@ type SelectInputProps = {
   placeholder?: string,
   disabled?: boolean,
   creatable?: boolean,
-  isMulti?: boolean,
-  options?: { value: any, label: string }[],
+  isMulti: boolean,
+  valueOnly: boolean,
+  options?: OptionsType,
 };
 
 type SelectInputUncontrolledProps = SelectInputProps & {
@@ -36,7 +38,7 @@ type SelectInputControlledProps = SelectInputProps & {
 };
 
 const getStyles = (name: ?string, formik: ?FormikProps): any => {
-  const error = name && formik && name in formik.errors;
+  const error = name && formik && deepValue(formik.errors, name);
 
   const controlBorderShadow = provided =>
     'borderBox' in provided && !error ? provided.borderBox : 'none';
@@ -57,6 +59,7 @@ const getStyles = (name: ?string, formik: ?FormikProps): any => {
       boxShadow: controlBorderShadow(provided),
     }),
     input: contentColorStyle,
+    singleValue: contentColorStyle,
     clearIndicator: contentColorStyle,
     dropdownIndicator: contentColorStyle,
     menu: provided => ({
@@ -71,6 +74,18 @@ const getStyles = (name: ?string, formik: ?FormikProps): any => {
   };
 };
 
+const toValue = (option: OptionType, valueOnly: boolean): any =>
+  valueOnly ? option.value : option;
+
+const toMultiValue = (option: OptionsType, valueOnly: boolean): any =>
+  (option || []).map(x => (valueOnly ? x.value : x));
+
+const toOption = (value: any, valueOnly: boolean): OptionType =>
+  valueOnly ? { value, label: value } : value;
+
+const toMultiOption = (value: any, valueOnly: boolean): OptionsType =>
+  valueOnly ? value.map(x => ({ value: x, label: x })) : value;
+
 export const SelectInputUncontrolled = (
   props: SelectInputUncontrolledProps,
 ) => {
@@ -80,6 +95,7 @@ export const SelectInputUncontrolled = (
     disabled,
     creatable,
     isMulti,
+    valueOnly,
     options,
     onChange,
   } = props;
@@ -93,7 +109,13 @@ export const SelectInputUncontrolled = (
       styles={getStyles()}
       placeholder={placeholder}
       options={options}
-      onChange={onChange}
+      onChange={option =>
+        onChange(
+          isMulti
+            ? toMultiValue(option, valueOnly)
+            : toValue(option, valueOnly),
+        )
+      }
     />
   );
 };
@@ -107,9 +129,11 @@ const SelectInputControlled = (props: SelectInputControlledProps) => {
     disabled,
     creatable,
     isMulti,
+    valueOnly,
     options,
   } = props;
   const { values, setFieldValue } = formik;
+  const value = deepValue(values, name);
   const SelectComponent = creatable ? Creatable : Select;
   return (
     // $FlowFixMe Createable bug!
@@ -118,10 +142,19 @@ const SelectInputControlled = (props: SelectInputControlledProps) => {
       isDisabled={disabled}
       isMulti={isMulti}
       styles={getStyles(name, formik)}
-      value={deepValue(values, name)}
+      value={
+        isMulti ? toMultiOption(value, valueOnly) : toOption(value, valueOnly)
+      }
       placeholder={placeholder}
       options={options}
-      onChange={value => setFieldValue(name, value || [])}
+      onChange={option =>
+        setFieldValue(
+          name,
+          isMulti
+            ? toMultiValue(option, valueOnly)
+            : toValue(option, valueOnly),
+        )
+      }
     />
   );
 };
@@ -132,6 +165,7 @@ const commonPropTypes = {
   disabled: PropTypes.bool,
   creatable: PropTypes.bool,
   isMulti: PropTypes.bool,
+  valueOnly: PropTypes.bool,
   options: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.any.isRequired,
@@ -146,6 +180,7 @@ const commonDefaultProps = {
   disabled: false,
   creatable: false,
   isMulti: false,
+  valueOnly: false,
   options: [],
 };
 
@@ -165,6 +200,8 @@ SelectInputControlled.propTypes = {
   ...commonPropTypes,
 };
 
-SelectInputControlled.defaultProps = commonDefaultProps;
+SelectInputControlled.defaultProps = {
+  ...commonDefaultProps,
+};
 
 export default SelectInputControlled;

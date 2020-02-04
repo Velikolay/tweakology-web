@@ -2,7 +2,7 @@
 import React from 'react';
 
 import type { UIViewNode } from '../../types';
-import type { AnyUIView } from '../../../../services/device/types';
+import type { UIControl } from '../../../../services/device/types';
 
 import TabBar, { Tab } from '../../../../components/TabBar';
 import Events from './Events';
@@ -10,7 +10,7 @@ import Events from './Events';
 import './Workflow.scss';
 
 type WorkflowProps = {
-  activeNode: UIViewNode<AnyUIView>,
+  activeNode: UIViewNode<UIControl>,
 };
 
 const Workflow = ({ activeNode }: WorkflowProps) => {

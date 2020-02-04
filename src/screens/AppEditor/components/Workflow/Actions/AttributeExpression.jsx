@@ -20,23 +20,23 @@ import './AttributeExpression.scss';
 
 type AttributeExpressionActionState = {
   rerender: boolean,
-  attributes: { value: string, label: string }[],
-  attributeExpression: string,
+  attributeName: string,
+  expression: string,
 };
 
 type AttributeExpressionActionError = {
   rerender: string,
-  attributes: string,
-  attributeExpression: string,
+  attributeName: string,
+  expression: string,
 };
 
 type AttributeExpressionActionFormik = {
   formik: {
     values: {
-      values: AttributeExpressionActionState,
+      args: AttributeExpressionActionState,
     },
     errors: {
-      values: AttributeExpressionActionError,
+      args: AttributeExpressionActionError,
     },
     setFieldValue: (string, any) => void,
   },
@@ -44,20 +44,20 @@ type AttributeExpressionActionFormik = {
 
 const InitialValues = {
   type: 'AttributeExpression',
-  values: {
+  args: {
     rerender: false,
-    attributes: [],
-    attributeExpression: '',
+    attributeName: '',
+    expression: '',
   },
 };
 
 const ValidationSchema = Yup.object().shape({
-  values: Yup.object().shape({
+  args: Yup.object().shape({
     rerender: Yup.boolean().required('Required'),
-    attributes: Yup.array()
-      .min(1, 'At least one attribute required')
+    attributeName: Yup.string()
+      .min(3, 'Attribute name should be at least 3 characters long')
       .required('Required'),
-    attributeExpression: Yup.string(),
+    expression: Yup.string(),
   }),
 });
 
@@ -68,14 +68,14 @@ const AttributeExpressionAction = ({
 }: ActionContentProps) => {
   const {
     values: {
-      values: { rerender, attributes, attributeExpression },
+      args: { rerender, attributeName, expression },
     },
   } = formik;
   return mode === MutableListItemMode.SUMMARY ? (
     <AttributeExpressionActionSummary
       rerender={rerender}
-      attributes={attributes}
-      attributeExpression={attributeExpression}
+      attributeName={attributeName}
+      expression={expression}
     />
   ) : (
     <AttributeExpressionActionEdit formik={formik} />
@@ -84,22 +84,17 @@ const AttributeExpressionAction = ({
 
 const FormikShape = PropTypes.shape({
   values: PropTypes.shape({
-    values: PropTypes.shape({
+    args: PropTypes.shape({
       rerender: PropTypes.bool.isRequired,
-      attributes: PropTypes.arrayOf(
-        PropTypes.shape({
-          value: PropTypes.string.isRequired,
-          label: PropTypes.string.isRequired,
-        }),
-      ).isRequired,
-      attributeExpression: PropTypes.string.isRequired,
+      attributeName: PropTypes.string.isRequired,
+      expression: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
   errors: PropTypes.shape({
-    values: PropTypes.shape({
+    args: PropTypes.shape({
       rerender: PropTypes.string,
-      attributes: PropTypes.string,
-      attributeExpression: PropTypes.string,
+      attributeName: PropTypes.string,
+      expression: PropTypes.string,
     }),
   }).isRequired,
   setFieldValue: PropTypes.func.isRequired,
@@ -113,8 +108,8 @@ AttributeExpressionAction.propTypes = {
 
 const AttributeExpressionActionSummary = ({
   rerender,
-  attributes,
-  attributeExpression,
+  attributeName,
+  expression,
 }: AttributeExpressionActionState) => (
   <div className="AttributeExpressionSummary">
     <IconContext.Provider
@@ -124,14 +119,9 @@ const AttributeExpressionActionSummary = ({
     </IconContext.Provider>
     <div className="AttributeExpressionSummary__text">Update attributes</div>
     <div className="AttributeExpressionSummary__attributes">
-      {attributes.map(({ label }, idx) => (
-        <React.Fragment key={label}>
-          {idx > 0 ? <span> , </span> : null}
-          <span className="AttributeExpressionSummary__attributes__label">
-            {label}
-          </span>
-        </React.Fragment>
-      ))}
+      <span className="AttributeExpressionSummary__attributes__label">
+        {attributeName}
+      </span>
     </div>
     {rerender ? (
       <div className="AttributeExpressionSummary__text">and rerender</div>
@@ -151,22 +141,22 @@ const AttributeExpressionActionEdit = ({
     <>
       <Toggle
         className="AttributeExpressionForm__rerenderToggle"
-        name="values.rerender"
+        name="args.rerender"
         title="Rerender"
         formik={formik}
       />
       <SelectInput
         className="AttributeExpressionForm__attributes"
-        name="values.attributes"
+        name="args.attributeName"
         formik={formik}
         placeholder="Attribute Name"
         options={options}
-        isMulti
         creatable
+        valueOnly
       />
       <TextArea
         className="AttributeExpressionForm__expression"
-        name="values.attributeExpression"
+        name="args.expression"
         placeholder="Attribute Expression"
         rows={6}
         formik={formik}

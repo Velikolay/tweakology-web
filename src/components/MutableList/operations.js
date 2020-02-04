@@ -21,9 +21,21 @@ export const writeItem = (id: string, item: any) => {
   return PersistenceService.write(id, item);
 };
 
-export const findItemIds = (name: string): string[] => {
+export const findItemIds = (
+  name: string,
+  searchLists: boolean = false,
+): string[] => {
   const items = PersistenceService.readAll();
-  return Object.keys(items).filter(
-    id => id.startsWith(`${name}.`) && !id.endsWith('.list'),
+  const listSuffix = '.list';
+  const unique = array => [...new Set(array)];
+
+  return unique(
+    Object.keys(items)
+      .filter(id => id.startsWith(`${name}.`))
+      .map(id =>
+        searchLists && id.endsWith(listSuffix)
+          ? id.slice(0, -listSuffix.length)
+          : id,
+      ),
   );
 };

@@ -107,11 +107,11 @@ class AppEditor extends Component {
 
   onSubmitChanges = () => {
     const { tree } = this.state;
-    console.log(tree);
     this.apiClient
-      .modifyTree('test', tree)
-      .then(() => this.updateTree())
+      .modify('test', { tree }, this.runtimeContext)
       .then(() => PersistenceService.clear())
+      .then(() => this.updateTree())
+      .then(() => this.updateRuntimeContext())
       .catch(err => console.log(err));
   };
 
