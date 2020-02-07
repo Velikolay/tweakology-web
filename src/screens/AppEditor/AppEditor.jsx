@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import isEqual from 'lodash.isequal';
 
 import DeviceConnector from '../../services/device/connector';
-import PersistenceService from '../../services/persistence';
 import APIClient from './api-client-adapter';
 import DeviceContext from './contexts/DeviceContext';
 import RuntimeContext from './contexts/RuntimeContext';
@@ -33,6 +32,7 @@ class AppEditor extends Component {
       },
       activeNode: null,
       onFocusNode: null,
+      runtimeContext: null,
     };
 
     this.formikBag = null;
@@ -86,9 +86,7 @@ class AppEditor extends Component {
   updateRuntimeContext = () =>
     this.apiClient
       .fetchRuntimeData()
-      .then(runtimeData => {
-        this.runtimeContext = runtimeData;
-      })
+      .then(runtimeContext => this.setState({ runtimeContext }))
       .catch(err => console.log(err));
 
   updateTree = () =>
@@ -106,10 +104,9 @@ class AppEditor extends Component {
       .catch(err => console.log(err));
 
   onSubmitChanges = () => {
-    const { tree } = this.state;
+    const { tree, runtimeContext } = this.state;
     this.apiClient
-      .modify('test', { tree }, this.runtimeContext)
-      .then(() => PersistenceService.clear())
+      .modify('test', { tree }, runtimeContext)
       .then(() => this.updateTree())
       .then(() => this.updateRuntimeContext())
       .catch(err => console.log(err));
@@ -231,10 +228,12 @@ class AppEditor extends Component {
       tree,
       activeNode,
       onFocusNode,
+      runtimeContext,
     } = this.state;
+
     return (
       <DeviceContext.Provider value={this.deviceContext}>
-        <RuntimeContext.Provider value={this.runtimeContext}>
+        <RuntimeContext.Provider value={runtimeContext}>
           <AppEditorLayout
             connectedDevice={connectedDevice}
             devices={devices}

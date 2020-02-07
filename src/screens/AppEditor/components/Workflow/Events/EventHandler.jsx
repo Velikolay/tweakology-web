@@ -86,6 +86,7 @@ const EventHandler = ({
 }: EventHandlerProps) => {
   const { events: eventOptions } = useContext(DeviceContext);
   const { actions: remoteActions } = useContext(RuntimeContext);
+
   const { events, actions } = data || { events: [], actions: [] };
   const actionItems = actions
     .filter(aid => aid in remoteActions)
@@ -93,6 +94,7 @@ const EventHandler = ({
       id: aid,
       data: remoteActions[aid],
     }));
+
   return (
     <Formik initialValues={{ events }} validationSchema={ValidationSchema}>
       {formik => (

@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import isEqual from 'lodash.isequal';
+
 import uuidv4 from 'uuid/v4';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -74,6 +76,24 @@ const MutableList = (props: MutableListProps) => {
     if (initItems.length > 0) {
       writeList(parentId, initItems);
       setItems(initItems);
+    }
+  } else {
+    let itemsChanged = false;
+    const changedItems = items.map(item => {
+      const remoteItem = remoteItems.find(({ id }) => id === item.id);
+      if (remoteItem && !isEqual(item.data, remoteItem.data)) {
+        itemsChanged = true;
+        return {
+          id: item.id,
+          status: item.status,
+          data: remoteItem.data,
+        };
+      }
+      return item;
+    });
+
+    if (itemsChanged) {
+      setItems(changedItems);
     }
   }
 
