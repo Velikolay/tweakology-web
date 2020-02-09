@@ -11,7 +11,9 @@ import withAction from './ActionHOC';
 
 import Toggle from '../../../../../components/InputFields/Toggle';
 import SelectInput from '../../../../../components/InputFields/SelectInput';
-import TextArea from '../../../../../components/InputFields/TextArea';
+import TextArea, {
+  LiquidCodeBlockControlled,
+} from '../../../../../components/InputFields/TextArea';
 import { MutableListItemMode } from '../../../../../components/MutableList';
 
 import RuntimeContext from '../../../contexts/RuntimeContext';
@@ -154,13 +156,20 @@ const AttributeExpressionActionEdit = ({
         creatable
         valueOnly
       />
-      <TextArea
+      <LiquidCodeBlockControlled
         className="AttributeExpressionForm__expression"
         name="args.expression"
         placeholder="Attribute Expression"
         rows={6}
         formik={formik}
       />
+      {/* <TextArea
+        className="AttributeExpressionForm__expression"
+        name="args.expression"
+        placeholder="Attribute Expression"
+        rows={6}
+        formik={formik}
+      /> */}
     </>
   );
 };

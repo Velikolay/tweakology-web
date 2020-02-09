@@ -1,7 +1,10 @@
 // @flow
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+
+import Prism from 'prismjs';
+import './LiquidCodeHighlight';
 
 import { deepValue } from '../Formik';
 
@@ -23,6 +26,37 @@ type TextAreaControlledProps = TextAreaProps & {
 
 type TextAreaUncontrolledProps = TextAreaProps & {
   defaultValue: string,
+};
+
+const stripHtml = html => {
+  return html.textContent || html.innerText || '';
+};
+
+export const LiquidCodeBlockControlled = (props: TextAreaControlledProps) => {
+  const {
+    name,
+    formik: { setFieldValue, values },
+  } = props;
+
+  const codeRef = useRef();
+  useEffect(() => {
+    if (codeRef && codeRef.current) {
+      Prism.highlightElement(codeRef.current);
+    }
+  });
+
+  return (
+    <pre>
+      <code
+        ref={codeRef}
+        className="language-liquid"
+        contentEditable
+        onInput={e => setFieldValue(name, stripHtml(e.target))}
+      >
+        {deepValue(values, name)}
+      </code>
+    </pre>
+  );
 };
 
 const TextAreaControlled = (props: TextAreaControlledProps) => {
