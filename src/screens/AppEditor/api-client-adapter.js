@@ -171,19 +171,27 @@ const viewConstraintsChanges = (tree: UITree): ?any => {
 const viewChanges = (tree: UITree): ?any => {
   const constraints = viewConstraintsChanges(tree);
   const eventHandlers = getEventHandlerIds(tree.id);
+  const { eventHandlers: treeEventHandlers } = tree.properties;
   const changes = {};
+  let properties = {};
 
   if (tree.updatedProperties) {
-    changes.frame = tree.updatedProperties.frame; // TODO: delete when engine expects the frame in properties
-    changes.properties = tree.updatedProperties;
+    properties = { ...tree.updatedProperties };
+  }
+
+  if (
+    eventHandlers.length > 0 &&
+    !(treeEventHandlers && isEqual(eventHandlers, treeEventHandlers))
+  ) {
+    properties.eventHandlers = eventHandlers;
   }
 
   if (constraints) {
     changes.constraints = constraints;
   }
 
-  if (eventHandlers.length > 0) {
-    changes.eventHandlers = eventHandlers;
+  if (Object.keys(properties).length !== 0) {
+    changes.properties = properties;
   }
 
   return Object.keys(changes).length !== 0 ? changes : null;
